@@ -1,110 +1,98 @@
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "geometry.h"
+#include <time.h>
+#include <math.h>
+#include <SDL/SDL_image.h>
 
-int main(int argc, char** argv){
+#define ZOOM 1
+#define DIVIDETIME 5
 
- /*
-	TESTS TP1
+#define WINDOW_SCALE 2
 
-	Point3D point = pointXYZ(0,0,0);
-	Vector3D vecteur = vectorXYZ(1,2,0);
-	Vector3D resultat = pointPlusVector(point,vecteur);
-	printf("Resultat pointPlusVector : \n");
-	printVector3D(resultat);
+static unsigned int WINDOW_WIDTH = 800;
+static unsigned int WINDOW_HEIGHT = 800;
+static const unsigned int BIT_PER_PIXEL = 32;
+static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
-	Vector3D vecteur2 = vectorXYZ(0.5,1,-2);
-	Vector3D vecteur2bis = vectorXYZ(0.2,-1,0);
-	resultat = addVectors(vecteur2,vecteur2bis);
-	printf("Resultat addVectors : \n");
-	printVector3D(resultat);
+time_t rawtime;
 
-	Vector3D vecteur3 = vectorXYZ(0.5,1,-2);
-	Vector3D vecteur3bis = vectorXYZ(0.2,-1,0);
-	resultat = subVectors(vecteur3,vecteur3bis);
-	printf("Resultat subVectors : \n");
-	printVector3D(resultat);
+struct tm * timeinfo;
 
-	Vector3D vecteur4 = vectorXYZ(0.5,1,-2);
-	resultat = multVector(vecteur4,2);
-	printf("Resultat multVector : \n");
-	printVector3D(resultat);
+void resizeViewport() {
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-WINDOW_SCALE/2.0, WINDOW_SCALE/2., -WINDOW_SCALE/2., WINDOW_SCALE/2.);
+    SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
+}
 
-	Vector3D vecteur5 = vectorXYZ(0.5,1,-2);
-	resultat = multVector(vecteur5,0);
-	printf("Resultat multVector 0 : \n");
-	printVector3D(resultat);
+int main(int argc, char** argv) {
 
-	Vector3D vecteur6 = vectorXYZ(0.5,1,-2);
-	resultat = divVector(vecteur6,2);
-	printf("Resultat divVector : \n");
-	printVector3D(resultat);
+    // Initialisation de la SDL
+    if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
+        fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
+        return EXIT_FAILURE;
+    }
 
-	Vector3D vecteur7 = vectorXYZ(1,0,0);
-	Vector3D vecteur7bis = vectorXYZ(2,0,0);
-	float resultatDot = dot(vecteur7,vecteur7bis);
-	printf("Resultat dot : \n");
-	printf("%f\n",resultatDot);
+    // Ouverture d'une fenêtre et création d'un contexte OpenGL
+    if(NULL == SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE)) {
+        fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");
+        return EXIT_FAILURE;
+    }
+    SDL_WM_SetCaption("Mdr le s o l e i l", NULL);
 
-	Vector3D vecteur8 = vectorXYZ(1,0,0);
-	Vector3D vecteur8bis = vectorXYZ(0,1,0);
-	resultatDot = dot(vecteur8,vecteur8bis);
-	printf("Resultat dot : \n");
-	printf("%f\n",resultatDot);
-
-	Vector3D vecteur9 = vectorXYZ(2,0,0);
-	resultatDot = norm(vecteur9);
-	printf("Resultat norm : \n");
-	printf("%f\n",resultatDot);
-
-	Vector3D vecteur10 = vectorXYZ(1,1,1);
-	resultatDot = norm(vecteur10);
-	printf("Resultat norm 2 : \n");
-	printf("%f\n",resultatDot);
-
-	Vector3D vecteur11 = vectorXYZ(0,0,0);
-	resultatDot = norm(vecteur11);
-	printf("Resultat norm 0 : \n");
-	printf("%f\n",resultatDot);
-
-	Vector3D vecteur12 = vectorXYZ(1,1,1);
-	resultat = normalize(vecteur12);
-	printf("Resultat normalize : \n");
-	printVector3D(resultat);
-
-	Vector3D vecteur13 = vectorXYZ(0,0,0);
-	resultat = normalize(vecteur13);
-	printf("Resultat normalize : \n");
-	printVector3D(resultat);
-
- */
+    resizeViewport();
 
 
+    //SDL_FreeSurface(SDL_Surface* logoImac);
+
+    /* Boucle de dessin (à décommenter pour l'exercice 3)*/
+    int loop = 1;
+    glClearColor(0.1, 0.1, 0.1 ,1.0);
+    while(loop) {
+
+        Uint32 startTime = SDL_GetTicks();
+        glClear(GL_COLOR_BUFFER_BIT);
+
+				drawShip();
 
 
+        SDL_Event e;
+        while(SDL_PollEvent(&e)) {
+
+            switch(e.type) {
+
+                case SDL_QUIT:
+                    loop = 0;
+                    break;
+
+                case SDL_VIDEORESIZE:
+                    WINDOW_WIDTH = e.resize.w;
+                    WINDOW_HEIGHT = e.resize.h;
+                    resizeViewport();
+
+                default:
+                    break;
+            }
+        }
+
+        SDL_GL_SwapBuffers();
+        Uint32 elapsedTime = SDL_GetTicks() - startTime;
+        if(elapsedTime < FRAMERATE_MILLISECONDS) {
+            SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
+        }
+    }
 
 
+    // TODO: Libération des données GPU
+    // ...
 
+    // Liberation des ressources associées à la SDL
+    SDL_Quit();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
