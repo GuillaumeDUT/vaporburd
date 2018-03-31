@@ -3,6 +3,6 @@
 
 //drawShip
 
-void drawShip();
+void drawShip(float posX);
 
 #endif

@@ -8,19 +8,19 @@
 #include <math.h>
 #include <SDL/SDL_image.h>
 
+#include "basic_shape.h"
+#include "ship.h"
+
 #define ZOOM 1
 #define DIVIDETIME 5
 
-#define WINDOW_SCALE 2
+#define WINDOW_SCALE 10
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
-time_t rawtime;
-
-struct tm * timeinfo;
 
 void resizeViewport() {
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -29,6 +29,7 @@ void resizeViewport() {
     gluOrtho2D(-WINDOW_SCALE/2.0, WINDOW_SCALE/2., -WINDOW_SCALE/2., WINDOW_SCALE/2.);
     SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
 }
+
 
 int main(int argc, char** argv) {
 
@@ -47,7 +48,7 @@ int main(int argc, char** argv) {
 
     resizeViewport();
 
-
+		float posXVaisseau = 0;
     //SDL_FreeSurface(SDL_Surface* logoImac);
 
     /* Boucle de dessin (à décommenter pour l'exercice 3)*/
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
         Uint32 startTime = SDL_GetTicks();
         glClear(GL_COLOR_BUFFER_BIT);
 
-				drawShip();
+				drawShip(posXVaisseau);
 
 
         SDL_Event e;
@@ -74,6 +75,23 @@ int main(int argc, char** argv) {
                     WINDOW_WIDTH = e.resize.w;
                     WINDOW_HEIGHT = e.resize.h;
                     resizeViewport();
+
+								case SDL_KEYDOWN:
+											//printf("touche pressée (code = %d)\n", e.key.keysym.sym);
+											// if spacebar
+											if(e.key.keysym.sym == 32 ){
+												printf("Shoot\n" );
+											}
+											// if arrow up
+											if(e.key.keysym.sym == SDLK_UP){
+												posXVaisseau +=0.1;
+												printf("PosX   %f\n",posXVaisseau);
+											}
+											//if arrow down
+											if(e.key.keysym.sym == SDLK_DOWN){
+												posXVaisseau -=0.1;
+											}
+										break;
 
                 default:
                     break;
