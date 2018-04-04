@@ -52,6 +52,13 @@ int main(int argc, char** argv) {
 
     Ship ship = createShip(-4.0,0.0,10);
 
+    int triggerKeyArrowUp;
+    int triggerKeyArrowDown;
+    int triggerKeyArrowLeft;
+    int triggerKeyArrowRight;
+    int triggerKeySpacebar;
+
+
     int loop = 1;
     glClearColor(0.1, 0.1, 0.1 ,1.0);
     while(loop) {
@@ -61,6 +68,23 @@ int main(int argc, char** argv) {
 
 				drawShip(ship);
 
+
+        //Si on reste appuyé sur la barre espace on tire, same pour les flêches
+        if(triggerKeySpacebar){
+          shoot();
+        }
+        if(triggerKeyArrowUp){
+          moveUp();
+        }
+        if(triggerKeyArrowUp){
+          moveDown();
+        }
+        if(triggerKeyArrowLeft){
+          moveLeft();
+        }
+        if(triggerKeyArrowRight){
+          moveRight();
+        }
 
 
         SDL_Event e;
@@ -80,19 +104,48 @@ int main(int argc, char** argv) {
 								case SDL_KEYDOWN:
 											//printf("touche pressée (code = %d)\n", e.key.keysym.sym);
 											// if spacebar
-											if(e.key.keysym.sym == 32 ){
+											if(e.key.keysym.sym == SDLK_SPACE){
+                        triggerKeySpacebar =1;
 												printf("Shoot\n" );
 											}
 											// if arrow up
 											if(e.key.keysym.sym == SDLK_UP){
-												posXVaisseau +=0.1;
+                        triggerKeyArrowUp =1;
 												printf("PosX   %f\n",posXVaisseau);
 											}
 											//if arrow down
 											if(e.key.keysym.sym == SDLK_DOWN){
-												posXVaisseau -=0.1;
+                        triggerKeyArrowDown = 1;
+											}
+											//if arrow right
+											if(e.key.keysym.sym == SDLK_RIGHT){
+                        triggerKeyArrowRight = 1;
+											}
+											//if arrow left
+											if(e.key.keysym.sym == SDLK_LEFT){
+                        triggerKeyArrowLeft = 1;
 											}
 										break;
+                case SDL_KEYUP:
+                      if(e.key.keysym.sym == SDLK_SPACE){
+                        triggerKeySpacebar =0;
+                      }
+                      if(e.key.keysym.sym == SDLK_UP){
+                        triggerKeyArrowUp =0;
+                      }
+                      //if arrow down
+                      if(e.key.keysym.sym == SDLK_DOWN){
+                        triggerKeyArrowDown = 0;
+                      }
+                      //if arrow right
+											if(e.key.keysym.sym == SDLK_RIGHT){
+                        triggerKeyArrowRight = 0;
+											}
+											//if arrow left
+											if(e.key.keysym.sym == SDLK_LEFT){
+                        triggerKeyArrowLeft = 0;
+											}
+                    break;
 
                 default:
                     break;

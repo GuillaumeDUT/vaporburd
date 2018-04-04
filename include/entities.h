@@ -1,5 +1,5 @@
-#ifndef SHIP_H
-#define SHIP_H
+#ifndef ENTITIES_H
+#define ENTITIES_H
 
 //drawShip
 
