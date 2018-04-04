@@ -9,7 +9,7 @@
 #include <SDL/SDL_image.h>
 
 #include "basic_shape.h"
-#include "ship.h"
+#include "entities.h"
 
 #define ZOOM 1
 #define DIVIDETIME 5
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");
         return EXIT_FAILURE;
     }
-    SDL_WM_SetCaption("Mdr le s o l e i l", NULL);
+    SDL_WM_SetCaption("", NULL);
 
     resizeViewport();
 
