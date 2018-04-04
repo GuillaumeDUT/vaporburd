@@ -5,13 +5,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <SDL/SDL_image.h>
 
 #include "entities.h"
 #include "basic_shape.h"
-
-#define X 0
-#define Y 1
 
 Ship createShip(float x, float y, int hp){
  		Ship  temp = malloc( sizeof( struct Entity ) );
@@ -24,9 +20,6 @@ Ship createShip(float x, float y, int hp){
 
     temp->speed[X] = 0;
     temp->speed[Y] = 0;
-
-    temp->acc[X] = 0;
-    temp->acc[Y] = 0;
 
     temp->hp = hp;
 
@@ -44,9 +37,6 @@ Ennemy createEnnemy(float x, float y, int hp){
     temp->speed[X] = 0;
     temp->speed[Y] = 0;
 
-    temp->acc[X] = 0;
-    temp->acc[Y] = 0;
-
     temp->hp = hp;
 
 		return temp;
@@ -63,9 +53,6 @@ Obstacle createObstacle(float x, float y, int hp){
     temp->speed[X] = 0;
     temp->speed[Y] = 0;
 
-    temp->acc[X] = 0;
-    temp->acc[Y] = 0;
-
     temp->hp = hp;
 
 		return temp;
@@ -74,7 +61,7 @@ Obstacle createObstacle(float x, float y, int hp){
 void drawShip(Ship ship){
 
   glPushMatrix();
-    glTranslatef(ship->pos[X],0,0);
+    glTranslatef(ship->pos[X],ship->pos[Y],0);
     glScalef(0.5,0.5,1);
     drawCircle(1);
   glPopMatrix();

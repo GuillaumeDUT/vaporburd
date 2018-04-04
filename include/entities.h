@@ -1,13 +1,12 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
 
-//drawShip
-
+#define X 0
+#define Y 1
 
 typedef struct Entity{
 	float pos[2];
 	float speed[2];
-	float acc[2];
 	int hp;
 }*Ship, *Ennemy, *Obstacle;
 
