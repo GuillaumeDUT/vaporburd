@@ -1,7 +1,8 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
+#define X 0
+#define Y 1
 
-//drawShip
 
 
 typedef struct Entity{
@@ -10,6 +11,9 @@ typedef struct Entity{
 	float acc[2];
 	int hp;
 }*Ship, *Ennemy, *Obstacle;
+
+
+
 
 Ship createShip(float x, float y, int hp);
 Ennemy createEnnemy(float x, float y, int hp);

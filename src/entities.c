@@ -10,8 +10,7 @@
 #include "entities.h"
 #include "basic_shape.h"
 
-#define X 0
-#define Y 1
+
 
 Ship createShip(float x, float y, int hp){
  		Ship  temp = malloc( sizeof( struct Entity ) );

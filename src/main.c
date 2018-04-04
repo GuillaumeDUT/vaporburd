@@ -48,7 +48,6 @@ int main(int argc, char** argv) {
 
     resizeViewport();
 
-		float posXVaisseau = 0;
 
     Ship ship = createShip(-4.0,0.0,10);
 
@@ -71,20 +70,20 @@ int main(int argc, char** argv) {
 
         //Si on reste appuyé sur la barre espace on tire, same pour les flêches
         if(triggerKeySpacebar){
-          shoot();
+          shoot(ship);
         }
-        if(triggerKeyArrowUp){
-          moveUp();
-        }
-        if(triggerKeyArrowUp){
-          moveDown();
-        }
-        if(triggerKeyArrowLeft){
-          moveLeft();
-        }
-        if(triggerKeyArrowRight){
-          moveRight();
-        }
+        // if(triggerKeyArrowUp){
+        //   moveUp();
+        // }
+        // if(triggerKeyArrowUp){
+        //   moveDown();
+        // }
+        // if(triggerKeyArrowLeft){
+        //   moveLeft();
+        // }
+        // if(triggerKeyArrowRight){
+        //   moveRight();
+        // }
 
 
         SDL_Event e;
@@ -106,12 +105,11 @@ int main(int argc, char** argv) {
 											// if spacebar
 											if(e.key.keysym.sym == SDLK_SPACE){
                         triggerKeySpacebar =1;
-												printf("Shoot\n" );
+												//printf("Shoot\n" );
 											}
 											// if arrow up
 											if(e.key.keysym.sym == SDLK_UP){
                         triggerKeyArrowUp =1;
-												printf("PosX   %f\n",posXVaisseau);
 											}
 											//if arrow down
 											if(e.key.keysym.sym == SDLK_DOWN){

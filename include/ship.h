@@ -2,5 +2,4 @@
 #define SHIP_H
 
 
-
 #endif
