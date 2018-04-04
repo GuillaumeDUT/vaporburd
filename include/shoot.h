@@ -22,8 +22,7 @@ typedef struct BList{
 Bullet createBullet(Ship ship);
 
 // tire en fonction de la position actuelle du vaisseau
-void shoot(Ship ship);
-
+void shoot(Ship ship, BList *liste);
 
 void ajouterFinBList(BList *liste , Ship ship) ;
 void afficherBList( BList *liste );

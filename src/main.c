@@ -59,6 +59,8 @@ int main(int argc, char** argv) {
     int triggerKeySpacebar = 0;
 		displayShip(ship);
 
+    BList bulletsList;
+    bulletsList.taille = 0;
 
     int loop = 1;
     glClearColor(0.1, 0.1, 0.1 ,1.0);
@@ -69,11 +71,11 @@ int main(int argc, char** argv) {
 
 
         //Si on reste appuyé sur la barre espace on tire, same pour les flêches
-				/*
+
         if(triggerKeySpacebar){
-          shoot(ship);
+          shoot(ship,&bulletsList);
         }
-				*/
+
         if(triggerKeyArrowUp){
           moveUp(ship);
         }
@@ -90,8 +92,9 @@ int main(int argc, char** argv) {
 				moveShip(ship);
 				drawShip(ship);
 				displayShip(ship);
-				
+
 				drawObstacle(obstacle);
+        afficherBList(&bulletsList);
 
 				SDL_Event e;
         while(SDL_PollEvent(&e)) {

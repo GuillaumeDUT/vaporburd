@@ -16,17 +16,20 @@ static int id = 1;
 
 Bullet  createBullet(Ship ship){
 	Bullet  bullet;
-	bullet = malloc( sizeof(Bullet) );
+	bullet = (Bullet) malloc( sizeof(Bullet) );
 	if(bullet == NULL){
 		printf("Erreur d'allocation mémoire\n");
 		exit(0);
 	}
+	//printf("ship pos X %f || ship pos Y %f");
 	bullet->pos[X] = ship->pos[X];
 	bullet->pos[Y] = ship->pos[Y];
 	bullet->speed = BULLETSPEED;
 	bullet->damages = BULLETDAMAGES;
 	bullet->id = id;
 	id++;
+	bullet->next = NULL;
+	bullet->before = NULL;
 
 	return bullet;
 }
@@ -35,9 +38,19 @@ Bullet  createBullet(Ship ship){
 void ajouterFinBList(BList *liste , Ship ship) {
 	Bullet temp = createBullet( ship );
 
+	printf(" taille liste : %d\n",liste->taille);
+	if(temp == NULL){
+		printf("Erreur de la création d'une balle\n");
+		exit(0);
+	}
+
 	if ( liste->taille == 0 ) {
+
 		liste->first = temp;
+		//printf("la liste prends en first la bullet créée\n");
 		liste->last = temp;
+
+		//printf("la liste prends en last la bullet créée\n");
 	} else {
 		liste->last->next = temp;
 		temp->before = liste->last;
@@ -47,12 +60,20 @@ void ajouterFinBList(BList *liste , Ship ship) {
 	liste->taille++;
 }
 void afficherBList( BList *liste ) {
-	Bullet actuel = liste->first;
-  while ( actuel != NULL ) {
-    //printf("%c", actuel->id);
+	if(liste->taille == 0){
+		return ;
+	}
 
+	Bullet actuel = liste->first;
+	//printf("%d posX %f posY %f\n",actuel->id,actuel->pos[X],actuel->pos[Y]);
+
+  while ( actuel != NULL ) {
+
+    //printf("%c", actuel->id);
+		printf(" bullet || ");
     actuel = actuel->next;
   }
+
   //printf("\n");
 }
 int supprimerDernierBList( BList *liste ) {
@@ -94,6 +115,6 @@ int supprimerBList( BList * liste, int id ) {
 	return 1;
 }
 
-void shoot(Ship ship){
-
+void shoot(Ship ship,BList *liste){
+	ajouterFinBList(liste,ship);
 }
