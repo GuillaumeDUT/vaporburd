@@ -49,6 +49,20 @@ void moveShip(Ship ship) {
 		ship->speed[X] = absFloat(ship->speed[X]) > 0.0001 ? ship->speed[X] * MOMENTUM : 0;
 		ship->speed[Y] = absFloat(ship->speed[Y]) > 0.0001 ? ship->speed[Y] * MOMENTUM : 0;
 		
+		/* Deplacement du bas en haut */
+		if ( ship->pos[Y] > 5 ) ship->pos[Y] -= 10;
+		if ( ship->pos[Y] < -5 ) ship->pos[Y] += 10;
+		
+		/* Constrain */
+		if ( ship->pos[X] < -5 ) {
+				ship->pos[X] = -5;
+				ship->speed[X] = 0;				
+		}	
+		if ( ship->pos[X] > 5 ) {
+				ship->pos[X] = 5;
+				ship->speed[X] = 0;				
+		}
+		
 }
 
 void displayShip(Ship ship) {

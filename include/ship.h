@@ -1,8 +1,8 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#define ACC 0.015
-#define MOMENTUM 0.9
+#define ACC 0.03
+#define MOMENTUM 0.8
 
 void moveUp(Ship ship);
 void moveDown(Ship ship);
