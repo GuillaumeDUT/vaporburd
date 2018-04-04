@@ -5,8 +5,9 @@
 
 
 typedef struct Entity{
-	float x;
-	float y;
+	float pos[2];
+	float speed[2];
+	float acc[2];
 	int hp;
 }*Ship, *Ennemy, *Obstacle;
 
