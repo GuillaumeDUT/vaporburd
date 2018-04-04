@@ -7,8 +7,6 @@
 #define ACC 0.027
 #define MOMENTUM 0.85
 
-
-
 void moveUp(Ship ship);
 void moveDown(Ship ship);
 void moveLeft(Ship ship);

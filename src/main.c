@@ -11,6 +11,7 @@
 #include "entities.h"
 #include "ship.h"
 #include "shoot.h"
+#include "obstacle.h"
 
 #define ZOOM 1
 #define DIVIDETIME 5
@@ -48,16 +49,25 @@ int main(int argc, char** argv) {
 
     resizeViewport();
 
-    Ship ship = createShip(-4.0,0.0,10);
+    Ship ship = createShip(-4.0, 0.0, 10, 0.5);
 
-		Obstacle obstacle = createObstacle(3.0, 0.0, 15);
+		OList obstacles;
+		obstacles.taille = 0;
+		ajouterFinOList(&obstacles, createObstacle(4.0, 4.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, 3.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, 2.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, 1.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, 0.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, -1.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, -2.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, -3.0, 20, 1));
+		ajouterFinOList(&obstacles, createObstacle(4.0, -4.0, 20, 1));
 
     int triggerKeyArrowUp = 0;
     int triggerKeyArrowDown = 0;
     int triggerKeyArrowLeft = 0;
     int triggerKeyArrowRight = 0;
     int triggerKeySpacebar = 0;
-		displayShip(ship);
 
 
     int loop = 1;
@@ -89,9 +99,7 @@ int main(int argc, char** argv) {
 
 				moveShip(ship);
 				drawShip(ship);
-				displayShip(ship);
-				
-				drawObstacle(obstacle);
+				loopOList(ship, &obstacles);
 
 				SDL_Event e;
         while(SDL_PollEvent(&e)) {
