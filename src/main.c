@@ -48,6 +48,8 @@ int main(int argc, char** argv) {
     resizeViewport();
 
     Ship ship = createShip(-4.0,0.0,10);
+		
+		Obstacle obstacle = createObstacle(3.0, 0.0, 15);
 
     int triggerKeyArrowUp = 0;
     int triggerKeyArrowDown = 0;
@@ -87,6 +89,8 @@ int main(int argc, char** argv) {
 				moveShip(ship);
 				drawShip(ship);
 				displayShip(ship);
+				
+				drawObstacle(obstacle);
 
 				SDL_Event e;
         while(SDL_PollEvent(&e)) {
