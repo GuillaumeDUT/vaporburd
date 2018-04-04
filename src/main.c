@@ -6,10 +6,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
-#include <SDL/SDL_image.h>
 
 #include "basic_shape.h"
 #include "entities.h"
+#include "ship.h"
 
 #define ZOOM 1
 #define DIVIDETIME 5
@@ -30,7 +30,6 @@ void resizeViewport() {
     SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
 }
 
-
 int main(int argc, char** argv) {
 
     // Initialisation de la SDL
@@ -48,14 +47,14 @@ int main(int argc, char** argv) {
 
     resizeViewport();
 
-
     Ship ship = createShip(-4.0,0.0,10);
 
-    int triggerKeyArrowUp;
-    int triggerKeyArrowDown;
-    int triggerKeyArrowLeft;
-    int triggerKeyArrowRight;
-    int triggerKeySpacebar;
+    int triggerKeyArrowUp = 0;
+    int triggerKeyArrowDown = 0;
+    int triggerKeyArrowLeft = 0;
+    int triggerKeyArrowRight = 0;
+    int triggerKeySpacebar = 0;
+		displayShip(ship);
 
 
     int loop = 1;
@@ -65,28 +64,31 @@ int main(int argc, char** argv) {
         Uint32 startTime = SDL_GetTicks();
         glClear(GL_COLOR_BUFFER_BIT);
 
-				drawShip(ship);
-
 
         //Si on reste appuyé sur la barre espace on tire, same pour les flêches
+				/*
         if(triggerKeySpacebar){
           shoot(ship);
         }
-        // if(triggerKeyArrowUp){
-        //   moveUp();
-        // }
-        // if(triggerKeyArrowUp){
-        //   moveDown();
-        // }
-        // if(triggerKeyArrowLeft){
-        //   moveLeft();
-        // }
-        // if(triggerKeyArrowRight){
-        //   moveRight();
-        // }
+				*/
+        if(triggerKeyArrowUp){
+          moveUp(ship);
+        }
+        if(triggerKeyArrowDown){
+          moveDown(ship);
+        }
+        if(triggerKeyArrowLeft){
+          moveLeft(ship);
+        }
+        if(triggerKeyArrowRight){
+          moveRight(ship);
+        }
 
+				moveShip(ship);
+				drawShip(ship);
+				displayShip(ship);
 
-        SDL_Event e;
+				SDL_Event e;
         while(SDL_PollEvent(&e)) {
 
             switch(e.type) {
