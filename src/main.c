@@ -67,8 +67,9 @@ int main(int argc, char** argv) {
     int triggerKeyArrowDown = 0;
     int triggerKeyArrowLeft = 0;
     int triggerKeyArrowRight = 0;
-    int triggerKeySpacebar = 0;
 
+    BList bulletsList;
+    bulletsList.taille = 0;
 
     int loop = 1;
     glClearColor(0.1, 0.1, 0.1 ,1.0);
@@ -79,11 +80,7 @@ int main(int argc, char** argv) {
 
 
         //Si on reste appuyé sur la barre espace on tire, same pour les flêches
-				/*
-        if(triggerKeySpacebar){
-          shoot(ship);
-        }
-				*/
+
         if(triggerKeyArrowUp){
           moveUp(ship);
         }
@@ -97,10 +94,12 @@ int main(int argc, char** argv) {
           moveRight(ship);
         }
 
+				/* Boucle affichage des objets */
 				moveShip(ship);
 				drawShip(ship);
 				loopOList(ship, &obstacles);
-
+        afficherBList(&bulletsList);
+				
 				SDL_Event e;
         while(SDL_PollEvent(&e)) {
 
@@ -118,13 +117,9 @@ int main(int argc, char** argv) {
 								case SDL_KEYDOWN:
 											//printf("touche pressée (code = %d)\n", e.key.keysym.sym);
 											// if spacebar
-											if(e.key.keysym.sym == SDLK_SPACE){
-                        triggerKeySpacebar =1;
-												//printf("Shoot\n" );
-											}
 											// if arrow up
 											if(e.key.keysym.sym == SDLK_UP){
-                        triggerKeyArrowUp =1;
+                        triggerKeyArrowUp = 1;
 											}
 											//if arrow down
 											if(e.key.keysym.sym == SDLK_DOWN){
@@ -141,10 +136,10 @@ int main(int argc, char** argv) {
 										break;
                 case SDL_KEYUP:
                       if(e.key.keysym.sym == SDLK_SPACE){
-                        triggerKeySpacebar =0;
+          							shoot(ship, &bulletsList);
                       }
                       if(e.key.keysym.sym == SDLK_UP){
-                        triggerKeyArrowUp =0;
+                        triggerKeyArrowUp = 0;
                       }
                       //if arrow down
                       if(e.key.keysym.sym == SDLK_DOWN){
