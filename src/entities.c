@@ -60,9 +60,19 @@ Obstacle createObstacle(float x, float y, int hp){
 void drawShip(Ship ship){
 
   glPushMatrix();
+		glColor3f(255, 255, 255);
     glTranslatef(ship->pos[X],ship->pos[Y],0);
     glScalef(0.5,0.5,1);
     drawCircle(1);
   glPopMatrix();
 
+}
+void drawObstacle(Obstacle obstacle) {
+	
+  glPushMatrix();
+		glColor3f(255, 0, 0);
+    glTranslatef(obstacle->pos[X],obstacle->pos[Y],0);
+    glScalef(1,1,1);
+    drawSquare(0);
+  glPopMatrix();
 }

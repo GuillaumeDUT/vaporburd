@@ -50,6 +50,8 @@ int main(int argc, char** argv) {
 
     Ship ship = createShip(-4.0,0.0,10);
 
+		Obstacle obstacle = createObstacle(3.0, 0.0, 15);
+
     int triggerKeyArrowUp = 0;
     int triggerKeyArrowDown = 0;
     int triggerKeyArrowLeft = 0;
@@ -85,9 +87,11 @@ int main(int argc, char** argv) {
           moveRight(ship);
         }
 
-				// moveShip(ship);
-				// drawShip(ship);
-				// displayShip(ship);
+				moveShip(ship);
+				drawShip(ship);
+				displayShip(ship);
+				
+				drawObstacle(obstacle);
 
 				SDL_Event e;
         while(SDL_PollEvent(&e)) {

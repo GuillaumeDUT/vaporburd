@@ -19,5 +19,6 @@ Ennemy createEnnemy(float x, float y, int hp);
 Obstacle createObstacle(float x, float y, int hp);
 
 void drawShip(Ship ship);
+void drawObstacle(Obstacle obstacle);
 
 #endif
