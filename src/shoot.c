@@ -7,9 +7,6 @@
 #include <math.h>
 #include <SDL/SDL_image.h>
 
-#include "entities.h"
-#include "basic_shape.h"
-#include "ship.h"
 #include "shoot.h"
 
 #define BULLETSPEED 2

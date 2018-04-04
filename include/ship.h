@@ -12,4 +12,5 @@ void moveRight(Ship ship);
 void moveShip(Ship ship);
 
 void displayShip(Ship ship);
+
 #endif

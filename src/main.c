@@ -10,6 +10,7 @@
 #include "basic_shape.h"
 #include "entities.h"
 #include "ship.h"
+#include "shoot.h"
 
 #define ZOOM 1
 #define DIVIDETIME 5
@@ -84,9 +85,9 @@ int main(int argc, char** argv) {
           moveRight(ship);
         }
 
-				moveShip(ship);
-				drawShip(ship);
-				displayShip(ship);
+				// moveShip(ship);
+				// drawShip(ship);
+				// displayShip(ship);
 
 				SDL_Event e;
         while(SDL_PollEvent(&e)) {
