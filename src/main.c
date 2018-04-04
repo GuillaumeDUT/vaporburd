@@ -49,9 +49,9 @@ int main(int argc, char** argv) {
     resizeViewport();
 
 		float posXVaisseau = 0;
-    //SDL_FreeSurface(SDL_Surface* logoImac);
 
-    /* Boucle de dessin (à décommenter pour l'exercice 3)*/
+    Ship ship = createShip(-4.0,0.0,10);
+
     int loop = 1;
     glClearColor(0.1, 0.1, 0.1 ,1.0);
     while(loop) {
@@ -59,7 +59,8 @@ int main(int argc, char** argv) {
         Uint32 startTime = SDL_GetTicks();
         glClear(GL_COLOR_BUFFER_BIT);
 
-				drawShip(posXVaisseau);
+				drawShip(ship);
+
 
 
         SDL_Event e;
