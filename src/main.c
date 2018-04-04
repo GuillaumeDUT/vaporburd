@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
         if(triggerKeyArrowRight){
           moveRight(ship);
         }
-				
+
 				moveShip(ship);
 				drawShip(ship);
 				displayShip(ship);
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
 											// if spacebar
 											if(e.key.keysym.sym == SDLK_SPACE){
                         triggerKeySpacebar =1;
-												printf("Shoot\n" );
+												//printf("Shoot\n" );
 											}
 											// if arrow up
 											if(e.key.keysym.sym == SDLK_UP){
