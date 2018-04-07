@@ -3,7 +3,7 @@
 #define WINDOW_SCALE 10
 #define SHOOT_COOLDOWN 24
 #define SEGMENTSCERCLES 64
-#define BULLETSPEED 2
+#define BULLETSPEED 0.2
 #define BULLETDAMAGES 10
 #define X 0
 #define Y 1

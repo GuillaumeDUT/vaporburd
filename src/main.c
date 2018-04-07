@@ -6,6 +6,7 @@
 #include "ship.h"
 #include "shoot.h"
 #include "obstacle.h"
+#include "ennemies.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
@@ -52,6 +53,14 @@ int main(int argc, char** argv) {
   ajouterFinOList(&obstaclesList, createObstacle(4.0, -3.0, 20, 1));
   ajouterFinOList(&obstaclesList, createObstacle(4.0, -4.0, 20, 1));
 
+  
+  EList ennemiesList;
+  ennemiesList.taille = 0;
+  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 1.0, 5, 0.5));
+  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 2.0, 5, 0.5));
+  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 3.0, 5, 0.5));
+  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 4.0, 5, 0.5));
+  
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
@@ -77,6 +86,7 @@ int main(int argc, char** argv) {
     if(triggerKeyArrowLeft) moveLeft(ship);
     if(triggerKeyArrowRight) moveRight(ship);
 
+    /* Tir */
     shootCooldown = shootCooldown > 0 ? shootCooldown-1 : 0;
     if ( triggerKeyArrowSpace ) {
       if ( shootCooldown <= 0 ) {
@@ -91,9 +101,7 @@ int main(int argc, char** argv) {
     drawShip(ship);
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList);
-    /*
-    afficherBList(&bulletsList);
-    */
+    loopEList(ship, &ennemiesList);
     
     SDL_Event e;
     while(SDL_PollEvent(&e)) {

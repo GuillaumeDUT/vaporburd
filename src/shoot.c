@@ -138,5 +138,6 @@ void drawBullet( Bullet bullet ) {
   glPopMatrix();
 }
 void moveBullet( Bullet bullet ) {
-  bullet->pos[X] += 0.1;
+  bullet->pos[X] += BULLETSPEED;
 }
+

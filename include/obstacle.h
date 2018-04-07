@@ -9,7 +9,7 @@ typedef struct OList{
 	int taille;
 } OList;
 
-void ajouterFinOList(OList *liste , Ship ship);
+void ajouterFinOList(OList *liste , Obstacle obstacle);
 void afficherOList(OList *liste);
 int supprimerDernierOList(OList *liste);
 int supprimerOList(OList * liste, int id);
