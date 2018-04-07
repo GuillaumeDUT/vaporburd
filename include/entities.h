@@ -1,9 +1,8 @@
 #ifndef ENTITIES_H
 #define ENTITIES_H
-#define X 0
-#define Y 1
 
 #include "basic_shape.h"
+#include "constants.h"
 
 typedef struct Entity{
 	float pos[2];

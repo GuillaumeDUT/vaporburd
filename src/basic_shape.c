@@ -1,6 +1,5 @@
 #include "libs.h"
-
-#define SEGMENTSCERCLES 64
+#include "constants.h"
 
 #include "basic_shape.h"
 
@@ -12,7 +11,6 @@ void drawCircle(int full){
     }
   glEnd();
 }
-
 void drawSquare(int full){
   GLenum type = full ? GL_QUADS : GL_LINE_LOOP;
   glBegin(type);

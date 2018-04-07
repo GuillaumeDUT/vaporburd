@@ -1,11 +1,10 @@
 #ifndef SHIP_H
 #define SHIP_H
 
+#include "constants.h"
 #include "entities.h"
 #include "helpers.h"
 
-#define ACC 0.027
-#define MOMENTUM 0.85
 
 void moveUp(Ship ship);
 void moveDown(Ship ship);

@@ -73,6 +73,7 @@ void drawShip(Ship ship){
     drawCircle(1);
   glPopMatrix();
 		
+  /* Indicateurs de la bounding box */
 	/* Min : vert */
   glPushMatrix();
 		glColor3f(0, 0, 255);
