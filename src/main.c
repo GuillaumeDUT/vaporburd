@@ -7,13 +7,12 @@
 #include "shoot.h"
 #include "obstacle.h"
 #include "ennemies.h"
-#include "audio.h"
+#include "osu_reader.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
-
 
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -40,21 +39,25 @@ int main(int argc, char** argv) {
 
   resizeViewport();
 
-
-
   // Ouverture de la musique
+  //Initialisation de l'API Mixer
   Mix_Music *music;
-
   if((Mix_Init(MIX_INIT_MP3)&MIX_INIT_MP3)!=MIX_INIT_MP3) {
     printf("Mix_Init error: %s",Mix_GetError());
   }
-
-  //Initialisation de l'API Mixer
   if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
     printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
   }
   music = Mix_LoadMUS("./assets/flicker.mp3");
-  Mix_PlayMusic(music, -1); 
+  Mix_PlayMusic(music, -1);
+  int CORRECTIF = 150;
+  int musicStartTime = SDL_GetTicks() + CORRECTIF;
+  printf("Music start at %d ticks\n", musicStartTime);
+
+
+  OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [Hard].osu");
+  OSUNode currentOsuNode = osu.first;
+  
 
   srand(time(NULL));
 
@@ -75,9 +78,6 @@ int main(int argc, char** argv) {
 
   EList ennemiesList;
   ennemiesList.taille = 0;
-  newRandomEnnemy(&ennemiesList);
-  newRandomEnnemy(&ennemiesList);
-  newRandomEnnemy(&ennemiesList);
 
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
@@ -93,9 +93,15 @@ int main(int argc, char** argv) {
   int loop = 1;
   glClearColor(0.1, 0.1, 0.1 ,1.0);
   while(loop) {
-
     Uint32 startTime = SDL_GetTicks();
     glClear(GL_COLOR_BUFFER_BIT);
+    
+    /* Spawn ennemy */
+    if ( currentOsuNode != NULL && 
+        musicStartTime + currentOsuNode->time <= SDL_GetTicks() ) {
+      currentOsuNode = currentOsuNode->next;
+      newRandomEnnemy(&ennemiesList);      
+    }
 
 
     /* Si on reste appuyé sur les flêches, on se déplace */

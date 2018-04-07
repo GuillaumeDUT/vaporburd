@@ -99,7 +99,6 @@ void loopEList(Ship ship, BList *bullets, EList *liste) {
     
     if ( ennemyActuel->hp <= 0 )  {
       supprimerEList(liste, ennemyActuel->id);
-      newRandomEnnemy(liste);
     }
     
     

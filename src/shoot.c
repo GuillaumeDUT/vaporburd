@@ -49,7 +49,7 @@ void ajouterFinBList(BList *liste, Bullet bullet) {
   }
 
   liste->taille++;
-  printf(" taille liste : %d\n",liste->taille);
+//  printf(" taille liste : %d\n",liste->taille);
 }
 void afficherBList( BList *liste ) {
   if(liste->taille == 0){
