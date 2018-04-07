@@ -2,6 +2,7 @@
 #define ENNEMIES_H
 
 #include "entities.h"
+#include "shoot.h"
 
 typedef struct EList{
 	Ennemy first;
@@ -14,7 +15,8 @@ void afficherEList(EList *liste);
 int supprimerDernierEList(EList *liste);
 int supprimerEList(EList * liste, int id);
 
-void loopEList(Ship ship, EList *liste);
-void drawEnnemy( Ennemy ennemy );
+void loopEList(Ship ship, BList *bullets, EList *liste);
+void drawEnnemy(Ennemy ennemy, int full);
+int collisionBulletEnnemy(Bullet b, Ennemy e);
 
 #endif

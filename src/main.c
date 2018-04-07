@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
     drawShip(ship);
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList);
-    loopEList(ship, &ennemiesList);
+    loopEList(ship, &bulletsList, &ennemiesList);
     
     SDL_Event e;
     while(SDL_PollEvent(&e)) {

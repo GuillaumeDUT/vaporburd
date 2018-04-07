@@ -6,6 +6,9 @@
 
 typedef struct Bullet{
 	float pos[2];
+  float min[2];
+  float max[2];
+	float size;
 	float speed;
 	int damages;
 	int id;

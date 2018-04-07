@@ -15,10 +15,19 @@ Bullet createBullet(Ship ship){
   //printf("ship pos X %f || ship pos Y %f");
   bullet->pos[X] = ship->pos[X];
   bullet->pos[Y] = ship->pos[Y];
-  bullet->speed = BULLETSPEED;
-  bullet->damages = BULLETDAMAGES;
+  
+  bullet->speed = BULLET_SPEED;
+  bullet->damages = BULLET_DAMAGES;
+  bullet->size = BULLET_SIZE;
+  
+	bullet->min[X] = -BULLET_SIZE/2;
+	bullet->min[Y] = -BULLET_SIZE/2;
+	bullet->max[X] = BULLET_SIZE/2;
+	bullet->max[Y] = BULLET_SIZE/2;	
+  
   bullet->id = id;
   id++;
+  
   bullet->next = NULL;
   bullet->before = NULL;
 
@@ -131,13 +140,13 @@ void drawBullet( Bullet bullet ) {
     bullet->pos[Y],
     0);
   glScalef(
-    0.2,
-    0.2,
+    bullet->size,
+    bullet->size,
     1);
   drawCircle(1);
   glPopMatrix();
 }
 void moveBullet( Bullet bullet ) {
-  bullet->pos[X] += BULLETSPEED;
+  bullet->pos[X] += BULLET_SPEED;
 }
 
