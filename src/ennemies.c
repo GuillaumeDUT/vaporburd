@@ -1,6 +1,7 @@
 #include "libs.h"
 
 #include "ennemies.h"
+#include "helpers.h"
 
 void ajouterFinEList(EList *liste, Ennemy ennemy) {
 
@@ -28,11 +29,7 @@ int supprimerDernierEList(EList *liste) {
   }
   return supprimerEList( liste, liste->last->id);
 }
-/*
-	Supprime une unite de la liste doublement chainée
-	L'unite a supprimer est identifiée par son id
-*/
-int supprimerEList(EList * liste, int id) {
+int supprimerEList(EList *liste, int id) {
   Ennemy tmp = liste->first;
   int found = 0;
   while ( tmp != NULL && !found ) {
@@ -60,6 +57,14 @@ int supprimerEList(EList * liste, int id) {
   return 1;
 }
 
+void newRandomEnnemy(EList *ennemiesList) {  
+  ajouterFinEList(ennemiesList, createEnnemy(
+    frand_a_b(0.0, 3.0),
+    frand_a_b(-4.0, 4.0),
+    5, /* HP */
+    0.5 /* SIZE */));
+}
+
 void loopEList(Ship ship, BList *bullets, EList *liste) {
   if(liste->taille == 0){
     return ;
@@ -80,6 +85,7 @@ void loopEList(Ship ship, BList *bullets, EList *liste) {
       while ( bulletActuel != NULL ) {
         if ( collisionBulletEnnemy(bulletActuel, ennemyActuel) ) {
           drawEnnemy( ennemyActuel, 1 );
+          ennemyActuel->hp -= BULLET_DAMAGES;
         }
         bulletActuel = bulletActuel->next;
       }
@@ -90,6 +96,11 @@ void loopEList(Ship ship, BList *bullets, EList *liste) {
 			drawShip(ship, 1);
 			drawEnnemy(ennemyActuel, 1);
 		}
+    
+    if ( ennemyActuel->hp <= 0 )  {
+      supprimerEList(liste, ennemyActuel->id);
+      newRandomEnnemy(liste);
+    }
     
     
     ennemyActuel = next;

@@ -131,7 +131,7 @@ void loopBList(Ship ship, BList *liste) {
   }
 }
 void drawBullet( Bullet bullet ) {
-  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
+//  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
 
   glPushMatrix();
   glColor3f(0, 155, 155);

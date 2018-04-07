@@ -38,6 +38,8 @@ int main(int argc, char** argv) {
   SDL_WM_SetCaption("", NULL);
 
   resizeViewport();
+  
+  srand(time(NULL));
 
   Ship ship = createShip(-4.0, 0.0, 10, 0.5);
 
@@ -56,10 +58,9 @@ int main(int argc, char** argv) {
   
   EList ennemiesList;
   ennemiesList.taille = 0;
-  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 1.0, 5, 0.5));
-  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 2.0, 5, 0.5));
-  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 3.0, 5, 0.5));
-  ajouterFinEList(&ennemiesList, createEnnemy(2.0, 4.0, 5, 0.5));
+  newRandomEnnemy(&ennemiesList);
+  newRandomEnnemy(&ennemiesList);
+  newRandomEnnemy(&ennemiesList);
   
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
