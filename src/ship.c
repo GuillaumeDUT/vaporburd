@@ -58,7 +58,7 @@ void moveShip(Ship ship) {
 void displayShip(Ship ship) {
 		printf("(hp:%d) x:%f | y:%f ||| speed: x:%f, | y:%f\n", ship->hp, ship->pos[X], ship->pos[Y], ship->speed[X], ship->speed[Y] );
 }
-void drawShip(Ship ship){
+void drawShip(Ship ship, int full){
 
   glPushMatrix();
 		glColor3f(255, 255, 255);
@@ -70,7 +70,7 @@ void drawShip(Ship ship){
 				ship->size,
 				ship->size,
 				1);
-    drawCircle(1);
+    drawCircle(full);
   glPopMatrix();
 		
   /* Indicateurs de la bounding box */

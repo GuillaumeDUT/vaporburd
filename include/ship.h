@@ -14,5 +14,6 @@ void moveRight(Ship ship);
 void moveShip(Ship ship);
 
 void displayShip(Ship ship);
+void drawShip(Ship ship, int full);
 
 #endif

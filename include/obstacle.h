@@ -2,6 +2,7 @@
 #define OBSTACLE_H
 
 #include "entities.h"
+#include "ship.h"
 
 typedef struct OList{
 	Obstacle first;

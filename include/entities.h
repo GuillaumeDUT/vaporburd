@@ -20,6 +20,4 @@ Ship createShip(float x, float y, int hp, float size);
 Ennemy createEnnemy(float x, float y, int hp, float size);
 Obstacle createObstacle(float x, float y, int hp, float size);
 
-void drawShip(Ship ship);
-
 #endif

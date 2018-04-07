@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 
     /* Boucle affichage des objets */
     moveShip(ship);
-    drawShip(ship);
+    drawShip(ship, 0);
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList);
     loopEList(ship, &bulletsList, &ennemiesList);

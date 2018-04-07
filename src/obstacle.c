@@ -68,6 +68,7 @@ void loopOList(Ship ship, OList *liste) {
 		drawObstacle(actuel, 0);
 		if ( collisionShipObstacle(ship, actuel) ) {
 			drawObstacle(actuel, 1);
+			drawShip(ship, 1);
 		}
     actuel = actuel->next;
   }
