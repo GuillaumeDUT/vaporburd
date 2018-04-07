@@ -1,5 +1,6 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_mixer.h>
 
 /* For windows 7 / Cygwin */
 #include <w32api/GL/gl.h>

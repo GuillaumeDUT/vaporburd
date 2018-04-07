@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -O2 -g
-LDFLAGS = -L/usr/bin/ -lSDL -lglu32 -lopengl32 -lSDL_image -lM
+LDFLAGS = -L/usr/bin/ -lSDL -lglu32 -lopengl32 -lSDL_image -lSDL_mixer -lM
 
 APP_BIN = vaporburd
 SRC_PATH = src

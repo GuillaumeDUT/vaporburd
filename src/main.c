@@ -7,6 +7,7 @@
 #include "shoot.h"
 #include "obstacle.h"
 #include "ennemies.h"
+#include "audio.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
@@ -25,7 +26,7 @@ void resizeViewport() {
 int main(int argc, char** argv) {
 
   // Initialisation de la SDL
-  if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
+  if(-1 == SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
     fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
     return EXIT_FAILURE;
   }
@@ -38,7 +39,23 @@ int main(int argc, char** argv) {
   SDL_WM_SetCaption("", NULL);
 
   resizeViewport();
-  
+
+
+
+  // Ouverture de la musique
+  Mix_Music *music;
+
+  if((Mix_Init(MIX_INIT_MP3)&MIX_INIT_MP3)!=MIX_INIT_MP3) {
+    printf("Mix_Init error: %s",Mix_GetError());
+  }
+
+  //Initialisation de l'API Mixer
+  if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
+    printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
+  }
+  music = Mix_LoadMUS("./assets/flicker.mp3");
+  Mix_PlayMusic(music, -1); 
+
   srand(time(NULL));
 
   Ship ship = createShip(-4.0, 0.0, 10, 0.5);
@@ -55,13 +72,13 @@ int main(int argc, char** argv) {
   ajouterFinOList(&obstaclesList, createObstacle(4.0, -3.0, 20, 1));
   ajouterFinOList(&obstaclesList, createObstacle(4.0, -4.0, 20, 1));
 
-  
+
   EList ennemiesList;
   ennemiesList.taille = 0;
   newRandomEnnemy(&ennemiesList);
   newRandomEnnemy(&ennemiesList);
   newRandomEnnemy(&ennemiesList);
-  
+
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
@@ -103,7 +120,7 @@ int main(int argc, char** argv) {
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList);
     loopEList(ship, &bulletsList, &ennemiesList);
-    
+
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
 
@@ -151,6 +168,8 @@ int main(int argc, char** argv) {
 
   // TODO: Libération des données GPU
   // ...
+  Mix_FreeMusic(music);
+  Mix_CloseAudio();
 
   // Liberation des ressources associées à la SDL
   SDL_Quit();
