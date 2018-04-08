@@ -26,7 +26,7 @@ Bullet createBullet(Ship ship);
 
 // tire en fonction de la position actuelle du vaisseau
 void shoot(Ship ship, BList *liste);
-void loopBList(Ship ship, BList *liste);
+void loopBList(Ship ship, BList *liste, float globalTranslationTotal);
 void drawBullet( Bullet bullet );
 void moveBullet( Bullet bullet );
 

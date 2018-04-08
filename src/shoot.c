@@ -112,7 +112,7 @@ void shoot(Ship ship, BList *liste){
   ajouterFinBList(liste, bullet);
   return;
 }
-void loopBList(Ship ship, BList *liste) {
+void loopBList(Ship ship, BList *liste, float globalTranslationTotal) {
   if(liste->taille == 0){
     return ;
   }
@@ -122,8 +122,9 @@ void loopBList(Ship ship, BList *liste) {
     next = actuel->next;
     moveBullet( actuel );
     drawBullet( actuel );
+    
     /* Supprime quand on sort de l'ecran */
-    if ( actuel->pos[X] >= WINDOW_SCALE / 2 ) {
+    if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ) {
       supprimerBList( liste, actuel->id );
     }
     /* Next */

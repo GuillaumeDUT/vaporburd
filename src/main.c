@@ -14,6 +14,7 @@ static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
+static float MUSIC_DURATION = 279000;
 
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -82,7 +83,7 @@ int main(int argc, char** argv) {
     printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
   }
   music = Mix_LoadMUS("./assets/flicker.mp3");
-  /* Mix_PlayMusic(music, -1); */
+  Mix_PlayMusic(music, -1);
   int CORRECTIF = 150;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
@@ -103,20 +104,8 @@ int main(int argc, char** argv) {
 
   OList obstaclesList;
   obstaclesList.taille = 0;
-  createFromPPM( &obstaclesList, "./assets/map.ppm" );
+  int mapLength = createFromPPM( &obstaclesList, "./assets/map.ppm" );
   
-  /*
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, 4.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, 3.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, 2.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, 1.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, 0.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, -1.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, -2.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, -3.0, 20, 1));
-  ajouterFinOList(&obstaclesList, createObstacle(4.0, -4.0, 20, 1));
-  */
-
   EList ennemiesList;
   ennemiesList.taille = 0;
 
@@ -127,6 +116,9 @@ int main(int argc, char** argv) {
   int triggerKeyArrowSpace = 0;
 
   int shootCooldown = 0;
+  
+  float globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
+  float globalTranslationTotal = 0;
 
   BList bulletsList;
   bulletsList.taille = 0;
@@ -135,7 +127,9 @@ int main(int argc, char** argv) {
   glClearColor(0.1, 0.1, 0.1 ,1.0);
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
+    globalTranslationTotal += globalTranslation;
     glClear(GL_COLOR_BUFFER_BIT);
+    glTranslatef(-globalTranslation, 0, 0);
 
     /* Texture */
 
@@ -175,7 +169,7 @@ int main(int argc, char** argv) {
     if ( currentOsuNode != NULL && 
         musicStartTime + currentOsuNode->time <= SDL_GetTicks() ) {
       currentOsuNode = currentOsuNode->next;
-      newRandomEnnemy(&ennemiesList);      
+      newRandomEnnemy(&ennemiesList, globalTranslationTotal);      
     }
 
 
@@ -195,10 +189,10 @@ int main(int argc, char** argv) {
     }
 
     /* Boucle affichage des objets */
-    moveShip(ship);
+    moveShip(ship, globalTranslation, globalTranslationTotal);
     drawShip(ship, 0);
     loopOList(ship, &obstaclesList);
-    loopBList(ship, &bulletsList);
+    loopBList(ship, &bulletsList, globalTranslationTotal);
     loopEList(ship, &bulletsList, &ennemiesList);
 
 

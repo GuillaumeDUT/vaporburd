@@ -57,10 +57,11 @@ int supprimerEList(EList *liste, int id) {
   return 1;
 }
 
-void newRandomEnnemy(EList *ennemiesList) {  
+void newRandomEnnemy(EList *ennemiesList, float globalTranslation) {
+  int limit = WINDOW_SCALE/2 - 1;
   ajouterFinEList(ennemiesList, createEnnemy(
-    frand_a_b(0.0, 3.0),
-    frand_a_b(-4.0, 4.0),
+    frand_a_b(limit, limit-5) + globalTranslation,
+    frand_a_b(-limit, limit),
     5, /* HP */
     0.5 /* SIZE */));
 }

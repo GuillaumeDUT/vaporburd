@@ -8,6 +8,6 @@ typedef struct ppmnode {
   struct node *next;
 } *PPMNode;
 
-void createFromPPM( OList *obstacles, char *filename );
+int createFromPPM( OList *obstacles, char *filename );
 
 #endif

@@ -2,7 +2,8 @@
 
 #include "ppm_reader.h"
 
-void createFromPPM( OList *obstacles, char *filename ) {  
+/* Return the width of the map */
+int createFromPPM( OList *obstacles, char *filename ) {  
   printf("PPM File : %s\n", filename);
   FILE *ppmFile;
   char line[64];
@@ -33,8 +34,10 @@ void createFromPPM( OList *obstacles, char *filename ) {
   */
   fgets(line, 64, ppmFile);
   sscanf(line, "%d %d", &w, &h);
+  /*
   printf("line 2 : %s", line);
   printf("w:%d h:%d\n", w, h);
+  */
   
   /* 
     Lecture de la troisieme ligne
@@ -42,9 +45,10 @@ void createFromPPM( OList *obstacles, char *filename ) {
   */
   fgets(line, 64, ppmFile);
   sscanf(line, "%d", &maxColorValue);
+  /*
   printf("line 3 : %s", line);
   printf("Max:%d\n", maxColorValue);
-  
+  */
   
   /*
     Lecture du fichier jusqu'a la fin
@@ -77,5 +81,7 @@ void createFromPPM( OList *obstacles, char *filename ) {
 
     }
   }
+  
+  return w;
 
 }
