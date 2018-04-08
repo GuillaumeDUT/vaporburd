@@ -70,10 +70,13 @@ int createFromPPM( OList *obstacles, char *filename ) {
       
       /* Red */
       if ( r==maxColorValue && g==0 && b==0 ) {
-        x = 1.0 * j;
+        /*
         y = 1.0 * i * WINDOW_SCALE;
         y /= (float)h;
         y -= WINDOW_SCALE/2 - 0.5;
+        */
+        x = 1.0 * j;
+        y = fmap((float) i, 0, h, -WINDOW_SCALE/2 + 0.5, WINDOW_SCALE/2 + 0.5);
         ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
         /*printf("RED (%d, %d) : %d %d %d\n", i, j, r, g, b);*/
       }
