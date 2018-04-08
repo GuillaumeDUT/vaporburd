@@ -2,11 +2,7 @@
 #define PPM_READER_H
 
 #include "obstacle.h"
-
-typedef struct ppmnode {
-  int x, y, time;
-  struct node *next;
-} *PPMNode;
+#include "lists.h"
 
 int createFromPPM( OList *obstacles, char *filename );
 

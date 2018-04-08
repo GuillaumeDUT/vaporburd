@@ -63,34 +63,33 @@ int main(int argc, char** argv) {
   }
 
   // Ouverture d'une fenêtre et création d'un contexte OpenGL
-  SDL_Surface *screen = NULL;
-  screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
-  if(screen == NULL) {
+  if(SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE) == NULL) {
     fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");
     return EXIT_FAILURE;
   }
   SDL_WM_SetCaption("V A P O R B U R D", NULL);
 
   resizeViewport();
+  srand(time(NULL));
 
   /* Ouverture de la musique */
   /* Initialisation de l'API Mixer */
-  Mix_Music *music;
   if((Mix_Init(MIX_INIT_MP3)&MIX_INIT_MP3)!=MIX_INIT_MP3) {
     printf("Mix_Init error: %s",Mix_GetError());
   }
   if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
     printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
   }
-  music = Mix_LoadMUS("./assets/flicker.mp3");
-  Mix_PlayMusic(music, -1);
+  
+  Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
+  /* Mix_PlayMusic(music, -1); */
   int CORRECTIF = 150;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
+  
   OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [Hard].osu");
   OSUNode currentOsuNode = osu.first;
 
-  srand(time(NULL));
 
   /* Chargement et traitement de la texture */
   /*
@@ -101,14 +100,16 @@ int main(int argc, char** argv) {
 
 
   Ship ship = createShip(-4.0, 0.0, 10, 0.5);
+  displayShip(ship);
 
   OList obstaclesList;
-  obstaclesList.taille = 0;
-  int mapLength = createFromPPM( &obstaclesList, "./assets/map.ppm" );
-  
+  obstaclesList.taille = 0;  
   EList ennemiesList;
   ennemiesList.taille = 0;
+  BList bulletsList;
+  bulletsList.taille = 0;
 
+  int mapLength = createFromPPM( &obstaclesList, "./assets/map.ppm" );
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
@@ -120,17 +121,17 @@ int main(int argc, char** argv) {
   float globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
   float globalTranslationTotal = 0;
 
-  BList bulletsList;
-  bulletsList.taille = 0;
-
   int loop = 1;
   glClearColor(0.1, 0.1, 0.1 ,1.0);
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
-    globalTranslationTotal += globalTranslation;
     glClear(GL_COLOR_BUFFER_BIT);
     glTranslatef(-globalTranslation, 0, 0);
 
+    /* Global counter */
+    globalTranslationTotal += globalTranslation;
+    
+    
     /* Texture */
 
     /* Active l'image */
@@ -172,7 +173,6 @@ int main(int argc, char** argv) {
       newRandomEnnemy(&ennemiesList, globalTranslationTotal);      
     }
 
-
     /* Si on reste appuyé sur les flêches, on se déplace */
     if(triggerKeyArrowUp) moveUp(ship);
     if(triggerKeyArrowDown) moveDown(ship);
@@ -189,12 +189,11 @@ int main(int argc, char** argv) {
     }
 
     /* Boucle affichage des objets */
-    moveShip(ship, globalTranslation, globalTranslationTotal);
+    moveShip(ship, globalTranslation, globalTranslationTotal);    
     drawShip(ship, 0);
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList, globalTranslationTotal);
     loopEList(ship, &bulletsList, &ennemiesList);
-
 
     /* Texte */
 

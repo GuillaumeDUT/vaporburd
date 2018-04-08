@@ -72,7 +72,7 @@ int createFromPPM( OList *obstacles, char *filename ) {
       if ( r==255 && g==0 && b==0 ) {
         x = (float)j;
         y = (float)i*WINDOW_SCALE/(float)h - WINDOW_SCALE/2;
-        ajouterFinOList(obstacles, createObstacle( x, y, 20, 1));
+        ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
       }
       /* Blue */
       /*

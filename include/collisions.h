@@ -6,8 +6,6 @@
 #include "shoot.h"
 #include "obstacle.h"
 
-int collisionBulletEnnemy(Bullet b, Ennemy e);
-int collisionShipEnnemy(Ship s, Ennemy e);
-int collisionShipObstacle(Ship s, Obstacle o);
+int collision(Entity e1, Entity e2);
 
 #endif

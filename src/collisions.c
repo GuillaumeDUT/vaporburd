@@ -3,42 +3,14 @@
 
 #include "collisions.h"
 
-
-/* Detecte les collisions */
-int collisionBulletEnnemy(Bullet b, Ennemy e) {
-  /* Detect X and Y */
-  if ( (b->pos[X]+b->max[X] > e->pos[X]+e->min[X])
-      && (b->pos[X]+b->min[X] < e->pos[X]+e->max[X])
-      && (b->pos[Y]+b->max[Y] > e->pos[Y]+e->min[Y])
-      && (b->pos[Y]+b->min[Y] < e->pos[Y]+e->max[Y])) {
-    return 1;
-  } else {
-    return 0;		
-  }		
-}
-
-int collisionShipEnnemy(Ship s, Ennemy e) {
-  /* Detect X and Y */
-  if ( (s->pos[X]+s->max[X] > e->pos[X]+e->min[X])
-      && (s->pos[X]+s->min[X] < e->pos[X]+e->max[X])
-      && (s->pos[Y]+s->max[Y] > e->pos[Y]+e->min[Y])
-      && (s->pos[Y]+s->min[Y] < e->pos[Y]+e->max[Y])) {
-    return 1;
-  } else {
-    return 0;		
-  }		
-}
-
-/* Detecte les collisions */
-int collisionShipObstacle(Ship s, Obstacle o) {
-	
+int collision(Entity e1, Entity e2) {
 	/* Detect X */
-	if ( (s->pos[X]+s->max[X] > o->pos[X]+o->min[X])
-		&& (s->pos[X]+s->min[X] < o->pos[X]+o->max[X])
-		&& (s->pos[Y]+s->max[Y] > o->pos[Y]+o->min[Y])
-		&& (s->pos[Y]+s->min[Y] < o->pos[Y]+o->max[Y])) {
+	if ( (e1->pos[X]+e1->max[X] > e2->pos[X]+e2->min[X])
+		&& (e1->pos[X]+e1->min[X] < e2->pos[X]+e2->max[X])
+		&& (e1->pos[Y]+e1->max[Y] > e2->pos[Y]+e2->min[Y])
+		&& (e1->pos[Y]+e1->min[Y] < e2->pos[Y]+e2->max[Y])) {
 		return 1;
 	} else {
 		return 0;		
-	}		
+	}
 }

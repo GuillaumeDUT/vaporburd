@@ -2,63 +2,6 @@
 
 #include "obstacle.h"
 
-void ajouterFinOList(OList *liste, Obstacle obstacle) {
-
-	if ( liste->taille == 0 ) {
-		liste->first = obstacle;
-		liste->last = obstacle;
-	} else {
-		liste->last->next = obstacle;
-		obstacle->before = liste->last;
-		liste->last = obstacle;
-	}
-
-	liste->taille++;
-}
-void afficherOList(OList *liste) {
-	Obstacle actuel = liste->first;
-  while ( actuel != NULL ) {
-    actuel = actuel->next;
-  }
-}
-int supprimerDernierOList(OList *liste) {
-  if ( liste->taille == 0 ) {
-    printf("Liste vide\n");
-    return 0;
-  }
-  return supprimerOList( liste, liste->last->id);
-}
-/*
-	Supprime une unite de la liste doublement chainée
-	L'unite a supprimer est identifiée par son id
-*/
-int supprimerOList(OList * liste, int id) {
-	Obstacle tmp = liste->first;
-	int found = 0;
-	while ( tmp != NULL && !found ) {
-		if ( tmp->id == id ) {
-			if ( liste->taille == 1 ) {
-				liste->first = NULL;
-				liste->last = NULL;
-			} else if ( tmp->next == NULL ) {
-				liste->last = tmp->before;
-				liste->last->next = NULL;
-			} else if ( tmp->before == NULL ) {
-				liste->first = tmp->next;
-				liste->first->before = NULL;
-			} else {
-				tmp->next->before = tmp->before;
-				tmp->before->next = tmp->next;
-			}
-			found = 1;
-			liste->taille--;
-		} else {
-			tmp = tmp->next;
-		}
-	}
-
-	return 1;
-}
 
 
 /* Affiche et detecte les collisions */
@@ -66,7 +9,7 @@ void loopOList(Ship ship, OList *liste) {
 	Obstacle actuel = liste->first;
   while ( actuel != NULL ) {		
 		drawObstacle(actuel, 0);
-		if ( collisionShipObstacle(ship, actuel) ) {
+		if ( collision(ship, actuel) ) {
 			drawObstacle(actuel, 1);
 			drawShip(ship, 1);
 		}
