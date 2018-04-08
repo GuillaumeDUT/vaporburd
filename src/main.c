@@ -90,12 +90,12 @@ int main(int argc, char** argv) {
 */
 
   Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
-  /* Mix_PlayMusic(music, -1); */
-  int CORRECTIF = 150;
+  Mix_PlayMusic(music, -1);
+  int CORRECTIF = 100;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
 
-  OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [Hard].osu");
+  OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [ryuu's Easy].osu");
   OSUNode currentOsuNode = osu.first;
 
   Ship ship = createShip(-4.0, 0.0, 10, 0.5);
@@ -112,7 +112,8 @@ int main(int argc, char** argv) {
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
   int triggerKeyArrowRight = 0;
-  int triggerKeyArrowSpace = 0;
+  int triggerKeySpace = 0;
+  int triggerKeyShift = 0;
 
   int shootCooldown = 0;
 
@@ -180,7 +181,7 @@ int main(int argc, char** argv) {
 
     /* Tir */
     shootCooldown = shootCooldown > 0 ? shootCooldown-1 : 0;
-    if ( triggerKeyArrowSpace ) {
+    if ( triggerKeySpace ) {
       if ( shootCooldown <= 0 ) {
         shootCooldown = SHOOT_COOLDOWN;
         shoot(ship, &bulletsList);
@@ -190,14 +191,14 @@ int main(int argc, char** argv) {
 
 
     /* Boucle d'update et affichage des objets */
-    moveShip(ship, globalTranslation, globalTranslationTotal);    
+    moveShip(ship, globalTranslation, globalTranslationTotal, triggerKeyShift);    
     drawShip(ship, 0);
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList, globalTranslationTotal);
     loopEList(ship, &bulletsList, &ennemiesList);
 
     if ( ship->hp <= 0) {
-      printf("Fin de partie\n");
+      printf("Fin de partie\n\n");
       loop = 0;
     }
 
@@ -224,14 +225,18 @@ int main(int argc, char** argv) {
           if(e.key.keysym.sym == SDLK_DOWN) triggerKeyArrowDown = 1;
           if(e.key.keysym.sym == SDLK_RIGHT) triggerKeyArrowRight = 1;
           if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 1;
-          if(e.key.keysym.sym == SDLK_SPACE) triggerKeyArrowSpace = 1;
+          if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 1;
+          if(e.key.keysym.sym == SDLK_LSHIFT
+          || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 1;
           break;
         case SDL_KEYUP:
           if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 0;
           if(e.key.keysym.sym == SDLK_DOWN) triggerKeyArrowDown = 0;
           if(e.key.keysym.sym == SDLK_RIGHT) triggerKeyArrowRight = 0;
           if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 0;
-          if(e.key.keysym.sym == SDLK_SPACE) triggerKeyArrowSpace = 0;
+          if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 0;
+          if(e.key.keysym.sym == SDLK_LSHIFT
+          || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 0;
           if(e.key.keysym.sym == 'a' || e.key.keysym.sym == 'q') loop = 0;
           break;
 

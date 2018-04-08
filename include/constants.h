@@ -1,7 +1,7 @@
 #define ZOOM 1
 #define DIVIDETIME 5
 #define WINDOW_SCALE 20.0
-#define SHOOT_COOLDOWN 24
+#define SHOOT_COOLDOWN 6
 #define SEGMENTSCERCLES 64
 
 #define BULLET_SPEED 0.2
@@ -14,3 +14,4 @@
 #define Y 1
 #define ACC 0.035
 #define MOMENTUM 0.85
+#define SLOW_MULTIPLIER 1.5

@@ -33,20 +33,19 @@ void moveRight(Ship ship) {
 }
 
 /* Déplace le vaisson en fonction de son vecteur de vitesse */
-void moveShip(Ship ship, float globalTranslation, float globalTranslationTotal) {
+void moveShip(Ship ship, float globalTranslation, float globalTranslationTotal, int slow) {
   int LIMIT = WINDOW_SCALE/2;
-  
+  float multiplier = slow ? 0.6 : 1;
+
   ship->pos[X] += ship->speed[X];
   ship->pos[Y] += ship->speed[Y];
 
+  ship->speed[X] = absFloat(ship->speed[X]) > 0.0001 ? ship->speed[X] * MOMENTUM * multiplier : 0;
+  ship->speed[Y] = absFloat(ship->speed[Y]) > 0.0001 ? ship->speed[Y] * MOMENTUM * multiplier : 0;
 
-  ship->speed[X] = absFloat(ship->speed[X]) > 0.0001 ? ship->speed[X] * MOMENTUM : 0;
-  ship->speed[Y] = absFloat(ship->speed[Y]) > 0.0001 ? ship->speed[Y] * MOMENTUM : 0;
-  
   /* Fix */
   ship->pos[X] += globalTranslation;
-  
-  
+
   /* Deplacement du bas en haut */
   if ( ship->pos[Y] > LIMIT ) ship->pos[Y] -= WINDOW_SCALE;
   if ( ship->pos[Y] < -LIMIT ) ship->pos[Y] += WINDOW_SCALE;

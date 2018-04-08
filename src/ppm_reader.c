@@ -7,7 +7,7 @@ int createFromPPM( OList *obstacles, char *filename ) {
   printf("PPM File : %s\n", filename);
   FILE *ppmFile;
   char line[64];
-  int w, h, j, i, r, g, b, maxColorValue;
+  int w, h, i, j, r, g, b, maxColorValue;
   float x, y;
   
   /* On ouvre le fichier */
@@ -58,8 +58,8 @@ int createFromPPM( OList *obstacles, char *filename ) {
     WIDTH = j
     HEIGHT = i
   */
-  for( i=0; i<h; i++) {
-    for( j=0; j<w; j++) {
+  for( i=0; i<h; i+=1) {
+    for( j=0; j<w; j+=1) {
       fgets(line, 64, ppmFile);
       sscanf(line, "%d", &r);
       fgets(line, 64, ppmFile);
@@ -69,14 +69,17 @@ int createFromPPM( OList *obstacles, char *filename ) {
       
       
       /* Red */
-      if ( r==255 && g==0 && b==0 ) {
-        x = (float)j;
-        y = (float)i*WINDOW_SCALE/(float)h - WINDOW_SCALE/2;
+      if ( r==maxColorValue && g==0 && b==0 ) {
+        x = 1.0 * j;
+        y = 1.0 * i * WINDOW_SCALE;
+        y /= (float)h;
+        y -= WINDOW_SCALE/2 - 0.5;
         ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
+        /*printf("RED (%d, %d) : %d %d %d\n", i, j, r, g, b);*/
       }
       /* Blue */
       /*
-      if ( r==0 && g==0 && b==255 ) {
+      if ( r==0 && g==0 && b==maxColorValue ) {
         printf("BLUE (%d, %d) : %d %d %d\n", i, j, r, g, b);
       }
       */
