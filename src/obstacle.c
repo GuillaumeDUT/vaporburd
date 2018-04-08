@@ -81,17 +81,3 @@ void drawObstacle(Obstacle obstacle, int full) {
     drawSquare(full);
   glPopMatrix();
 }
-
-/* Detecte les collisions */
-int collisionShipObstacle(Ship s, Obstacle o) {
-	
-	/* Detect X */
-	if ( (s->pos[X]+s->max[X] > o->pos[X]+o->min[X])
-		&& (s->pos[X]+s->min[X] < o->pos[X]+o->max[X])
-		&& (s->pos[Y]+s->max[Y] > o->pos[Y]+o->min[Y])
-		&& (s->pos[Y]+s->min[Y] < o->pos[Y]+o->max[Y])) {
-		return 1;
-	} else {
-		return 0;		
-	}		
-}

@@ -17,6 +17,5 @@ int supprimerOList(OList * liste, int id);
 
 void loopOList(Ship ship, OList *liste);
 void drawObstacle(Obstacle obstacle, int full);
-int collisionShipObstacle(Ship s, Obstacle o);
 
 #endif

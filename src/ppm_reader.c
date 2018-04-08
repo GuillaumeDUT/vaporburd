@@ -22,7 +22,9 @@ int createFromPPM( OList *obstacles, char *filename ) {
     Contient P3
   */
   fgets(line, 64, ppmFile);
+  /*
   printf("line 1 : %s", line);
+  */
   if ( strcmp(line, "P3\n") != 0 ) {
     printf("Error : Not a PPM file\n");
     exit(0);

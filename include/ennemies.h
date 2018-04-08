@@ -19,7 +19,5 @@ void newRandomEnnemy(EList *ennemiesList, float globalTranslation);
 
 void loopEList(Ship ship, BList *bullets, EList *liste);
 void drawEnnemy(Ennemy ennemy, int full);
-int collisionBulletEnnemy(Bullet b, Ennemy e);
-int collisionShipEnnemy(Ship s, Ennemy e);
 
 #endif
