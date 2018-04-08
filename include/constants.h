@@ -8,6 +8,8 @@
 #define BULLET_DAMAGES 10
 #define BULLET_SIZE 0.1
 
+#define SHIP_DAMAGES 5
+
 #define X 0
 #define Y 1
 #define ACC 0.035

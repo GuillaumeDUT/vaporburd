@@ -15,44 +15,47 @@ void loopEList(Ship ship, BList *bullets, EList *ennemies) {
   if(ennemies->taille == 0){
     return ;
   }
-  Ennemy ennemyActuel = ennemies->first;
-  Ennemy next;
-  while ( ennemyActuel != NULL ) {
-    next = ennemyActuel->next;
+  Ennemy eActuel = ennemies->first;
+  Ennemy eNext;
+  while ( eActuel != NULL ) {
+    eNext = eActuel->next;
     /*
-    moveEnnemy( ennemyActuel );
+    moveEnnemy( eActuel );
     */
-    drawEnnemy( ennemyActuel, 0 );
+    drawEnnemy( eActuel, 0 );
     
     
     /* Collision avec les bullets */
     if(bullets->taille != 0){
       Bullet bulletActuel = bullets->first;
+      Bullet bulletNext;
       while ( bulletActuel != NULL ) {
-        if ( collision(bulletActuel, ennemyActuel) ) {
-          drawEnnemy( ennemyActuel, 1 );
-          ennemyActuel->hp -= BULLET_DAMAGES;
+        bulletNext = bulletActuel->next;
+        if ( collision(bulletActuel, eActuel) ) {
+          drawEnnemy( eActuel, 1 );
+          getDamage(bulletActuel, eActuel);
+          supprimerList(bullets, bulletActuel->id);
         }
-        bulletActuel = bulletActuel->next;
+        bulletActuel = bulletNext;
       }
     }
     
     /* Collision avec le ship */
-    if ( collision(ship, ennemyActuel) ) {
+    if ( collision(ship, eActuel) ) {
 			drawShip(ship, 1);
-			drawEnnemy(ennemyActuel, 1);
+			drawEnnemy(eActuel, 1);
+      getDamage(ship, eActuel);
+      getDamage(eActuel, ship);
+      displayEntity(ship);
 		}
     
-    if ( ennemyActuel->hp <= 0 )  {
-      supprimerList(ennemies, ennemyActuel->id);
+    if ( eActuel->hp <= 0 )  {
+      supprimerList(ennemies, eActuel->id);
     }
-    
-    
-    ennemyActuel = next;
+    eActuel = eNext;
   }
 }
 void drawEnnemy( Ennemy ennemy, int full ) {
-//  printf("(%d) posX:%f posY:%f\n", ennemy->id, ennemy->pos[X], ennemy->pos[Y]);
   glPushMatrix();
   glColor3f(255, 0, 120);
   glTranslatef(

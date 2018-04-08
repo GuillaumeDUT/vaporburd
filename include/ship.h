@@ -13,7 +13,6 @@ void moveRight(Ship ship);
 
 void moveShip(Ship ship, float globalTranslation, float globalTranslationTotal);
 
-void displayShip(Ship ship);
 void drawShip(Ship ship, int full);
 
 #endif

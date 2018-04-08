@@ -24,4 +24,13 @@ Bullet createBullet(Ship ship);
 
 Entity createEntity(float x, float y, int hp, float size, int id);
 
+void displayEntity(Entity e);
+/* 
+  Return :
+  0: Dead
+  1: Alive
+*/
+void getDamage(Entity attacker, Entity defender);
+
+
 #endif

@@ -7,7 +7,9 @@ static int obstacleID = 0;
 static int bulletID = 0;
 
 Ship createShip(float x, float y, int hp, float size){
-	return (Ship) createEntity(x, y, hp, size, 0 );
+  Ship ship = (Ship) createEntity(x, y, hp, size, 0);
+  ship->damages = SHIP_DAMAGES;
+  return ship;
 }
 Ennemy createEnnemy(float x, float y, int hp, float size){
 	return (Ennemy) createEntity(x, y, hp, size, ennemyID++ );
@@ -34,7 +36,7 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
 	temp->hp = hp;
 	temp->id = id;
 	temp->size = size;
-  temp->damages = 0;
+  temp->damages = 1;
   
 	temp->pos[X] = x;
 	temp->pos[Y] = y;
@@ -51,4 +53,17 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
 	temp->before = NULL;
 
 	return temp;
+}
+
+void displayEntity(Entity e) {
+  printf("(id:%d) x:%f y:%f | speed: x:%f y:%f | hp:%d | dmg:%d | size:%f\n", e->id, e->pos[X], e->pos[Y], e->speed[X], e->speed[Y], e->hp, e->damages, e->size);
+}
+
+/* 
+  Return :
+  0: Dead
+  1: Alive
+*/
+void getDamage(Entity attacker, Entity defender) {
+  defender->hp -= attacker->damages;
 }

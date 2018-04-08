@@ -62,3 +62,9 @@ int supprimerList(List *liste, int id){
   }
   return 1;
 }
+int deleteList(List *liste) {
+  while ( liste->taille != 0 ) {
+    supprimerDernierList(liste);
+  }
+  return 1;
+}

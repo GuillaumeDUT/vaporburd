@@ -62,9 +62,6 @@ void moveShip(Ship ship, float globalTranslation, float globalTranslationTotal) 
   }
 }
 
-void displayShip(Ship ship) {
-  printf("(hp:%d) x:%f | y:%f ||| speed: x:%f, | y:%f\n", ship->hp, ship->pos[X], ship->pos[Y], ship->speed[X], ship->speed[Y] );
-}
 void drawShip(Ship ship, int full){
 
   glPushMatrix();

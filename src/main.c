@@ -80,15 +80,6 @@ int main(int argc, char** argv) {
   if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
     printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
   }
-  
-  Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
-  /* Mix_PlayMusic(music, -1); */
-  int CORRECTIF = 150;
-  int musicStartTime = SDL_GetTicks() + CORRECTIF;
-  printf("Music start at %d ticks\n", musicStartTime);
-  
-  OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [Hard].osu");
-  OSUNode currentOsuNode = osu.first;
 
 
   /* Chargement et traitement de la texture */
@@ -98,9 +89,16 @@ int main(int argc, char** argv) {
   setTexture("l", 0, textureID);
 */
 
+  Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
+  /* Mix_PlayMusic(music, -1); */
+  int CORRECTIF = 150;
+  int musicStartTime = SDL_GetTicks() + CORRECTIF;
+  printf("Music start at %d ticks\n", musicStartTime);
+
+  OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [Hard].osu");
+  OSUNode currentOsuNode = osu.first;
 
   Ship ship = createShip(-4.0, 0.0, 10, 0.5);
-  displayShip(ship);
 
   OList obstaclesList;
   obstaclesList.taille = 0;  
@@ -117,7 +115,7 @@ int main(int argc, char** argv) {
   int triggerKeyArrowSpace = 0;
 
   int shootCooldown = 0;
-  
+
   float globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
   float globalTranslationTotal = 0;
 
@@ -130,8 +128,8 @@ int main(int argc, char** argv) {
 
     /* Global counter */
     globalTranslationTotal += globalTranslation;
-    
-    
+
+
     /* Texture */
 
     /* Active l'image */
@@ -168,7 +166,8 @@ int main(int argc, char** argv) {
 
     /* Spawn ennemy */
     if ( currentOsuNode != NULL && 
-        musicStartTime + currentOsuNode->time <= SDL_GetTicks() ) {
+        musicStartTime + currentOsuNode->time <= SDL_GetTicks() )
+    {
       currentOsuNode = currentOsuNode->next;
       newRandomEnnemy(&ennemiesList, globalTranslationTotal);      
     }
@@ -188,14 +187,21 @@ int main(int argc, char** argv) {
       } 
     }
 
-    /* Boucle affichage des objets */
+
+
+    /* Boucle d'update et affichage des objets */
     moveShip(ship, globalTranslation, globalTranslationTotal);    
     drawShip(ship, 0);
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList, globalTranslationTotal);
     loopEList(ship, &bulletsList, &ennemiesList);
 
-    /* Texte */
+    if ( ship->hp <= 0) {
+      printf("Fin de partie\n");
+      loop = 0;
+    }
+
+
 
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
@@ -241,14 +247,21 @@ int main(int argc, char** argv) {
     }
   }
 
-
-  // TODO: Libération des données GPU
-  /*
+  /* SUPPRESSION DES RESSOURCES */
+  {
+    /* TODO: Libération des données GPU */
+    /*
   glDeleteTextures(11, textureID);
 */
-  // Liberation des ressources associées à la SDL
-  Mix_FreeMusic(music);
-  Mix_CloseAudio();
+    /* Liberation des ressources associées à la SDL */
+    Mix_FreeMusic(music);
+    Mix_CloseAudio();
+
+    /* Liberation des structures allouées */
+    deleteList(&obstaclesList);
+    deleteList(&ennemiesList);
+    deleteList(&bulletsList);
+  }
 
   SDL_Quit();
 

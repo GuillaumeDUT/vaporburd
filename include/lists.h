@@ -12,7 +12,7 @@ typedef struct List{
 void ajouterFinList(List *liste , Entity e);
 void afficherList(List *liste);
 int supprimerDernierList(List *liste);
-int supprimerList(List * liste, int id);
-
+int supprimerList(List *liste, int id);
+int deleteList(List *liste);
 
 #endif
