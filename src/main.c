@@ -36,11 +36,11 @@ void setTexture ( char *name, int textureID, GLuint *textures ) {
     glTexImage2D(
       GL_TEXTURE_2D,
       0,
-      GL_RGBA,
+      GL_RGB,
       image->w,
       image->h,
       0,
-      GL_RGBA,
+      GL_RGB,
       GL_UNSIGNED_BYTE,
       image->pixels);
 
@@ -91,10 +91,11 @@ int main(int argc, char** argv) {
   srand(time(NULL));
 
   /* Chargement et traitement de la texture */
+  /*
   GLuint textureID[1];
   glGenTextures(1, textureID);
   setTexture("l", 0, textureID);
-
+*/
 
 
   Ship ship = createShip(-4.0, 0.0, 10, 0.5);
@@ -135,6 +136,7 @@ int main(int argc, char** argv) {
     /* Texture */
 
     /* Active l'image */
+    /*
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureID[0]);
 
@@ -157,11 +159,12 @@ int main(int argc, char** argv) {
       glVertex2f(-w/2, -h/2);
     }
     glEnd();        
-
+*/
     /* Desactive l'image */      
+    /*
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_TEXTURE_2D);
-
+*/
 
 
     /* Spawn ennemy */
@@ -244,8 +247,9 @@ int main(int argc, char** argv) {
 
 
   // TODO: Libération des données GPU
+  /*
   glDeleteTextures(11, textureID);
-
+*/
   // Liberation des ressources associées à la SDL
   Mix_FreeMusic(music);
   Mix_CloseAudio();
