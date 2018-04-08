@@ -10,7 +10,15 @@ void newRandomEnnemy(EList *ennemies, float globalTranslation) {
     5, /* HP */
     0.5 /* SIZE */));
 }
-
+void newOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation)
+{
+  int limit = WINDOW_SCALE/2 - 1;
+  ajouterFinList(ennemies, createEnnemy(
+    limit + globalTranslation,
+    fmap(oNode->y, 0, 384, -limit, limit),
+    5, /* HP */
+    0.5 /* SIZE */));
+}
 void loopEList(Ship ship, BList *bullets, EList *ennemies) {
   if(ennemies->taille == 0){
     return ;
@@ -23,8 +31,8 @@ void loopEList(Ship ship, BList *bullets, EList *ennemies) {
     moveEnnemy( eActuel );
     */
     drawEnnemy( eActuel, 0 );
-    
-    
+
+
     /* Collision avec les bullets */
     if(bullets->taille != 0){
       Bullet bulletActuel = bullets->first;
@@ -39,16 +47,16 @@ void loopEList(Ship ship, BList *bullets, EList *ennemies) {
         bulletActuel = bulletNext;
       }
     }
-    
+
     /* Collision avec le ship */
     if ( collision(ship, eActuel) ) {
-			drawShip(ship, 1);
-			drawEnnemy(eActuel, 1);
+      drawShip(ship, 1);
+      drawEnnemy(eActuel, 1);
       getDamage(ship, eActuel);
       getDamage(eActuel, ship);
       displayEntity(ship);
-		}
-    
+    }
+
     if ( eActuel->hp <= 0 )  {
       supprimerList(ennemies, eActuel->id);
     }

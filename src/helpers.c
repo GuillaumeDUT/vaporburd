@@ -16,3 +16,6 @@ int rand_a_b(int a, int b) {
 double frand_a_b(double a, double b) {
     return ( rand()/(double)RAND_MAX ) * (b-a) + a;
 }
+float fmap(float value, float istart, float istop, float ostart, float ostop) {
+  return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+}

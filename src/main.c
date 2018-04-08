@@ -165,12 +165,18 @@ int main(int argc, char** argv) {
 */
 
 
-    /* Spawn ennemy */
+    /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
     if ( currentOsuNode != NULL && 
         musicStartTime + currentOsuNode->time <= SDL_GetTicks() )
     {
+      /*
+      newRandomEnnemy(&ennemiesList, globalTranslationTotal);
+      */
+      newOSUNodeEnnemy(
+        &ennemiesList,
+        currentOsuNode,
+        globalTranslationTotal);
       currentOsuNode = currentOsuNode->next;
-      newRandomEnnemy(&ennemiesList, globalTranslationTotal);      
     }
 
     /* Si on reste appuyé sur les flêches, on se déplace */
@@ -227,7 +233,7 @@ int main(int argc, char** argv) {
           if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 1;
           if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 1;
           if(e.key.keysym.sym == SDLK_LSHIFT
-          || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 1;
+             || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 1;
           break;
         case SDL_KEYUP:
           if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 0;
@@ -236,7 +242,7 @@ int main(int argc, char** argv) {
           if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 0;
           if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 0;
           if(e.key.keysym.sym == SDLK_LSHIFT
-          || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 0;
+             || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 0;
           if(e.key.keysym.sym == 'a' || e.key.keysym.sym == 'q') loop = 0;
           break;
 
