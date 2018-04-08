@@ -8,6 +8,7 @@
 #include "obstacle.h"
 #include "ennemies.h"
 #include "osu_reader.h"
+#include "ppm_reader.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
@@ -102,6 +103,9 @@ int main(int argc, char** argv) {
 
   OList obstaclesList;
   obstaclesList.taille = 0;
+  createFromPPM( &obstaclesList, "./assets/map.ppm" );
+  
+  /*
   ajouterFinOList(&obstaclesList, createObstacle(4.0, 4.0, 20, 1));
   ajouterFinOList(&obstaclesList, createObstacle(4.0, 3.0, 20, 1));
   ajouterFinOList(&obstaclesList, createObstacle(4.0, 2.0, 20, 1));
@@ -111,7 +115,7 @@ int main(int argc, char** argv) {
   ajouterFinOList(&obstaclesList, createObstacle(4.0, -2.0, 20, 1));
   ajouterFinOList(&obstaclesList, createObstacle(4.0, -3.0, 20, 1));
   ajouterFinOList(&obstaclesList, createObstacle(4.0, -4.0, 20, 1));
-
+  */
 
   EList ennemiesList;
   ennemiesList.taille = 0;
@@ -185,7 +189,6 @@ int main(int argc, char** argv) {
     shootCooldown = shootCooldown > 0 ? shootCooldown-1 : 0;
     if ( triggerKeyArrowSpace ) {
       if ( shootCooldown <= 0 ) {
-        printf("Shot\n");
         shootCooldown = SHOOT_COOLDOWN;
         shoot(ship, &bulletsList);
       } 

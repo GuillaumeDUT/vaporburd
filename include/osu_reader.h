@@ -1,9 +1,9 @@
 #ifndef OSU_READER_H
 #define OSU_READER_H
 
-typedef struct node {
+typedef struct osunode {
   int x, y, time;
-  struct node *next;
+  struct osunode *next;
 } *OSUNode;
 
 typedef struct OSUList {

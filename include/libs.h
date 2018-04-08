@@ -14,4 +14,5 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <strings.h>
 #include <math.h>

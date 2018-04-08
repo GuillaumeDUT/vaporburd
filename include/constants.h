@@ -1,6 +1,6 @@
 #define ZOOM 1
 #define DIVIDETIME 5
-#define WINDOW_SCALE 10
+#define WINDOW_SCALE 20.0
 #define SHOOT_COOLDOWN 24
 #define SEGMENTSCERCLES 64
 
@@ -10,5 +10,5 @@
 
 #define X 0
 #define Y 1
-#define ACC 0.027
+#define ACC 0.035
 #define MOMENTUM 0.85
