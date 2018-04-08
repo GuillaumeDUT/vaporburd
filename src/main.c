@@ -21,6 +21,36 @@ void resizeViewport() {
   gluOrtho2D(-WINDOW_SCALE/2.0, WINDOW_SCALE/2., -WINDOW_SCALE/2., WINDOW_SCALE/2.);
   SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
 }
+void setTexture ( char *name, int textureID, GLuint *textures ) {
+
+  char filepath[100];
+  SDL_Surface *image = NULL;
+  sprintf(filepath, "./assets/%s.png", name);
+  image = IMG_Load("assets/l.png");
+
+
+  if ( image ) {
+    glBindTexture(GL_TEXTURE_2D, textures[textureID]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glTexImage2D(
+      GL_TEXTURE_2D,
+      0,
+      GL_RGBA,
+      image->w,
+      image->h,
+      0,
+      GL_RGBA,
+      GL_UNSIGNED_BYTE,
+      image->pixels);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    // FREE
+    SDL_FreeSurface( image );
+  } else {
+    printf("Erreur chargement image %s ( jpg )\n", name);
+  }
+}
 
 int main(int argc, char** argv) {
 
@@ -31,16 +61,18 @@ int main(int argc, char** argv) {
   }
 
   // Ouverture d'une fenêtre et création d'un contexte OpenGL
-  if(NULL == SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE)) {
+  SDL_Surface *screen = NULL;
+  screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
+  if(screen == NULL) {
     fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");
     return EXIT_FAILURE;
   }
-  SDL_WM_SetCaption("", NULL);
+  SDL_WM_SetCaption("V A P O R B U R D", NULL);
 
   resizeViewport();
 
-  // Ouverture de la musique
-  //Initialisation de l'API Mixer
+  /* Ouverture de la musique */
+  /* Initialisation de l'API Mixer */
   Mix_Music *music;
   if((Mix_Init(MIX_INIT_MP3)&MIX_INIT_MP3)!=MIX_INIT_MP3) {
     printf("Mix_Init error: %s",Mix_GetError());
@@ -49,17 +81,21 @@ int main(int argc, char** argv) {
     printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
   }
   music = Mix_LoadMUS("./assets/flicker.mp3");
-  Mix_PlayMusic(music, -1);
+  /* Mix_PlayMusic(music, -1); */
   int CORRECTIF = 150;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
-
-
   OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [Hard].osu");
   OSUNode currentOsuNode = osu.first;
-  
 
   srand(time(NULL));
+
+  /* Chargement et traitement de la texture */
+  GLuint textureID[1];
+  glGenTextures(1, textureID);
+  setTexture("l", 0, textureID);
+
+
 
   Ship ship = createShip(-4.0, 0.0, 10, 0.5);
 
@@ -95,7 +131,39 @@ int main(int argc, char** argv) {
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
     glClear(GL_COLOR_BUFFER_BIT);
-    
+
+    /* Texture */
+
+    /* Active l'image */
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureID[0]);
+
+    int scale = 5;
+    float w = 12 / scale;
+    float h = 16 / scale;
+
+    glBegin(GL_QUADS);
+    {
+      glTexCoord2f(0, 0);
+      glVertex2f(-w/2, h/2);
+
+      glTexCoord2f(1, 0);
+      glVertex2f(w/2, h/2);
+
+      glTexCoord2f(1, 1);
+      glVertex2f(w/2, -h/2);      
+
+      glTexCoord2f(0, 1);
+      glVertex2f(-w/2, -h/2);
+    }
+    glEnd();        
+
+    /* Desactive l'image */      
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
+
+
+
     /* Spawn ennemy */
     if ( currentOsuNode != NULL && 
         musicStartTime + currentOsuNode->time <= SDL_GetTicks() ) {
@@ -126,6 +194,9 @@ int main(int argc, char** argv) {
     loopOList(ship, &obstaclesList);
     loopBList(ship, &bulletsList);
     loopEList(ship, &bulletsList, &ennemiesList);
+
+
+    /* Texte */
 
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
@@ -173,11 +244,12 @@ int main(int argc, char** argv) {
 
 
   // TODO: Libération des données GPU
-  // ...
+  glDeleteTextures(11, textureID);
+
+  // Liberation des ressources associées à la SDL
   Mix_FreeMusic(music);
   Mix_CloseAudio();
 
-  // Liberation des ressources associées à la SDL
   SDL_Quit();
 
   return EXIT_SUCCESS;
