@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "entities.h"
 #include "lists.h"
+#include "helpers.h"
 
 // tire en fonction de la position actuelle du vaisseau
 void shoot(Ship ship, BList *liste);

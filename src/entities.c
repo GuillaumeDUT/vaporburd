@@ -11,17 +11,19 @@ Ship createShip(float x, float y, int hp, float size){
   Ship ship = (Ship) createEntity(x, y, hp, size, 0);
   ship->damages = SHIP_DAMAGES;
   ship->attackSpeed = SHIP_ATTACK_SPEED;
+  ship->missileLevel = 1;
   return ship;
 }
 Ennemy createEnnemy(float x, float y, int hp, float size){
-	return (Ennemy) createEntity(x, y, hp, size, ennemyID++ );
+  Ennemy ennemy = (Ennemy) createEntity(x, y, hp, size, ennemyID++ );
+  ennemy->missileLevel = 1;
+	return ennemy;
 }
 Obstacle createObstacle(float x, float y, int hp, float size){
 	return (Obstacle) createEntity(x, y, hp, size, obstacleID++ );
 }
 Bonus createBonus(float x, float y, int hp, float size, int type) {
   Bonus bonus = (Bonus) createEntity(x, y, hp, size, bonusID++ );
-  bonus->damages = 0;
   bonus->bonusType = type;
   return bonus;  
 }
@@ -59,6 +61,7 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
   temp->bonusType = NOT_A_BONUS;
   temp->damages = 1;
   temp->attackSpeed = 0;
+  temp->missileLevel = 0;
 	
 	temp->next = NULL;
 	temp->before = NULL;

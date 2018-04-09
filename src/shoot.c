@@ -1,12 +1,51 @@
 #include "libs.h"
-#include "constants.h"
 
 #include "shoot.h"
 
 void shoot(Ship ship, BList *liste){
-  Bullet bullet = createBullet( ship );
-  ajouterFinList(liste, bullet);
-  return;
+  int max = intMin(ship->missileLevel, 5);
+  printf("Max: %d\n", max);
+  Bullet bullets[max];
+  int i;
+
+  for ( i=0; i<max; i++ ) {
+    bullets[i] = createBullet(ship);
+    ajouterFinList(liste, bullets[i]);
+    if ( ship->missileLevel >= 5 ) {
+      bullets[i]->size = bullets[i]->size * 3;
+    }
+  }
+
+  switch (max) {
+    case 2:
+      bullets[0]->speed[Y] = -0.02;
+      bullets[1]->speed[Y] = 0.02;
+      break;
+    case 3:
+      bullets[1]->speed[Y] = -0.02;
+      bullets[2]->speed[Y] = 0.02;
+      break;
+    case 4: {
+      Bullet b5 = createBullet(ship);
+      ajouterFinList(liste, b5);
+      float size = b5->size;
+      bullets[1]->pos[Y] -= size * 4;
+      bullets[2]->pos[Y] -= size * 2;
+      bullets[3]->pos[Y] += size * 2;
+      b5->pos[Y] += size * 4;
+    }
+      break;
+    case 5: {
+      float size =  bullets[1]->size;
+      bullets[1]->pos[Y] -= size * 4;
+      bullets[2]->pos[Y] -= size * 2;
+      bullets[3]->pos[Y] += size * 2;
+      bullets[4]->pos[Y] += size * 4;
+    }
+      break;
+    default:
+      break;      
+  }  
 }
 void updateBullets(Ship ship, BList *liste, float globalTranslationTotal) {
   if(liste->taille == 0){
@@ -18,7 +57,7 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal) {
     next = actuel->next;
     moveBullet( actuel );
     drawBullet( actuel );
-    
+
     /* Supprime quand on sort de l'ecran */
     if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ) {
       supprimerList( liste, actuel->id );
@@ -28,7 +67,7 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal) {
   }
 }
 void drawBullet( Bullet bullet ) {
-//  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
+  //  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
 
   glPushMatrix();
   glColor3f(0, 155, 155);
@@ -44,6 +83,7 @@ void drawBullet( Bullet bullet ) {
   glPopMatrix();
 }
 void moveBullet( Bullet bullet ) {
-  bullet->pos[X] += BULLET_SPEED;
+  bullet->pos[X] += bullet->speed[X];
+  bullet->pos[Y] += bullet->speed[Y];
 }
 

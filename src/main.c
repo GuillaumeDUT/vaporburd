@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
 */
 
   Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
-  /*Mix_PlayMusic(music, -1);*/
+  Mix_PlayMusic(music, -1);
   int CORRECTIF = 100;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
   BList bonusesList;
   bonusesList.taille = 0;
 
-  int mapLength = createFromPPM("./assets/map.ppm", &obstaclesList, &bonusesList);
+  int mapLength = createFromPPM("./assets/map2.ppm", &obstaclesList, &bonusesList);
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
@@ -191,12 +191,10 @@ int main(int argc, char** argv) {
     shootCooldown = shootCooldown > 0 ? shootCooldown-1 : 0;
     if ( triggerKeySpace ) {
       if ( shootCooldown <= 0 ) {
-        shootCooldown = 25;
+        shootCooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackSpeed);
         shoot(ship, &bulletsList);
       } 
     }
-
-
 
     /* Boucle d'update et affichage des objets */
     moveShip(ship, globalTranslation, globalTranslationTotal, triggerKeyShift); 
@@ -210,8 +208,6 @@ int main(int argc, char** argv) {
       printf("Fin de partie\n\n");
       loop = 0;
     }
-
-
 
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
@@ -247,6 +243,14 @@ int main(int argc, char** argv) {
           if(e.key.keysym.sym == SDLK_LSHIFT
              || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 0;
           if(e.key.keysym.sym == 'a' || e.key.keysym.sym == 'q') loop = 0;
+          if(e.key.keysym.sym == '1') {
+            ship->missileLevel++;
+            printf("Missile level:%d\n", ship->missileLevel);
+          }
+          if(e.key.keysym.sym == '2') {
+            ship->missileLevel--;
+            printf("Missile level:%d\n", ship->missileLevel);
+          }
           break;
 
         default:

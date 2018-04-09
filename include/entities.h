@@ -14,9 +14,12 @@ typedef struct Entity{
 	float min[2];
 	float max[2];
   
-  int bonusType;
 	int damages;
+  
+  /* Bonuses */
+  int bonusType;
   int attackSpeed;
+  int missileLevel;
   
 	struct Entity *next;
 	struct Entity *before;

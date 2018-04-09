@@ -19,3 +19,15 @@ double frand_a_b(double a, double b) {
 float fmap(float value, float istart, float istop, float ostart, float ostop) {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 }
+float floatMax(float a, float b) {
+  return a>b?a:b;
+}
+int intMax(int a, int b) {
+  return a>b?a:b;
+}
+float floatMin(float a, float b) {
+  return a<b?a:b;
+}
+int intMin(int a, int b) {
+  return a<b?a:b;
+}

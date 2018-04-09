@@ -31,8 +31,6 @@ void updateBonuses(Ship ship, BList *bonuses) {
       acquireBonus(ship, bActuel);
       supprimerList(bonuses, bActuel->id);
     }
-    
-    
     bActuel = bNext;
   }
 }
@@ -44,6 +42,9 @@ void acquireBonus(Ship ship, Bonus bonus) {
       break;
     case BONUS_TYPE_ATTACK_SPEED:
       ship->attackSpeed += SHIP_ATTACK_SPEED;
+      break;
+    case BONUS_TYPE_MISSILE_UP:
+      ship->missileLevel += 1;
       break;
     default:
       break;

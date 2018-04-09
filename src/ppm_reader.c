@@ -7,7 +7,7 @@ int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {
   printf("PPM File : %s\n", filename);
   FILE *ppmFile;
   char line[64];
-  int w, h, i, j, r, g, b, maxColorValue;
+  int w, h, i, j, r, g, b, max;
   float x, y;
   
   /* On ouvre le fichier */
@@ -46,10 +46,10 @@ int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {
     Contient la valeur de couleure maximale
   */
   fgets(line, 64, ppmFile);
-  sscanf(line, "%d", &maxColorValue);
+  sscanf(line, "%d", &max);
   /*
   printf("line 3 : %s", line);
-  printf("Max:%d\n", maxColorValue);
+  printf("Max:%d\n", max);
   */
   
   /*
@@ -73,18 +73,25 @@ int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {
       
         /*printf("COLOR (%d, %d) : %d %d %d\n", i, j, r, g, b);*/
         /* Red */
-        if ( r==maxColorValue && g==0 && b==0 ) {
+        if ( r==max && g==0 && b==0 ) {
           ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
         }
         /* Blue */
-        if ( r==0 && g==0 && b==maxColorValue ) {
+        if ( r==0 && g==0 && b==max ) {
           ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_DAMAGES));
         }
-        /* Blue */
-        if ( r==0 && g==maxColorValue && b==0 ) {
+        /* Green */
+        if ( r==0 && g==max && b==0 ) {
           ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_ATTACK_SPEED));
         }
-
+        /* Cyan */
+        if ( r==0 && g==max && b==max ) {
+          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_MISSILE_UP));
+        }
+        /* Magenta */
+        if ( r==max && g==0 && b==max ) {
+          ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
+        }
       }
     }
   }
