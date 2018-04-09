@@ -5,10 +5,12 @@
 static int ennemyID = 0;
 static int obstacleID = 0;
 static int bulletID = 0;
+static int bonusID = 0;
 
 Ship createShip(float x, float y, int hp, float size){
   Ship ship = (Ship) createEntity(x, y, hp, size, 0);
   ship->damages = SHIP_DAMAGES;
+  ship->attackSpeed = SHIP_ATTACK_SPEED;
   return ship;
 }
 Ennemy createEnnemy(float x, float y, int hp, float size){
@@ -17,11 +19,17 @@ Ennemy createEnnemy(float x, float y, int hp, float size){
 Obstacle createObstacle(float x, float y, int hp, float size){
 	return (Obstacle) createEntity(x, y, hp, size, obstacleID++ );
 }
+Bonus createBonus(float x, float y, int hp, float size, int type) {
+  Bonus bonus = (Bonus) createEntity(x, y, hp, size, bonusID++ );
+  bonus->damages = 0;
+  bonus->bonusType = type;
+  return bonus;  
+}
 Bullet createBullet(Ship ship){
   Bullet bullet = (Bullet) createEntity(ship->pos[X], ship->pos[Y], 1, BULLET_SIZE, bulletID++ );
   
   bullet->speed[X] = BULLET_SPEED;
-  bullet->damages = BULLET_DAMAGES;
+  bullet->damages = ship->damages;
   
   return bullet;
 }
@@ -36,7 +44,6 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
 	temp->hp = hp;
 	temp->id = id;
 	temp->size = size;
-  temp->damages = 1;
   
 	temp->pos[X] = x;
 	temp->pos[Y] = y;
@@ -47,7 +54,11 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
 	temp->min[X] = -size/2;
 	temp->min[Y] = -size/2;
 	temp->max[X] = size/2;
-	temp->max[Y] = size/2;	
+	temp->max[Y] = size/2;
+  
+  temp->bonusType = NOT_A_BONUS;
+  temp->damages = 1;
+  temp->attackSpeed = 0;
 	
 	temp->next = NULL;
 	temp->before = NULL;

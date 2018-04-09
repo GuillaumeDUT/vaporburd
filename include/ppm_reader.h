@@ -3,7 +3,8 @@
 
 #include "obstacle.h"
 #include "lists.h"
+#include "bonus.h"
 
-int createFromPPM( OList *obstacles, char *filename );
+int createFromPPM( char *filename, OList *obstacles, BList *bonuses );
 
 #endif

@@ -8,7 +8,7 @@ void shoot(Ship ship, BList *liste){
   ajouterFinList(liste, bullet);
   return;
 }
-void loopBList(Ship ship, BList *liste, float globalTranslationTotal) {
+void updateBullets(Ship ship, BList *liste, float globalTranslationTotal) {
   if(liste->taille == 0){
     return ;
   }

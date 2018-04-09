@@ -3,7 +3,7 @@
 #include "ppm_reader.h"
 
 /* Return the width of the map */
-int createFromPPM( OList *obstacles, char *filename ) {  
+int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {  
   printf("PPM File : %s\n", filename);
   FILE *ppmFile;
   char line[64];
@@ -67,26 +67,25 @@ int createFromPPM( OList *obstacles, char *filename ) {
       fgets(line, 64, ppmFile);
       sscanf(line, "%d", &b);
       
-      
-      /* Red */
-      if ( r==maxColorValue && g==0 && b==0 ) {
-        /*
-        y = 1.0 * i * WINDOW_SCALE;
-        y /= (float)h;
-        y -= WINDOW_SCALE/2 - 0.5;
-        */
+      if ( r!=0 || g!=0 || b!=0 ) {
         x = 1.0 * j;
-        y = fmap((float) i, 0, h, -WINDOW_SCALE/2 + 0.5, WINDOW_SCALE/2 + 0.5);
-        ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
-        /*printf("RED (%d, %d) : %d %d %d\n", i, j, r, g, b);*/
-      }
-      /* Blue */
-      /*
-      if ( r==0 && g==0 && b==maxColorValue ) {
-        printf("BLUE (%d, %d) : %d %d %d\n", i, j, r, g, b);
-      }
-      */
+        y = fmap((float) i, 0, h, WINDOW_SCALE/2 - 0.5, -WINDOW_SCALE/2 - 0.5);
+      
+        /*printf("COLOR (%d, %d) : %d %d %d\n", i, j, r, g, b);*/
+        /* Red */
+        if ( r==maxColorValue && g==0 && b==0 ) {
+          ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
+        }
+        /* Blue */
+        if ( r==0 && g==0 && b==maxColorValue ) {
+          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_DAMAGES));
+        }
+        /* Blue */
+        if ( r==0 && g==maxColorValue && b==0 ) {
+          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_ATTACK_SPEED));
+        }
 
+      }
     }
   }
   

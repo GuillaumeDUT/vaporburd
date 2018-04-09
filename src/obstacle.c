@@ -5,7 +5,7 @@
 
 
 /* Affiche et detecte les collisions */
-void loopOList(Ship ship, OList *obstacles) {
+void updateObstacles(Ship ship, OList *obstacles) {
   if(obstacles->taille == 0){
     return ;
   }

@@ -11,7 +11,7 @@
 
 void newRandomEnnemy(EList *ennemies, float globalTranslation);
 void newOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation);
-void loopEList(Ship ship, BList *bullets, EList *liste);
+void updateEnnemies(Ship ship, BList *bullets, EList *liste);
 void drawEnnemy(Ennemy ennemy, int full);
 
 #endif

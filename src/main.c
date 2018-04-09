@@ -9,6 +9,7 @@
 #include "ennemies.h"
 #include "osu_reader.h"
 #include "ppm_reader.h"
+#include "bonus.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
@@ -90,7 +91,7 @@ int main(int argc, char** argv) {
 */
 
   Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
-  Mix_PlayMusic(music, -1);
+  /*Mix_PlayMusic(music, -1);*/
   int CORRECTIF = 100;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
@@ -106,8 +107,10 @@ int main(int argc, char** argv) {
   ennemiesList.taille = 0;
   BList bulletsList;
   bulletsList.taille = 0;
+  BList bonusesList;
+  bonusesList.taille = 0;
 
-  int mapLength = createFromPPM( &obstaclesList, "./assets/map.ppm" );
+  int mapLength = createFromPPM("./assets/map.ppm", &obstaclesList, &bonusesList);
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
@@ -116,7 +119,7 @@ int main(int argc, char** argv) {
   int triggerKeyShift = 0;
 
   int shootCooldown = 0;
-
+  
   float globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
   float globalTranslationTotal = 0;
 
@@ -129,7 +132,6 @@ int main(int argc, char** argv) {
 
     /* Global counter */
     globalTranslationTotal += globalTranslation;
-
 
     /* Texture */
 
@@ -189,7 +191,7 @@ int main(int argc, char** argv) {
     shootCooldown = shootCooldown > 0 ? shootCooldown-1 : 0;
     if ( triggerKeySpace ) {
       if ( shootCooldown <= 0 ) {
-        shootCooldown = SHOOT_COOLDOWN;
+        shootCooldown = 25;
         shoot(ship, &bulletsList);
       } 
     }
@@ -197,11 +199,12 @@ int main(int argc, char** argv) {
 
 
     /* Boucle d'update et affichage des objets */
-    moveShip(ship, globalTranslation, globalTranslationTotal, triggerKeyShift);    
+    moveShip(ship, globalTranslation, globalTranslationTotal, triggerKeyShift); 
     drawShip(ship, 0);
-    loopOList(ship, &obstaclesList);
-    loopBList(ship, &bulletsList, globalTranslationTotal);
-    loopEList(ship, &bulletsList, &ennemiesList);
+    updateObstacles(ship, &obstaclesList);
+    updateBullets(ship, &bulletsList, globalTranslationTotal);
+    updateEnnemies(ship, &bulletsList, &ennemiesList);
+    updateBonuses(ship, &bonusesList);
 
     if ( ship->hp <= 0) {
       printf("Fin de partie\n\n");

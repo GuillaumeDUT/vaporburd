@@ -6,7 +6,7 @@
 #include "lists.h"
 #include "collisions.h"
 
-void loopOList(Ship ship, OList *liste);
+void updateObstacles(Ship ship, OList *liste);
 void drawObstacle(Obstacle obstacle, int full);
 
 #endif

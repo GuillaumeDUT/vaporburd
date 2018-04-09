@@ -16,10 +16,10 @@ void newOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation)
   ajouterFinList(ennemies, createEnnemy(
     limit + globalTranslation,
     fmap(oNode->y, 0, 384, -limit, limit),
-    5, /* HP */
+    100, /* HP */
     0.5 /* SIZE */));
 }
-void loopEList(Ship ship, BList *bullets, EList *ennemies) {
+void updateEnnemies(Ship ship, BList *bullets, EList *ennemies) {
   if(ennemies->taille == 0){
     return ;
   }
@@ -40,6 +40,7 @@ void loopEList(Ship ship, BList *bullets, EList *ennemies) {
       while ( bulletActuel != NULL ) {
         bulletNext = bulletActuel->next;
         if ( collision(bulletActuel, eActuel) ) {
+          displayEntity(eActuel);
           drawEnnemy( eActuel, 1 );
           getDamage(bulletActuel, eActuel);
           supprimerList(bullets, bulletActuel->id);
