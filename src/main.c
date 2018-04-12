@@ -245,11 +245,11 @@ int main(int argc, char** argv) {
           if(e.key.keysym.sym == 'a' || e.key.keysym.sym == 'q') loop = 0;
           if(e.key.keysym.sym == '1') {
             ship->missileLevel++;
-            printf("Missile level:%d\n", ship->missileLevel);
+            printf("[DEBUG] Missile level:%d\n", ship->missileLevel);
           }
           if(e.key.keysym.sym == '2') {
             ship->missileLevel--;
-            printf("Missile level:%d\n", ship->missileLevel);
+            printf("[DEBUG] Missile level:%d\n", ship->missileLevel);
           }
           break;
 

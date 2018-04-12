@@ -90,7 +90,9 @@ int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {
         }
         /* Magenta */
         if ( r==max && g==0 && b==max ) {
-          ajouterFinList(obstacles, createObstacle( x, y, 20, 1));
+          Obstacle obs = createObstacle( x, y, 20, 1);
+          obs->endOfLevel = 1;
+          ajouterFinList(obstacles, obs);
         }
       }
     }

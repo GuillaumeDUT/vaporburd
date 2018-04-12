@@ -20,7 +20,7 @@ void afficherList(List *liste){
   Entity actuel = liste->first;
   //printf("%d posX %f posY %f\n",actuel->id,actuel->pos[X],actuel->pos[Y]);
   while ( actuel != NULL ) {
-    printf("%c", actuel->id);
+    printf("%d->", actuel->id);
     actuel = actuel->next;
   }
   printf("\n");

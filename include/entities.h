@@ -21,6 +21,9 @@ typedef struct Entity{
   int attackSpeed;
   int missileLevel;
   
+  /* End of level */
+  int endOfLevel;
+  
 	struct Entity *next;
 	struct Entity *before;
 } *Ship, *Ennemy, *Obstacle, *Bullet, *Entity, *Bonus;

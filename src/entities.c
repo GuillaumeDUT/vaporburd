@@ -20,7 +20,8 @@ Ennemy createEnnemy(float x, float y, int hp, float size){
 	return ennemy;
 }
 Obstacle createObstacle(float x, float y, int hp, float size){
-	return (Obstacle) createEntity(x, y, hp, size, obstacleID++ );
+  Obstacle obstacle = (Obstacle) createEntity(x, y, hp, size, obstacleID++);
+	return obstacle;
 }
 Bonus createBonus(float x, float y, int hp, float size, int type) {
   Bonus bonus = (Bonus) createEntity(x, y, hp, size, bonusID++ );
@@ -62,6 +63,7 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
   temp->damages = 1;
   temp->attackSpeed = 0;
   temp->missileLevel = 0;
+  temp->endOfLevel = 0;
 	
 	temp->next = NULL;
 	temp->before = NULL;
