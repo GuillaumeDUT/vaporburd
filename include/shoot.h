@@ -7,7 +7,7 @@
 #include "helpers.h"
 
 // tire en fonction de la position actuelle du vaisseau
-void shoot(Ship ship, BList *liste);
+void shoot(Entity entity, BList *liste);
 void updateBullets(Ship ship, BList *liste, float globalTranslationTotal);
 void drawBullet( Bullet bullet );
 void moveBullet( Bullet bullet );

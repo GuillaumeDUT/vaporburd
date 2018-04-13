@@ -18,11 +18,13 @@ typedef struct Entity{
   
   /* Bonuses */
   int bonusType;
-  int attackSpeed;
+  float attackPerSecond;
+  int cooldown;
   int missileLevel;
   
   /* End of level */
   int endOfLevel;
+  int ennemyType;
   
 	struct Entity *next;
 	struct Entity *before;
@@ -32,7 +34,7 @@ Ship createShip(float x, float y, int hp, float size);
 Ennemy createEnnemy(float x, float y, int hp, float size);
 Obstacle createObstacle(float x, float y, int hp, float size);
 Bonus createBonus(float x, float y, int hp, float size, int type);
-Bullet createBullet(Ship ship);
+Bullet createBullet(Entity entity);
 
 Entity createEntity(float x, float y, int hp, float size, int id);
 

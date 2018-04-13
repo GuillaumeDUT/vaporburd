@@ -106,3 +106,28 @@ void drawShip(Ship ship, int full){
   glPopMatrix();
 
 }
+
+void updateShip(Ship ship, BList *bullets, float globalTranslation, float globalTranslationTotal, int slow) {
+  moveShip(ship, globalTranslation, globalTranslationTotal, slow); 
+  drawShip(ship, 0);
+
+
+  /* Collision avec les bullets */
+  if(bullets->taille != 0){
+    Bullet bulletActuel = bullets->first;
+    Bullet bulletNext;
+    while ( bulletActuel != NULL ) {
+      bulletNext = bulletActuel->next;
+      if ( collision(bulletActuel, ship) ) {
+        drawShip( ship, 1 );
+        /*
+        getDamage(bulletActuel, ship);
+        */
+        supprimerList(bullets, bulletActuel->id);
+      }
+      bulletActuel = bulletNext;
+    }
+  }
+}
+
+

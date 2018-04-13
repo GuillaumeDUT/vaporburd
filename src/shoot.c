@@ -2,18 +2,14 @@
 
 #include "shoot.h"
 
-void shoot(Ship ship, BList *liste){
-  int max = intMin(ship->missileLevel, 5);
-  printf("Max: %d\n", max);
+void shoot(Entity entity, BList *liste){
+  int max = intMin(entity->missileLevel, 5);
   Bullet bullets[max];
   int i;
 
   for ( i=0; i<max; i++ ) {
-    bullets[i] = createBullet(ship);
+    bullets[i] = createBullet(entity);
     ajouterFinList(liste, bullets[i]);
-    if ( ship->missileLevel >= 5 ) {
-      bullets[i]->size = bullets[i]->size * 3;
-    }
   }
 
   switch (max) {
@@ -26,7 +22,7 @@ void shoot(Ship ship, BList *liste){
       bullets[2]->speed[Y] = 0.02;
       break;
     case 4: {
-      Bullet b5 = createBullet(ship);
+      Bullet b5 = createBullet(entity);
       ajouterFinList(liste, b5);
       float size = b5->size;
       bullets[1]->pos[Y] -= size * 4;

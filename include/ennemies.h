@@ -9,9 +9,12 @@
 #include "ship.h"
 #include "collisions.h"
 
-void newRandomEnnemy(EList *ennemies, float globalTranslation);
-void newOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation);
+void createRandomEnnemy(EList *ennemies, float globalTranslation);
+void createOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation);
 void updateEnnemies(Ship ship, BList *bullets, EList *liste);
 void drawEnnemy(Ennemy ennemy, int full);
+void moveEnnemy( Ennemy ennemy );
+void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal);
+void shootEnnemy( Ennemy ennemy, BList *bullets );
 
 #endif

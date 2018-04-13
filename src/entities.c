@@ -10,65 +10,75 @@ static int bonusID = 0;
 Ship createShip(float x, float y, int hp, float size){
   Ship ship = (Ship) createEntity(x, y, hp, size, 0);
   ship->damages = SHIP_DAMAGES;
-  ship->attackSpeed = SHIP_ATTACK_SPEED;
+  ship->attackPerSecond = SHIP_ATTACK_SPEED;
   ship->missileLevel = 1;
   return ship;
 }
 Ennemy createEnnemy(float x, float y, int hp, float size){
   Ennemy ennemy = (Ennemy) createEntity(x, y, hp, size, ennemyID++ );
   ennemy->missileLevel = 1;
-	return ennemy;
+  ennemy->ennemyType = ENNEMY_TYPE_BASIC;
+  return ennemy;
 }
 Obstacle createObstacle(float x, float y, int hp, float size){
   Obstacle obstacle = (Obstacle) createEntity(x, y, hp, size, obstacleID++);
-	return obstacle;
+  return obstacle;
 }
 Bonus createBonus(float x, float y, int hp, float size, int type) {
   Bonus bonus = (Bonus) createEntity(x, y, hp, size, bonusID++ );
   bonus->bonusType = type;
   return bonus;  
 }
-Bullet createBullet(Ship ship){
-  Bullet bullet = (Bullet) createEntity(ship->pos[X], ship->pos[Y], 1, BULLET_SIZE, bulletID++ );
-  
+Bullet createBullet(Entity entity){
+  Bullet bullet = (Bullet) createEntity(entity->pos[X], entity->pos[Y], 1, BULLET_SIZE, bulletID++ );
+
   bullet->speed[X] = BULLET_SPEED;
-  bullet->damages = ship->damages;
-  
+  bullet->damages = entity->damages;
+
+  if ( entity->ennemyType != NOT_AN_ENNEMY ) {
+    bullet->speed[X] = -(bullet->speed[X]);
+    bullet->pos[X] -= entity->size;
+  } else {
+    bullet->pos[X] += entity->size;
+  }
+
   return bullet;
 }
 
 Entity createEntity(float x, float y, int hp, float size, int id) {
   Entity temp = (Entity) malloc( sizeof( struct Entity ) );
-	if( !temp){
-		printf("Erreur d'allocation\n");
-		exit(0);
-	}
+  if( !temp){
+    printf("Erreur d'allocation\n");
+    exit(0);
+  }
 
-	temp->hp = hp;
-	temp->id = id;
-	temp->size = size;
-  
-	temp->pos[X] = x;
-	temp->pos[Y] = y;
+  temp->hp = hp;
+  temp->id = id;
+  temp->size = size;
 
-	temp->speed[X] = 0;
-	temp->speed[Y] = 0;
-	
-	temp->min[X] = -size/2;
-	temp->min[Y] = -size/2;
-	temp->max[X] = size/2;
-	temp->max[Y] = size/2;
-  
+  temp->pos[X] = x;
+  temp->pos[Y] = y;
+
+  temp->speed[X] = 0;
+  temp->speed[Y] = 0;
+
+  temp->min[X] = -size/2;
+  temp->min[Y] = -size/2;
+  temp->max[X] = size/2;
+  temp->max[Y] = size/2;
+
   temp->bonusType = NOT_A_BONUS;
   temp->damages = 1;
-  temp->attackSpeed = 0;
+  temp->attackPerSecond = 0;
   temp->missileLevel = 0;
   temp->endOfLevel = 0;
-	
-	temp->next = NULL;
-	temp->before = NULL;
+  temp->ennemyType = NOT_AN_ENNEMY;
+  temp->cooldown = 0;
 
-	return temp;
+  temp->next = NULL;
+  temp->before = NULL;
+
+  return temp;
 }
 
 void displayEntity(Entity e) {

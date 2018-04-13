@@ -4,6 +4,7 @@
 #include "entities.h"
 #include "ship.h"
 #include "lists.h"
+#include "constants.h"
 #include "collisions.h"
 
 void updateObstacles(Ship ship, OList *liste);

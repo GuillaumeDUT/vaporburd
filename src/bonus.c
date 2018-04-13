@@ -41,7 +41,7 @@ void acquireBonus(Ship ship, Bonus bonus) {
       ship->damages += SHIP_DAMAGES;
       break;
     case BONUS_TYPE_ATTACK_SPEED:
-      ship->attackSpeed += SHIP_ATTACK_SPEED;
+      ship->attackPerSecond += SHIP_ATTACK_SPEED;
       break;
     case BONUS_TYPE_MISSILE_UP:
       ship->missileLevel += 1;

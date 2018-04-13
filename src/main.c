@@ -15,7 +15,10 @@ static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
-static float MUSIC_DURATION = 279000;
+static int MUSIC_DURATION = 2790/2;
+float WINDOW_SCALE = 20.0;
+float globalTranslation;
+int LEVEL_STATE;
 
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -57,6 +60,7 @@ void setTexture ( char *name, int textureID, GLuint *textures ) {
 
 int main(int argc, char** argv) {
 
+  LEVEL_STATE = LEVEL_STATE_INIT;
   // Initialisation de la SDL
   if(-1 == SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
     fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
@@ -91,7 +95,9 @@ int main(int argc, char** argv) {
 */
 
   Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
+  /*
   Mix_PlayMusic(music, -1);
+  */
   int CORRECTIF = 100;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
@@ -118,13 +124,13 @@ int main(int argc, char** argv) {
   int triggerKeySpace = 0;
   int triggerKeyShift = 0;
 
-  int shootCooldown = 0;
-  
-  float globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
+  globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
   float globalTranslationTotal = 0;
 
   int loop = 1;
   glClearColor(0.1, 0.1, 0.1 ,1.0);
+
+  LEVEL_STATE = LEVEL_STATE_RUNNING;
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
     glClear(GL_COLOR_BUFFER_BIT);
@@ -169,16 +175,21 @@ int main(int argc, char** argv) {
 
     /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
     if ( currentOsuNode != NULL && 
-        musicStartTime + currentOsuNode->time <= SDL_GetTicks() )
+        musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
+        LEVEL_STATE == LEVEL_STATE_RUNNING)
     {
       /*
-      newRandomEnnemy(&ennemiesList, globalTranslationTotal);
+     createRandomEnnemy(&ennemiesList, globalTranslationTotal);
       */
-      newOSUNodeEnnemy(
+      createOSUNodeEnnemy(
         &ennemiesList,
         currentOsuNode,
         globalTranslationTotal);
       currentOsuNode = currentOsuNode->next;
+    } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
+      createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
+      LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
+      printf("Boss spawned\n");
     }
 
     /* Si on reste appuyé sur les flêches, on se déplace */
@@ -188,17 +199,18 @@ int main(int argc, char** argv) {
     if(triggerKeyArrowRight) moveRight(ship);
 
     /* Tir */
-    shootCooldown = shootCooldown > 0 ? shootCooldown-1 : 0;
+    ship->cooldown = ship->cooldown > 0 ? 
+      ship->cooldown-1 
+      : 0;
     if ( triggerKeySpace ) {
-      if ( shootCooldown <= 0 ) {
-        shootCooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackSpeed);
+      if ( ship->cooldown <= 0 ) {
+        ship->cooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackPerSecond);
         shoot(ship, &bulletsList);
       } 
     }
 
     /* Boucle d'update et affichage des objets */
-    moveShip(ship, globalTranslation, globalTranslationTotal, triggerKeyShift); 
-    drawShip(ship, 0);
+    updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
     updateObstacles(ship, &obstaclesList);
     updateBullets(ship, &bulletsList, globalTranslationTotal);
     updateEnnemies(ship, &bulletsList, &ennemiesList);
