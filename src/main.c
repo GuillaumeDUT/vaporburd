@@ -15,7 +15,7 @@ static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
-static int MUSIC_DURATION = 2790/2;
+static int MUSIC_DURATION = 279000;
 float WINDOW_SCALE = 20.0;
 float globalTranslation;
 int LEVEL_STATE;
@@ -95,9 +95,7 @@ int main(int argc, char** argv) {
 */
 
   Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
-  /*
   Mix_PlayMusic(music, -1);
-  */
   int CORRECTIF = 100;
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
