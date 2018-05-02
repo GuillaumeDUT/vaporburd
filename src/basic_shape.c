@@ -4,9 +4,10 @@
 #include "basic_shape.h"
 
 void drawCircle(int full){
+	int i;
   GLenum type = full ? GL_POLYGON : GL_LINE_LOOP;
   glBegin(type);
-    for(int i=0;i<SEGMENTSCERCLES;i++){
+    for(i=0;i<SEGMENTSCERCLES;i++){
       glVertex2f(cos(i*(2*M_PI/SEGMENTSCERCLES))/2,sin(i*(2*M_PI/SEGMENTSCERCLES))/2);
     }
   glEnd();
