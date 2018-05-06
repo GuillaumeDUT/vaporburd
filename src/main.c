@@ -21,6 +21,9 @@ float WINDOW_SCALE = 20.0;
 float globalTranslation;
 int LEVEL_STATE;
 
+/* DEBUG */
+static const int DEBUG = 1;
+
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   glMatrixMode(GL_PROJECTION);
@@ -61,6 +64,12 @@ void setTexture ( char *name, int textureID, GLuint *textures ) {
 
 int main(int argc, char** argv) {
   LEVEL_STATE = LEVEL_STATE_INIT;
+
+  if ( DEBUG == 1 ) {
+    /* DEBUG DU BOSS */
+    MUSIC_DURATION = MUSIC_DURATION / 100;    
+  }
+
   // Initialisation de la SDL
   if(-1 == SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
     fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
@@ -125,9 +134,22 @@ int main(int argc, char** argv) {
   globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
   float globalTranslationTotal = 0;
 
-
   int loop = 1;
   glClearColor(0.1, 0.1, 0.1 ,1.0);
+
+  if ( DEBUG == 1 ) {
+    /* DEBUG DU BOSS */
+    Bonus actuel = bonusesList.first;
+    while ( actuel != NULL ) {
+      printf("%d->", actuel->id);
+      acquireBonus(ship, actuel);
+      supprimerList(&bonusesList, actuel->id);
+      actuel = actuel->next;
+    }
+
+  }
+
+
 
   LEVEL_STATE = LEVEL_STATE_RUNNING;
   while(loop) {

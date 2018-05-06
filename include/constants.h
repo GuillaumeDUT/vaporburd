@@ -11,7 +11,7 @@
 
 #define SHIP_DAMAGES 5
 #define SHIP_ATTACK_SPEED 1
-#define BOSS_HP 200000.0
+#define BOSS_HP 50000.0
 
 #define X 0
 #define Y 1

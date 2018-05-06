@@ -41,6 +41,15 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
         eActuel->speed[Y] = 0;
       }
 
+      /* Patterns du boss */
+      if ( eActuel->hp / BOSS_HP >= 0.8 ) {
+        /* PATTERN 1 */
+        bossPattern1( eActuel, ship, bullets );
+        //        shootEnnemy( eActuel, bullets );     
+      } else {
+        shootEnnemy( eActuel, bullets );        
+      }
+
     } else if ( eActuel->ennemyType == ENNEMY_TYPE_BASIC ) {
 
       /* Deplacement */
@@ -52,21 +61,21 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
       float offY = perlin2d(eActuel->perlinOffsetY,
                             eActuel->perlinOffsetX,
                             freq, depth);
-      
+
       eActuel->perlinOffsetX += 1;
       eActuel->perlinOffsetY += 1;
-      
+
       offX = fmap(offX, 0, 1, -0.1, 0.1);
       offY = fmap(offY, 0, 1, -0.1, 0.1);
-      
+
       eActuel->speed[X] = offX;
       eActuel->speed[Y] = offY;
+      shootEnnemy( eActuel, bullets );
 
     }    
     moveEnnemy( eActuel, globalTranslationTotal );
-    shootEnnemy( eActuel, bullets );
     drawEnnemy( eActuel, 0 );
-    
+
     /* Collision avec les bullets */
     if(bullets->taille != 0){
       Bullet bulletActuel = bullets->first;
@@ -168,6 +177,17 @@ void shootEnnemy(Ennemy ennemy, BList *bullets) {
     ennemy->cooldown = 1 + FRAMERATE_MILLISECONDS/(ennemy->attackPerSecond);
     shoot(ennemy, bullets);
   }
+}
+
+void bossPattern1(Ennemy ennemy, Ship ship, BList *bullets) {
+  ennemy->cooldown = ennemy->cooldown > 0 ? ennemy->cooldown-1 : 0;
+  if ( ennemy->cooldown < 50 && ennemy->cooldown % 10 == 0 ) {
+    bossAttack1(ennemy, ship, bullets, ennemy->cooldown);    
+  }
+  if ( ennemy->cooldown <= 0 ) {
+    ennemy->cooldown = 100;
+  }
+
 }
 
 void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal) {

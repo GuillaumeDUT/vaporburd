@@ -27,7 +27,7 @@ void updateObstacles(Ship ship, OList *obstacles) {
         drawShip(ship, 1);
         drawObstacle(oActuel, 1);
         getDamage(ship, oActuel);
-        getDamage(oActuel, ship);
+//        getDamage(oActuel, ship);
         displayEntity(ship);
       } else if ( oActuel->endOfLevel == 1 && LEVEL_STATE == LEVEL_STATE_RUNNING ) {
         /* End of the level */

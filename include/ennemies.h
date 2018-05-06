@@ -16,5 +16,6 @@ void drawEnnemy(Ennemy ennemy, int full);
 void moveEnnemy(Ennemy ennemy, int globalTranslationTotal);
 void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal);
 void shootEnnemy(Ennemy ennemy, BList *bullets);
+void bossPattern1(Ennemy e, Ship s, BList *bullets);
 
 #endif
