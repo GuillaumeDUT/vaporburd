@@ -83,3 +83,7 @@ void moveBullet( Bullet bullet ) {
   bullet->pos[Y] += bullet->speed[Y];
 }
 
+void aimShoot(Entity entity, BList *liste) {
+  
+}
+

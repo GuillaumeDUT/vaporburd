@@ -18,6 +18,9 @@ Ennemy createEnnemy(float x, float y, int hp, float size){
   Ennemy ennemy = (Ennemy) createEntity(x, y, hp, size, ennemyID++ );
   ennemy->missileLevel = 1;
   ennemy->ennemyType = ENNEMY_TYPE_BASIC;
+  ennemy->damages = 1;
+  ennemy->attackPerSecond = 0.1;
+  
   return ennemy;
 }
 Obstacle createObstacle(float x, float y, int hp, float size){
@@ -32,15 +35,19 @@ Bonus createBonus(float x, float y, int hp, float size, int type) {
 Bullet createBullet(Entity entity){
   Bullet bullet = (Bullet) createEntity(entity->pos[X], entity->pos[Y], 1, BULLET_SIZE, bulletID++ );
 
-  bullet->speed[X] = BULLET_SPEED;
   bullet->damages = entity->damages;
 
   if ( entity->ennemyType != NOT_AN_ENNEMY ) {
+    bullet->speed[X] = BULLET_SPEED * 1;
     bullet->speed[X] = -(bullet->speed[X]);
     bullet->pos[X] -= entity->size;
   } else {
+    bullet->speed[X] = BULLET_SPEED * 1.5;
     bullet->pos[X] += entity->size;
   }
+  
+  /* Le ennemi type permet differencier qui a tirer la balle */
+  bullet->ennemyType = entity->ennemyType;  
 
   return bullet;
 }
@@ -74,6 +81,9 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
   temp->endOfLevel = 0;
   temp->ennemyType = NOT_AN_ENNEMY;
   temp->cooldown = 0;
+  
+  temp->perlinOffsetX = rand_a_b(0, 256);
+  temp->perlinOffsetY = rand_a_b(0, 256);
 
   temp->next = NULL;
   temp->before = NULL;

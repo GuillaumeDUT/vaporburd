@@ -20,9 +20,9 @@ void createOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation
     limit + globalTranslation,
     fmap(oNode->y, 0, 384, -limit, limit),
     15, /* HP */
-    0.5 /* SIZE */));
+    1.5 /* SIZE */));
 }
-void updateEnnemies(Ship ship, BList *bullets, EList *ennemies) {
+void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTranslationTotal) {
   if(ennemies->taille == 0){
     return ;
   }
@@ -32,6 +32,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies) {
     eNext = eActuel->next;
     if ( eActuel->ennemyType == ENNEMY_TYPE_BOSS ) {
 
+      /* Deplacement */
       if ( eActuel->pos[Y] < ship->pos[Y] ) {
         eActuel->speed[Y] += ACC/5;
       } else if ( eActuel->pos[Y] > ship->pos[Y] ) {
@@ -40,18 +41,39 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies) {
         eActuel->speed[Y] = 0;
       }
 
-      moveEnnemy( eActuel );
-      shootEnnemy( eActuel, bullets );
-    }
-    drawEnnemy( eActuel, 0 );
+    } else if ( eActuel->ennemyType == ENNEMY_TYPE_BASIC ) {
 
+      /* Deplacement */
+      float freq = 0.01;
+      float depth = 4;
+      float offX = perlin2d(eActuel->perlinOffsetX,
+                            eActuel->perlinOffsetY,
+                            freq, depth);
+      float offY = perlin2d(eActuel->perlinOffsetY,
+                            eActuel->perlinOffsetX,
+                            freq, depth);
+      
+      eActuel->perlinOffsetX += 1;
+      eActuel->perlinOffsetY += 1;
+      
+      offX = fmap(offX, 0, 1, -0.1, 0.1);
+      offY = fmap(offY, 0, 1, -0.1, 0.1);
+      
+      eActuel->speed[X] = offX;
+      eActuel->speed[Y] = offY;
+
+    }    
+    moveEnnemy( eActuel, globalTranslationTotal );
+    shootEnnemy( eActuel, bullets );
+    drawEnnemy( eActuel, 0 );
+    
     /* Collision avec les bullets */
     if(bullets->taille != 0){
       Bullet bulletActuel = bullets->first;
       Bullet bulletNext;
       while ( bulletActuel != NULL ) {
         bulletNext = bulletActuel->next;
-        if ( collision(bulletActuel, eActuel) ) {
+        if ( bulletActuel->ennemyType == NOT_AN_ENNEMY && collision(bulletActuel, eActuel) ) {
           /*displayEntity(eActuel);*/
           drawEnnemy( eActuel, 1 );
           getDamage(bulletActuel, eActuel);
@@ -70,13 +92,14 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies) {
       /*displayEntity(ship);*/
     }
 
+    /* Verification de la mort */
     if ( eActuel->hp <= 0 )  {
       supprimerList(ennemies, eActuel->id);
     }
     eActuel = eNext;
   }
 }
-void drawEnnemy( Ennemy ennemy, int full ) {
+void drawEnnemy(Ennemy ennemy, int full) {
   glPushMatrix();
   {    
     glColor3f(255, 0, 120);
@@ -119,16 +142,27 @@ void drawEnnemy( Ennemy ennemy, int full ) {
   }
 }
 
-void moveEnnemy( Ennemy ennemy ) {
+void moveEnnemy(Ennemy ennemy, int globalTranslationTotal) {
+  int LIMIT = WINDOW_SCALE/2;
   ennemy->pos[X] += ennemy->speed[X];
   ennemy->pos[Y] += ennemy->speed[Y];
 
   ennemy->speed[Y] = absFloat(ennemy->speed[Y]) > 0.0001 ?
     ennemy->speed[Y] * 0.7
     : 0;
+
+  /* Contraint l'ennemi a rester à l'ecran */
+  if ( ennemy->pos[X] > LIMIT + globalTranslationTotal) {
+    ennemy->pos[X] = LIMIT + globalTranslationTotal;
+    ennemy->speed[X] = 0;
+  }
+
+  /* Deplacement du bas en haut */
+  if ( ennemy->pos[Y] > LIMIT ) ennemy->hp = 0;
+  if ( ennemy->pos[Y] < -LIMIT ) ennemy->hp = 0;
 }
 
-void shootEnnemy( Ennemy ennemy, BList *bullets ) {
+void shootEnnemy(Ennemy ennemy, BList *bullets) {
   ennemy->cooldown = ennemy->cooldown > 0 ? ennemy->cooldown-1 : 0;
   if ( ennemy->cooldown <= 0 ) {
     ennemy->cooldown = 1 + FRAMERATE_MILLISECONDS/(ennemy->attackPerSecond);

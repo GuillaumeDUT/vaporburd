@@ -105,6 +105,31 @@ void drawShip(Ship ship, int full){
   drawCircle(1);
   glPopMatrix();
 
+  /* Les HP */
+  /* Affichage de la barre de vie */
+  float percent = (float)ship->hp/20; // 20 is the nmax HP
+  glPushMatrix(); 
+  {
+    glLoadIdentity();
+    glColor3ub(203, 234, 131);
+
+    /* Outline */
+    glTranslatef(0, -0.92, 0);
+    glScalef(1.9, 0.02, 1);
+
+    glPushMatrix();
+    {
+      /* Plain */
+      glTranslatef(-(1-percent)/2, 0, 0);
+      glScalef(percent, 1, 1);
+      drawSquare(1);
+    }
+    glPopMatrix();
+
+    drawSquare(0);
+  }
+  glPopMatrix();
+
 }
 
 void updateShip(Ship ship, BList *bullets, float globalTranslation, float globalTranslationTotal, int slow) {
@@ -118,7 +143,7 @@ void updateShip(Ship ship, BList *bullets, float globalTranslation, float global
     Bullet bulletNext;
     while ( bulletActuel != NULL ) {
       bulletNext = bulletActuel->next;
-      if ( collision(bulletActuel, ship) ) {
+      if ( bulletActuel->ennemyType != NOT_AN_ENNEMY && collision(bulletActuel, ship) ) {
         drawShip( ship, 1 );
         /*
         getDamage(bulletActuel, ship);

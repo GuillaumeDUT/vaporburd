@@ -6,6 +6,7 @@
 #include "helpers.h"
 #include "lists.h"
 #include "collisions.h"
+#include "shoot.h"
 
 
 void moveUp(Ship ship);

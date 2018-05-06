@@ -3,6 +3,7 @@
 
 #include "basic_shape.h"
 #include "constants.h"
+#include "helpers.h"
 
 typedef struct Entity{
 	int hp;
@@ -15,6 +16,10 @@ typedef struct Entity{
 	float max[2];
   
 	int damages;
+  
+  /* Perlin noise */
+  int perlinOffsetX;
+  int perlinOffsetY;
   
   /* Bonuses */
   int bonusType;

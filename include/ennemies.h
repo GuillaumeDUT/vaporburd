@@ -11,10 +11,10 @@
 
 void createRandomEnnemy(EList *ennemies, float globalTranslation);
 void createOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation);
-void updateEnnemies(Ship ship, BList *bullets, EList *liste);
+void updateEnnemies(Ship ship, BList *bullets, EList *liste, int globalTranslationTotal);
 void drawEnnemy(Ennemy ennemy, int full);
-void moveEnnemy( Ennemy ennemy );
+void moveEnnemy(Ennemy ennemy, int globalTranslationTotal);
 void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal);
-void shootEnnemy( Ennemy ennemy, BList *bullets );
+void shootEnnemy(Ennemy ennemy, BList *bullets);
 
 #endif

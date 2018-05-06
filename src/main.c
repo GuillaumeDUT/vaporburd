@@ -2,6 +2,7 @@
 #include "constants.h"
 
 #include "basic_shape.h"
+#include "helpers.h"
 #include "entities.h"
 #include "ship.h"
 #include "shoot.h"
@@ -59,7 +60,6 @@ void setTexture ( char *name, int textureID, GLuint *textures ) {
 }
 
 int main(int argc, char** argv) {
-
   LEVEL_STATE = LEVEL_STATE_INIT;
   // Initialisation de la SDL
   if(-1 == SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
   OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [ryuu's Easy].osu");
   OSUNode currentOsuNode = osu.first;
 
-  Ship ship = createShip(-4.0, 0.0, 10, 0.5);
+  Ship ship = createShip(-4.0, 0.0, 20, 0.5);
 
   OList obstaclesList;
   obstaclesList.taille = 0;  
@@ -124,6 +124,7 @@ int main(int argc, char** argv) {
 
   globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
   float globalTranslationTotal = 0;
+
 
   int loop = 1;
   glClearColor(0.1, 0.1, 0.1 ,1.0);
@@ -196,6 +197,7 @@ int main(int argc, char** argv) {
     if(triggerKeyArrowLeft) moveLeft(ship);
     if(triggerKeyArrowRight) moveRight(ship);
 
+
     /* Tir */
     ship->cooldown = ship->cooldown > 0 ? 
       ship->cooldown-1 
@@ -207,11 +209,13 @@ int main(int argc, char** argv) {
       } 
     }
 
+
+
     /* Boucle d'update et affichage des objets */
     updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
     updateObstacles(ship, &obstaclesList);
     updateBullets(ship, &bulletsList, globalTranslationTotal);
-    updateEnnemies(ship, &bulletsList, &ennemiesList);
+    updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal);
     updateBonuses(ship, &bonusesList);
 
     if ( ship->hp <= 0) {
