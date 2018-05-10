@@ -89,7 +89,7 @@ void bossAttack1(Entity entity, Ship ship, BList *liste, int deltaTime) {
   Bullet bullet = createBullet(entity);
   ajouterFinList(liste, bullet);
 
-  bullet->pos[Y] += 0.8*(deltaTime-10);
+  bullet->pos[Y] += (deltaTime-25) / 3;
   bullet->size = 2;
 
   deltaX = ship->pos[X] - bullet->pos[X];
