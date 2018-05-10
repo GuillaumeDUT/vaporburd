@@ -21,6 +21,7 @@ float WINDOW_SCALE = 20.0;
 float globalTranslation;
 int LEVEL_STATE;
 
+
 /* DEBUG */
 static const int DEBUG = 1;
 
@@ -31,14 +32,14 @@ void resizeViewport() {
   gluOrtho2D(-WINDOW_SCALE/2.0, WINDOW_SCALE/2., -WINDOW_SCALE/2., WINDOW_SCALE/2.);
   SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
 }
+
+
 void setTexture ( char *name, int textureID, GLuint *textures ) {
 
   char filepath[100];
   SDL_Surface *image = NULL;
-  sprintf(filepath, "./assets/%s.png", name);
-  image = IMG_Load("assets/l.png");
-
-
+  sprintf(filepath, "./assets/img/%s.png", name);
+  image = IMG_Load(filepath);
   if ( image ) {
     glBindTexture(GL_TEXTURE_2D, textures[textureID]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -46,11 +47,11 @@ void setTexture ( char *name, int textureID, GLuint *textures ) {
     glTexImage2D(
       GL_TEXTURE_2D,
       0,
-      GL_RGB,
+      GL_RGBA,
       image->w,
       image->h,
       0,
-      GL_RGB,
+      GL_RGBA,
       GL_UNSIGNED_BYTE,
       image->pixels);
 
@@ -67,7 +68,7 @@ int main(int argc, char** argv) {
 
   if ( DEBUG == 1 ) {
     /* DEBUG DU BOSS */
-    MUSIC_DURATION = MUSIC_DURATION / 100;    
+    MUSIC_DURATION = MUSIC_DURATION / 100;
   }
 
   // Initialisation de la SDL
@@ -97,11 +98,23 @@ int main(int argc, char** argv) {
 
 
   /* Chargement et traitement de la texture */
-  /*
-  GLuint textureID[1];
+
+
+  GLuint textureID[10];
+
   glGenTextures(1, textureID);
-  setTexture("l", 0, textureID);
-*/
+  setTexture("bg", 2, textureID);
+  glGenTextures(1, textureID);
+  setTexture("bullet", 1, textureID);
+  glGenTextures(1, textureID);
+  setTexture("ship", 0, textureID);
+
+
+
+
+  /* activation du canal Alpha */
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
   Mix_PlayMusic(music, -1);
@@ -115,7 +128,7 @@ int main(int argc, char** argv) {
   Ship ship = createShip(-4.0, 0.0, 20, 0.5);
 
   OList obstaclesList;
-  obstaclesList.taille = 0;  
+  obstaclesList.taille = 0;
   EList ennemiesList;
   ennemiesList.taille = 0;
   BList bulletsList;
@@ -162,40 +175,63 @@ int main(int argc, char** argv) {
 
     /* Texture */
 
-    /* Active l'image */
-    /*
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID[0]);
 
-    int scale = 5;
-    float w = 12 / scale;
-    float h = 16 / scale;
+    /*affiche le bg */
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureID[3]);
 
     glBegin(GL_QUADS);
     {
+      glColor3ub(255,255,255);
       glTexCoord2f(0, 0);
-      glVertex2f(-w/2, h/2);
+      glVertex2f(-WINDOW_SCALE/2+globalTranslationTotal, +WINDOW_SCALE/2);
 
       glTexCoord2f(1, 0);
-      glVertex2f(w/2, h/2);
+      glVertex2f(+WINDOW_SCALE/2+globalTranslationTotal, +WINDOW_SCALE/2);
 
       glTexCoord2f(1, 1);
-      glVertex2f(w/2, -h/2);      
+      glVertex2f(+WINDOW_SCALE/2+globalTranslationTotal, -WINDOW_SCALE/2);
 
       glTexCoord2f(0, 1);
-      glVertex2f(-w/2, -h/2);
+      glVertex2f(-WINDOW_SCALE/2+globalTranslationTotal, -WINDOW_SCALE/2);
     }
-    glEnd();        
-*/
-    /* Desactive l'image */      
-    /*
+    glEnd();
+    /* Desactive l'image */
+
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_TEXTURE_2D);
-*/
+
+    /* Active l'image */
+    /* dessine l'image du vaisseau en fonction de sa position */
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureID[0]);
+
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
+      glTexCoord2f(0, 0);
+      glVertex2f(ship->pos[X]-1, ship->pos[Y]+1.76);
+
+      glTexCoord2f(1, 0);
+      glVertex2f(ship->pos[X]+1, ship->pos[Y]+1.76);
+
+      glTexCoord2f(1, 1);
+      glVertex2f(ship->pos[X]+1, ship->pos[Y]-1.76);
+
+      glTexCoord2f(0, 1);
+      glVertex2f(ship->pos[X]-1, ship->pos[Y]-1.76);
+    }
+    glEnd();
+    /* Desactive l'image */
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
+
 
 
     /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
-    if ( currentOsuNode != NULL && 
+    if ( currentOsuNode != NULL &&
         musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
         LEVEL_STATE == LEVEL_STATE_RUNNING)
     {
@@ -221,14 +257,14 @@ int main(int argc, char** argv) {
 
 
     /* Tir */
-    ship->cooldown = ship->cooldown > 0 ? 
-      ship->cooldown-1 
+    ship->cooldown = ship->cooldown > 0 ?
+      ship->cooldown-1
       : 0;
     if ( triggerKeySpace ) {
       if ( ship->cooldown <= 0 ) {
         ship->cooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackPerSecond);
         shoot(ship, &bulletsList);
-      } 
+      }
     }
 
 
@@ -236,7 +272,7 @@ int main(int argc, char** argv) {
     /* Boucle d'update et affichage des objets */
     updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
     updateObstacles(ship, &obstaclesList);
-    updateBullets(ship, &bulletsList, globalTranslationTotal);
+    updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
     updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal);
     updateBonuses(ship, &bonusesList);
 

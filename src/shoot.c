@@ -40,10 +40,10 @@ void shoot(Entity entity, BList *liste){
     }
       break;
     default:
-      break;      
-  }  
+      break;
+  }
 }
-void updateBullets(Ship ship, BList *liste, float globalTranslationTotal) {
+void updateBullets(Ship ship, BList *liste, float globalTranslationTotal,GLuint textureID[]) {
   if(liste->taille == 0){
     return ;
   }
@@ -52,7 +52,7 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal) {
   while ( actuel != NULL ) {
     next = actuel->next;
     moveBullet( actuel );
-    drawBullet( actuel );
+    drawBullet( actuel, &textureID[1] );
 
     /* Supprime quand on sort de l'ecran */
     if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ) {
@@ -62,20 +62,44 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal) {
     actuel = next;
   }
 }
-void drawBullet( Bullet bullet ) {
+void drawBullet( Bullet bullet,GLuint textureID[]) {
   //  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
 
   glPushMatrix();
-  glColor3f(0, 155, 155);
-  glTranslatef(
-    bullet->pos[X],
-    bullet->pos[Y],
-    0);
-  glScalef(
-    bullet->size,
-    bullet->size,
-    1);
-  drawCircle(1);
+    glEnable(GL_TEXTURE_2D);
+
+    //printf("Bug avant bind texture | posBullet \n",bullet->pos[X]);
+    glBindTexture(GL_TEXTURE_2D, textureID[1]);
+    //printf("Bug après bind texture \n");
+      glBegin(GL_QUADS);
+      {
+        glColor3ub(255,255,255);
+
+        glTexCoord2f(0, 0);
+        glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]+0.5);
+
+        glTexCoord2f(1, 0);
+        glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]+0.5);
+
+        glTexCoord2f(1, 1);
+        glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]-0.5);
+
+        glTexCoord2f(0, 1);
+        glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]-0.5);
+      }
+      glEnd();
+        glColor3f(0, 155, 155);
+    glTranslatef(
+      bullet->pos[X],
+      bullet->pos[Y],
+      0);
+    glScalef(
+      bullet->size,
+      bullet->size,
+      1);
+    drawCircle(1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
   glPopMatrix();
 }
 void moveBullet( Bullet bullet ) {
@@ -98,4 +122,3 @@ void bossAttack1(Entity entity, Ship ship, BList *liste, int deltaTime) {
   bullet->speed[Y] = deltaY/300;
   bullet->speed[X] = deltaX/300;
 }
-

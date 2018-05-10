@@ -8,8 +8,8 @@
 
 // tire en fonction de la position actuelle du vaisseau
 void shoot(Entity entity, BList *liste);
-void updateBullets(Ship ship, BList *liste, float globalTranslationTotal);
-void drawBullet( Bullet bullet );
+void updateBullets(Ship ship, BList *liste, float globalTranslationTotal, GLuint textureID[]);
+void drawBullet( Bullet bullet ,GLuint textureID[]);
 void moveBullet( Bullet bullet );
 void bossAttack1(Entity entity, Ship ship, BList *liste, int deltaTime);
 
