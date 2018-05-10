@@ -78,7 +78,7 @@ int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {
         }
         /* Blue */
         if ( r==0 && g==0 && b==max ) {
-          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_DAMAGES));
+          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_DAMAGE));
         }
         /* Green */
         if ( r==0 && g==max && b==0 ) {

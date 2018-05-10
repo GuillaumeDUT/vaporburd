@@ -36,8 +36,8 @@ void updateBonuses(Ship ship, BList *bonuses) {
 }
 
 void acquireBonus(Ship ship, Bonus bonus) {
-  switch(bonus->bonusType) {
-    case BONUS_TYPE_DAMAGES:
+  switch(bonus->type) {
+    case BONUS_TYPE_DAMAGE:
       ship->damages += SHIP_DAMAGES;
       break;
     case BONUS_TYPE_ATTACK_SPEED:

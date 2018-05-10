@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
   LEVEL_STATE = LEVEL_STATE_INIT;
 
   if ( DEBUG == 1 ) {
+    printf("MODE DEBUG BOSS ON \n");
     /* DEBUG DU BOSS */
     MUSIC_DURATION = MUSIC_DURATION / 100;    
   }

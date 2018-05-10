@@ -9,6 +9,7 @@ static int bonusID = 0;
 
 Ship createShip(float x, float y, int hp, float size){
   Ship ship = (Ship) createEntity(x, y, hp, size, 0);
+  ship->type = SHIP;
   ship->damages = SHIP_DAMAGES;
   ship->attackPerSecond = SHIP_ATTACK_SPEED;
   ship->missileLevel = 1;
@@ -17,7 +18,7 @@ Ship createShip(float x, float y, int hp, float size){
 Ennemy createEnnemy(float x, float y, int hp, float size){
   Ennemy ennemy = (Ennemy) createEntity(x, y, hp, size, ennemyID++ );
   ennemy->missileLevel = 1;
-  ennemy->ennemyType = ENNEMY_TYPE_BASIC;
+  ennemy->type = ENNEMY_SIMPLE;
   ennemy->damages = 1;
   ennemy->attackPerSecond = 0.1;
   
@@ -29,26 +30,25 @@ Obstacle createObstacle(float x, float y, int hp, float size){
 }
 Bonus createBonus(float x, float y, int hp, float size, int type) {
   Bonus bonus = (Bonus) createEntity(x, y, hp, size, bonusID++ );
-  bonus->bonusType = type;
+  bonus->type = BONUS_UNDEFINED;
   return bonus;  
 }
-Bullet createBullet(Entity entity){
-  Bullet bullet = (Bullet) createEntity(entity->pos[X], entity->pos[Y], 1, BULLET_SIZE, bulletID++ );
+Bullet createBullet(Entity entity, float size){
+  Bullet bullet = (Bullet) createEntity(entity->pos[X], entity->pos[Y], 1, size, bulletID++ );
 
   bullet->damages = entity->damages;
 
-  if ( entity->ennemyType != NOT_AN_ENNEMY ) {
+  if ( entity->type != SHIP ) {
     bullet->speed[X] = BULLET_SPEED * 1;
     bullet->speed[X] = -(bullet->speed[X]);
     bullet->pos[X] -= entity->size;
+    bullet->type = BULLET_ENNEMY;
   } else {
     bullet->speed[X] = BULLET_SPEED * 1.5;
     bullet->pos[X] += entity->size;
+    bullet->type = BULLET_SHIP;
   }
   
-  /* Le ennemi type permet differencier qui a tirer la balle */
-  bullet->ennemyType = entity->ennemyType;  
-
   return bullet;
 }
 
@@ -74,12 +74,11 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
   temp->max[X] = size/2;
   temp->max[Y] = size/2;
 
-  temp->bonusType = NOT_A_BONUS;
   temp->damages = 1;
   temp->attackPerSecond = 0;
   temp->missileLevel = 0;
   temp->endOfLevel = 0;
-  temp->ennemyType = NOT_AN_ENNEMY;
+  temp->type = UNDEFINED;
   temp->cooldown = 0;
   
   temp->perlinOffsetX = rand_a_b(0, 256);

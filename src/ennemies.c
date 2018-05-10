@@ -30,16 +30,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
   Ennemy eNext;
   while ( eActuel != NULL ) {
     eNext = eActuel->next;
-    if ( eActuel->ennemyType == ENNEMY_TYPE_BOSS ) {
-
-      /* Deplacement */
-      if ( eActuel->pos[Y] < ship->pos[Y] ) {
-        eActuel->speed[Y] += ACC/5;
-      } else if ( eActuel->pos[Y] > ship->pos[Y] ) {
-        eActuel->speed[Y] -= ACC/5;        
-      } else {
-        eActuel->speed[Y] = 0;
-      }
+    if ( eActuel->type == ENNEMY_BOSS ) {
 
       /* Patterns du boss */
       if ( eActuel->hp / BOSS_HP >= 0.8 ) {
@@ -47,10 +38,21 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
         bossPattern1( eActuel, ship, bullets );
         //        shootEnnemy( eActuel, bullets );     
       } else {
+        
+        
+        /* Deplacement */
+        if ( eActuel->pos[Y] < ship->pos[Y] ) {
+          eActuel->speed[Y] += ACC/5;
+        } else if ( eActuel->pos[Y] > ship->pos[Y] ) {
+          eActuel->speed[Y] -= ACC/5;        
+        } else {
+          eActuel->speed[Y] = 0;
+        }
+        
         shootEnnemy( eActuel, bullets );        
       }
 
-    } else if ( eActuel->ennemyType == ENNEMY_TYPE_BASIC ) {
+    } else if ( eActuel->type == ENNEMY_SIMPLE ) {
 
       /* Deplacement */
       float freq = 0.01;
@@ -82,7 +84,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
       Bullet bulletNext;
       while ( bulletActuel != NULL ) {
         bulletNext = bulletActuel->next;
-        if ( bulletActuel->ennemyType == NOT_AN_ENNEMY && collision(bulletActuel, eActuel) ) {
+        if ( bulletActuel->type == BULLET_SHIP && collision(bulletActuel, eActuel) ) {
           /*displayEntity(eActuel);*/
           drawEnnemy( eActuel, 1 );
           getDamage(bulletActuel, eActuel);
@@ -124,7 +126,7 @@ void drawEnnemy(Ennemy ennemy, int full) {
   }
   glPopMatrix();
 
-  if ( ennemy->ennemyType == ENNEMY_TYPE_BOSS ) {
+  if ( ennemy->type == ENNEMY_BOSS ) {
     /* Affichage de la barre de vie */
     float percent = (float)ennemy->hp/BOSS_HP;
     glPushMatrix(); 
@@ -201,7 +203,7 @@ void createBoss(EList *ennemies, float globalTranslation, float globalTranslatio
   );
 
   boss->speed[X] = globalTranslation;
-  boss->ennemyType = ENNEMY_TYPE_BOSS;
+  boss->type = ENNEMY_BOSS;
   boss->damages = 2;
   boss->attackPerSecond = 0.4;
   boss->missileLevel = 3;

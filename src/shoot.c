@@ -8,7 +8,7 @@ void shoot(Entity entity, BList *liste){
   int i;
 
   for ( i=0; i<max; i++ ) {
-    bullets[i] = createBullet(entity);
+    bullets[i] = createBullet(entity, BULLET_SIZE);
     ajouterFinList(liste, bullets[i]);
   }
 
@@ -22,7 +22,7 @@ void shoot(Entity entity, BList *liste){
       bullets[2]->speed[Y] = 0.02;
       break;
     case 4: {
-      Bullet b5 = createBullet(entity);
+      Bullet b5 = createBullet(entity, BULLET_SIZE);
       ajouterFinList(liste, b5);
       float size = b5->size;
       bullets[1]->pos[Y] -= size * 4;
@@ -86,11 +86,10 @@ void moveBullet( Bullet bullet ) {
 void bossAttack1(Entity entity, Ship ship, BList *liste, int deltaTime) {
   float deltaX, deltaY;
 
-  Bullet bullet = createBullet(entity);
+  Bullet bullet = createBullet(entity, 2);
   ajouterFinList(liste, bullet);
 
   bullet->pos[Y] += (deltaTime-25) / 3;
-  bullet->size = 2;
 
   deltaX = ship->pos[X] - bullet->pos[X];
   deltaY = ship->pos[Y] - bullet->pos[Y];
