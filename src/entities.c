@@ -30,7 +30,7 @@ Obstacle createObstacle(float x, float y, int hp, float size){
 }
 Bonus createBonus(float x, float y, int hp, float size, int type) {
   Bonus bonus = (Bonus) createEntity(x, y, hp, size, bonusID++ );
-  bonus->type = BONUS_UNDEFINED;
+  bonus->type = type;
   return bonus;  
 }
 Bullet createBullet(Entity entity, float size){

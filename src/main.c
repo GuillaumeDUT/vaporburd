@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
   LEVEL_STATE = LEVEL_STATE_INIT;
 
   if ( DEBUG == 1 ) {
-    printf("MODE DEBUG BOSS ON \n");
+    printf(" // // MODE DEBUG BOSS ON // // \n");
     /* DEBUG DU BOSS */
     MUSIC_DURATION = MUSIC_DURATION / 100;    
   }
@@ -144,6 +144,7 @@ int main(int argc, char** argv) {
     while ( actuel != NULL ) {
       printf("%d->", actuel->id);
       acquireBonus(ship, actuel);
+      printf("Bonus type: %d\n", actuel->type);
       supprimerList(&bonusesList, actuel->id);
       actuel = actuel->next;
     }
