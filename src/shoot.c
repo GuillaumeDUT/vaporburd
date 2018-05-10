@@ -52,7 +52,7 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal,GLuint 
   while ( actuel != NULL ) {
     next = actuel->next;
     moveBullet( actuel );
-    drawBullet( actuel, &textureID[1] );
+    drawBullet( actuel, textureID);
 
     /* Supprime quand on sort de l'ecran */
     if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ) {
@@ -67,10 +67,7 @@ void drawBullet( Bullet bullet,GLuint textureID[]) {
 
   glPushMatrix();
     glEnable(GL_TEXTURE_2D);
-
-    //printf("Bug avant bind texture | posBullet \n",bullet->pos[X]);
     glBindTexture(GL_TEXTURE_2D, textureID[1]);
-    //printf("Bug après bind texture \n");
       glBegin(GL_QUADS);
       {
         glColor3ub(255,255,255);

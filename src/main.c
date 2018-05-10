@@ -102,12 +102,12 @@ int main(int argc, char** argv) {
 
   GLuint textureID[10];
 
-  glGenTextures(1, textureID);
-  setTexture("bg", 2, textureID);
-  glGenTextures(1, textureID);
-  setTexture("bullet", 1, textureID);
+
+
   glGenTextures(1, textureID);
   setTexture("ship", 0, textureID);
+  setTexture("bullet", 1, textureID);
+  setTexture("bg", 2, textureID);
 
 
 
@@ -185,16 +185,16 @@ int main(int argc, char** argv) {
     {
       glColor3ub(255,255,255);
       glTexCoord2f(0, 0);
-      glVertex2f(-WINDOW_SCALE/2+globalTranslationTotal, +WINDOW_SCALE/2);
+      glVertex2f(-1.77 *10+globalTranslationTotal, +1 *10);
 
       glTexCoord2f(1, 0);
-      glVertex2f(+WINDOW_SCALE/2+globalTranslationTotal, +WINDOW_SCALE/2);
+      glVertex2f(+1.77 *10+globalTranslationTotal, +1 *10);
 
       glTexCoord2f(1, 1);
-      glVertex2f(+WINDOW_SCALE/2+globalTranslationTotal, -WINDOW_SCALE/2);
+      glVertex2f(+1.77 *10+globalTranslationTotal, -1 *10);
 
       glTexCoord2f(0, 1);
-      glVertex2f(-WINDOW_SCALE/2+globalTranslationTotal, -WINDOW_SCALE/2);
+      glVertex2f(-1.77 *10+globalTranslationTotal, -1 *10);
     }
     glEnd();
     /* Desactive l'image */
