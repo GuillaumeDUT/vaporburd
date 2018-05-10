@@ -21,7 +21,7 @@ Ennemy createEnnemy(float x, float y, int hp, float size){
   ennemy->type = ENNEMY_SIMPLE;
   ennemy->damages = 1;
   ennemy->attackPerSecond = 0.1;
-  
+
   return ennemy;
 }
 Obstacle createObstacle(float x, float y, int hp, float size){
@@ -36,6 +36,10 @@ Bonus createBonus(float x, float y, int hp, float size, int type) {
 Bullet createBullet(Entity entity, float size){
   Bullet bullet = (Bullet) createEntity(entity->pos[X], entity->pos[Y], 1, size, bulletID++ );
 
+  if (entity->type == ENNEMY_BOSS) {
+    printf("Size:%f\n", bullet->size);
+  }
+
   bullet->damages = entity->damages;
 
   if ( entity->type != SHIP ) {
@@ -48,7 +52,7 @@ Bullet createBullet(Entity entity, float size){
     bullet->pos[X] += entity->size;
     bullet->type = BULLET_SHIP;
   }
-  
+
   return bullet;
 }
 
@@ -80,7 +84,7 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
   temp->endOfLevel = 0;
   temp->type = UNDEFINED;
   temp->cooldown = 0;
-  
+
   temp->perlinOffsetX = rand_a_b(0, 256);
   temp->perlinOffsetY = rand_a_b(0, 256);
 

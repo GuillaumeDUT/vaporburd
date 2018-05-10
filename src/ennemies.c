@@ -184,9 +184,13 @@ void shootEnnemy(Ennemy ennemy, BList *bullets) {
 
 void bossPattern1(Ennemy ennemy, Ship ship, BList *bullets) {
   ennemy->cooldown = ennemy->cooldown > 0 ? ennemy->cooldown-1 : 0;
+  
+  /* Tir par raffale de 5 coups */
   if ( ennemy->cooldown < 50 && ennemy->cooldown % 10 == 0 ) {
     bossAttack1(ennemy, ship, bullets, ennemy->cooldown);    
   }
+  
+  /* Modifie le cooldown */
   if ( ennemy->cooldown <= 0 ) {
     ennemy->cooldown = 100;
   }

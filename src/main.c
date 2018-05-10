@@ -144,7 +144,6 @@ int main(int argc, char** argv) {
     while ( actuel != NULL ) {
       printf("%d->", actuel->id);
       acquireBonus(ship, actuel);
-      printf("Bonus type: %d\n", actuel->type);
       supprimerList(&bonusesList, actuel->id);
       actuel = actuel->next;
     }
@@ -238,8 +237,8 @@ int main(int argc, char** argv) {
     /* Boucle d'update et affichage des objets */
     updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
     updateObstacles(ship, &obstaclesList);
-    updateBullets(ship, &bulletsList, globalTranslationTotal);
     updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal);
+    updateBullets(ship, &bulletsList, globalTranslationTotal);
     updateBonuses(ship, &bonusesList);
 
     if ( ship->hp <= 0) {
