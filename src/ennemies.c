@@ -166,7 +166,8 @@ void moveEnnemy(Ennemy ennemy, int globalTranslationTotal) {
     ennemy->speed[X] = 0;
   }
 
-  /* Deplacement du bas en haut */
+  /* Deplacement du bas en h*(deltaTime-25);
+  bullet->size = 2.5; aut */
   if ( ennemy->pos[Y] > LIMIT ) ennemy->hp = 0;
   if ( ennemy->pos[Y] < -LIMIT ) ennemy->hp = 0;
 }
@@ -201,7 +202,7 @@ void createBoss(EList *ennemies, float globalTranslation, float globalTranslatio
 
   boss->speed[X] = globalTranslation;
   boss->ennemyType = ENNEMY_TYPE_BOSS;
-  boss->damages = 20;
+  boss->damages = 2;
   boss->attackPerSecond = 0.4;
   boss->missileLevel = 3;
 

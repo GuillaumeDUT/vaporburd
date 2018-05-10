@@ -145,9 +145,7 @@ void updateShip(Ship ship, BList *bullets, float globalTranslation, float global
       bulletNext = bulletActuel->next;
       if ( bulletActuel->ennemyType != NOT_AN_ENNEMY && collision(bulletActuel, ship) ) {
         drawShip( ship, 1 );
-        /*
         getDamage(bulletActuel, ship);
-        */
         supprimerList(bullets, bulletActuel->id);
       }
       bulletActuel = bulletNext;

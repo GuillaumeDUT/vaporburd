@@ -95,7 +95,7 @@ void bossAttack1(Entity entity, Ship ship, BList *liste, int deltaTime) {
   deltaX = ship->pos[X] - bullet->pos[X];
   deltaY = ship->pos[Y] - bullet->pos[Y];
 
-  bullet->speed[Y] = deltaY/100;
-  bullet->speed[X] = deltaX/100;
+  bullet->speed[Y] = deltaY/300;
+  bullet->speed[X] = deltaX/300;
 }
 
