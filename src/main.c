@@ -23,7 +23,7 @@ int LEVEL_STATE;
 
 
 /* DEBUG */
-static const int DEBUG = 1;
+static const int DEBUG = 0;
 
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -100,11 +100,11 @@ int main(int argc, char** argv) {
   /* Chargement et traitement de la texture */
 
 
-  GLuint textureID[10];
+  GLuint textureID[3];
 
 
 
-  glGenTextures(1, textureID);
+  glGenTextures(3, textureID);
   setTexture("ship", 0, textureID);
   setTexture("bullet", 1, textureID);
   setTexture("bg", 2, textureID);
@@ -179,7 +179,7 @@ int main(int argc, char** argv) {
     /*affiche le bg */
 
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID[3]);
+    glBindTexture(GL_TEXTURE_2D, textureID[2]);
 
     glBegin(GL_QUADS);
     {
