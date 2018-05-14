@@ -108,6 +108,7 @@ int main(int argc, char** argv) {
   setTexture("ship", 0, textureID);
   setTexture("bullet", 1, textureID);
   setTexture("bg", 2, textureID);
+  setTexture("wall",3,textureID);
 
 
 
@@ -271,7 +272,7 @@ int main(int argc, char** argv) {
 
     /* Boucle d'update et affichage des objets */
     updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
-    updateObstacles(ship, &obstaclesList);
+    updateObstacles(ship, &obstaclesList,textureID);
     updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
     updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal);
     updateBonuses(ship, &bonusesList);

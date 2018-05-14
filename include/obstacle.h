@@ -7,7 +7,7 @@
 #include "constants.h"
 #include "collisions.h"
 
-void updateObstacles(Ship ship, OList *liste);
-void drawObstacle(Obstacle obstacle, int full);
+void updateObstacles(Ship ship, OList *liste,GLuint textureID[]);
+void drawObstacle(Obstacle obstacle, int full,GLuint textureID[]);
 
 #endif

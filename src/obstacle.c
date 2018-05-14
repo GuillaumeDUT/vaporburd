@@ -10,7 +10,7 @@ int LEVEL_STATE;
 
 
 /* Affiche et detecte les collisions */
-void updateObstacles(Ship ship, OList *obstacles) {
+void updateObstacles(Ship ship, OList *obstacles, GLuint textureID[]) {
   if(obstacles->taille == 0){
     return ;
   }
@@ -18,14 +18,14 @@ void updateObstacles(Ship ship, OList *obstacles) {
   Obstacle oNext;
   while ( oActuel != NULL ) {
     oNext = oActuel->next;
-    drawObstacle( oActuel, 0 );
+    drawObstacle( oActuel, 0 , textureID);
 
     /* Collision avec le ship */
     if ( collision(ship, oActuel) ) {
       if ( oActuel->endOfLevel == 0 ) {
         /* Normal obstacle */
         drawShip(ship, 1);
-        drawObstacle(oActuel, 1);
+        drawObstacle(oActuel, 1, textureID);
         getDamage(ship, oActuel);
 //        getDamage(oActuel, ship);
         displayEntity(ship);
@@ -44,7 +44,7 @@ void updateObstacles(Ship ship, OList *obstacles) {
     oActuel = oNext;
   }
 }
-void drawObstacle(Obstacle obstacle, int full) {
+void drawObstacle(Obstacle obstacle, int full, GLuint textureID[]) {
   glPushMatrix(); {
     if ( obstacle->endOfLevel == 0 ) {
       glColor3f(255, 0, 0);
@@ -53,6 +53,30 @@ void drawObstacle(Obstacle obstacle, int full) {
     }
     glTranslatef(obstacle->pos[X], obstacle->pos[Y], 0);
     glScalef(obstacle->size, obstacle->size, 1);
-    drawSquare(full);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureID[3]);
+
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
+      glTexCoord2f(0, 0);
+      glVertex2f(-0.5, +0.5 );
+
+      glTexCoord2f(1, 0);
+      glVertex2f(+0.5, +0.5);
+
+      glTexCoord2f(1, 1);
+      glVertex2f(+0.5, -0.5);
+
+      glTexCoord2f(0, 1);
+      glVertex2f(-0.5, -0.5);
+    }
+    glEnd();
+    /* Desactive l'image */
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
+    //drawSquare(full);
   } glPopMatrix();
 }
