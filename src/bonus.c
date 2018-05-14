@@ -10,15 +10,15 @@ void drawBonus(Bonus b, int full,GLuint textureID[]) {
     glScalef(b->size, b->size, 1);
     glEnable(GL_TEXTURE_2D);
 
-    if(b->bonusType == BONUS_TYPE_DAMAGES){
+    if(b->type == BONUS_TYPE_DAMAGE){
     
       glBindTexture(GL_TEXTURE_2D, textureID[5]);
 
-    }else if(b->bonusType == BONUS_TYPE_ATTACK_SPEED){
+    }else if(b->type == BONUS_TYPE_ATTACK_SPEED){
 
       glBindTexture(GL_TEXTURE_2D, textureID[6]);
 
-    }else if(b->bonusType == BONUS_TYPE_MISSILE_UP){
+    }else if(b->type == BONUS_TYPE_MISSILE_UP){
 
       glBindTexture(GL_TEXTURE_2D, textureID[7]);
     }

@@ -67,7 +67,7 @@ void drawBullet( Bullet bullet,GLuint textureID[]) {
 
   glPushMatrix();
     glEnable(GL_TEXTURE_2D);
-    if(bullet->ennemyType == ENNEMY_TYPE_BASIC){
+    if(bullet->type == ENNEMY_SIMPLE){
         glBindTexture(GL_TEXTURE_2D, textureID[4]);
      
         glBegin(GL_QUADS);
@@ -87,7 +87,7 @@ void drawBullet( Bullet bullet,GLuint textureID[]) {
           glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5);
         }
         glEnd();
-      }else if(bullet->ennemyType == NOT_AN_ENNEMY){
+      }else if(bullet->type == ENNEMY_BOSS){
       glBindTexture(GL_TEXTURE_2D, textureID[1]);
         glBegin(GL_QUADS);
         {
