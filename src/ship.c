@@ -143,7 +143,7 @@ void updateShip(Ship ship, BList *bullets, float globalTranslation, float global
     Bullet bulletNext;
     while ( bulletActuel != NULL ) {
       bulletNext = bulletActuel->next;
-      if ( bulletActuel->ennemyType != NOT_AN_ENNEMY && collision(bulletActuel, ship) ) {
+      if ( bulletActuel->type == BULLET_ENNEMY && collision(bulletActuel, ship) ) {
         drawShip( ship, 1 );
         getDamage(bulletActuel, ship);
         supprimerList(bullets, bulletActuel->id);

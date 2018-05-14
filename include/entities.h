@@ -5,41 +5,53 @@
 #include "constants.h"
 #include "helpers.h"
 
+enum type {
+  UNDEFINED,
+  SHIP,
+  OBSTACLE,
+  BULLET_SHIP,
+  BULLET_ENNEMY,
+  ENNEMY_SIMPLE,
+  ENNEMY_BOSS,
+  BONUS_TYPE_DAMAGE,
+  BONUS_TYPE_ATTACK_SPEED,
+  BONUS_TYPE_MISSILE_UP
+};
+
 typedef struct Entity{
-	int hp;
-	int id;  
-	float size;
-  
-	float pos[2];
-	float speed[2];
-	float min[2];
-	float max[2];
-  
-	int damages;
-  
+  int hp;
+  int id;  
+  float size;
+
+  float pos[2];
+  float speed[2];
+  float min[2];
+  float max[2];
+
+  int damages;
+
   /* Perlin noise */
   int perlinOffsetX;
   int perlinOffsetY;
-  
-  /* Bonuses */
-  int bonusType;
+
+  /* Attack */
   float attackPerSecond;
   int cooldown;
   int missileLevel;
-  
+
   /* End of level */
   int endOfLevel;
-  int ennemyType;
-  
-	struct Entity *next;
-	struct Entity *before;
+  int type;
+
+  struct Entity *next;
+  struct Entity *before;
 } *Ship, *Ennemy, *Obstacle, *Bullet, *Entity, *Bonus;
 
 Ship createShip(float x, float y, int hp, float size);
 Ennemy createEnnemy(float x, float y, int hp, float size);
 Obstacle createObstacle(float x, float y, int hp, float size);
 Bonus createBonus(float x, float y, int hp, float size, int type);
-Bullet createBullet(Entity entity);
+Bullet createBullet(Entity entity, float size);
 
 Entity createEntity(float x, float y, int hp, float size, int id);
 

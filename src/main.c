@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
   LEVEL_STATE = LEVEL_STATE_INIT;
 
   if ( DEBUG == 1 ) {
+    printf(" // // MODE DEBUG BOSS ON // // \n");
     /* DEBUG DU BOSS */
     MUSIC_DURATION = MUSIC_DURATION / 100;
   }
@@ -281,6 +282,7 @@ int main(int argc, char** argv) {
     updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
     updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal,textureID);
     updateBonuses(ship, &bonusesList,textureID);
+
 
     if ( ship->hp <= 0) {
       printf("Fin de partie\n\n");
