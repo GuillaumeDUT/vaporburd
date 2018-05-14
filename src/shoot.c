@@ -67,25 +67,47 @@ void drawBullet( Bullet bullet,GLuint textureID[]) {
 
   glPushMatrix();
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID[1]);
-      glBegin(GL_QUADS);
-      {
-        glColor3ub(255,255,255);
+    if(bullet->ennemyType == ENNEMY_TYPE_BASIC){
+        glBindTexture(GL_TEXTURE_2D, textureID[4]);
+     
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+          glScalef(0.5,0.5,1);
+          glTexCoord2f(0, 0);
+          glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]+0.5);
 
-        glTexCoord2f(0, 0);
-        glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]+0.5);
+          glTexCoord2f(1, 0);
+          glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]+0.5);
 
-        glTexCoord2f(1, 0);
-        glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]+0.5);
+          glTexCoord2f(1, 1);
+          glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]-0.5);
 
-        glTexCoord2f(1, 1);
-        glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]-0.5);
+          glTexCoord2f(0, 1);
+          glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5);
+        }
+        glEnd();
+      }else if(bullet->ennemyType == NOT_AN_ENNEMY){
+      glBindTexture(GL_TEXTURE_2D, textureID[1]);
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
 
-        glTexCoord2f(0, 1);
-        glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]-0.5);
-      }
-      glEnd();
-        glColor3f(0, 155, 155);
+          glTexCoord2f(0, 0);
+          glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]+0.5);
+
+          glTexCoord2f(1, 0);
+          glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]+0.5);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]-0.5);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]-0.5);
+        }
+        glEnd();
+    }
+        //glColor3f(0, 155, 155);
     glTranslatef(
       bullet->pos[X],
       bullet->pos[Y],
@@ -94,9 +116,10 @@ void drawBullet( Bullet bullet,GLuint textureID[]) {
       bullet->size,
       bullet->size,
       1);
-    drawCircle(1);
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_TEXTURE_2D);
+
+    drawCircle(1);
   glPopMatrix();
 }
 void moveBullet( Bullet bullet ) {

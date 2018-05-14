@@ -100,15 +100,20 @@ int main(int argc, char** argv) {
   /* Chargement et traitement de la texture */
 
 
-  GLuint textureID[3];
+  GLuint textureID[10];
 
 
 
-  glGenTextures(3, textureID);
+  glGenTextures(10, textureID);
   setTexture("ship", 0, textureID);
   setTexture("bullet", 1, textureID);
   setTexture("bg", 2, textureID);
   setTexture("wall",3,textureID);
+  setTexture("ennemy_bullet",4,textureID);
+  setTexture("bonus1",5,textureID);
+  setTexture("bonus2",6,textureID);
+  setTexture("bonus3",7,textureID);
+  setTexture("basic_ennemy",8,textureID);
 
 
 
@@ -274,8 +279,8 @@ int main(int argc, char** argv) {
     updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
     updateObstacles(ship, &obstaclesList,textureID);
     updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
-    updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal);
-    updateBonuses(ship, &bonusesList);
+    updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal,textureID);
+    updateBonuses(ship, &bonusesList,textureID);
 
     if ( ship->hp <= 0) {
       printf("Fin de partie\n\n");

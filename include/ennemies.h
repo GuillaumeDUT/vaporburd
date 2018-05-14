@@ -11,8 +11,8 @@
 
 void createRandomEnnemy(EList *ennemies, float globalTranslation);
 void createOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation);
-void updateEnnemies(Ship ship, BList *bullets, EList *liste, int globalTranslationTotal);
-void drawEnnemy(Ennemy ennemy, int full);
+void updateEnnemies(Ship ship, BList *bullets, EList *liste, int globalTranslationTotal,GLuint textureID[]);
+void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]);
 void moveEnnemy(Ennemy ennemy, int globalTranslationTotal);
 void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal);
 void shootEnnemy(Ennemy ennemy, BList *bullets);

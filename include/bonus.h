@@ -8,8 +8,8 @@
 #include "ship.h"
 #include "collisions.h"
 
-void drawBonus(Bonus b, int full);
-void updateBonuses(Ship ship, BList *bonuses);
+void drawBonus(Bonus b, int full,GLuint textureID[]);
+void updateBonuses(Ship ship, BList *bonuses,GLuint textureID[]);
 void acquireBonus(Ship ship, Bonus bonus);
 
 #endif

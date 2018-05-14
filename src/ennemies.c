@@ -22,7 +22,7 @@ void createOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation
     15, /* HP */
     1.5 /* SIZE */));
 }
-void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTranslationTotal) {
+void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTranslationTotal,GLuint textureID[]) {
   if(ennemies->taille == 0){
     return ;
   }
@@ -74,7 +74,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
 
     }    
     moveEnnemy( eActuel, globalTranslationTotal );
-    drawEnnemy( eActuel, 0 );
+    drawEnnemy( eActuel, 0 , textureID);
 
     /* Collision avec les bullets */
     if(bullets->taille != 0){
@@ -84,7 +84,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
         bulletNext = bulletActuel->next;
         if ( bulletActuel->ennemyType == NOT_AN_ENNEMY && collision(bulletActuel, eActuel) ) {
           /*displayEntity(eActuel);*/
-          drawEnnemy( eActuel, 1 );
+          drawEnnemy( eActuel, 1 ,textureID);
           getDamage(bulletActuel, eActuel);
           supprimerList(bullets, bulletActuel->id);
         }
@@ -95,7 +95,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
     /* Collision avec le ship */
     if ( collision(ship, eActuel) ) {
       drawShip(ship, 1);
-      drawEnnemy(eActuel, 1);
+      drawEnnemy(eActuel, 1,textureID);
       getDamage(ship, eActuel);
       getDamage(eActuel, ship);
       /*displayEntity(ship);*/
@@ -108,7 +108,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
     eActuel = eNext;
   }
 }
-void drawEnnemy(Ennemy ennemy, int full) {
+void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
   glPushMatrix();
   {    
     glColor3f(255, 0, 120);
@@ -120,6 +120,33 @@ void drawEnnemy(Ennemy ennemy, int full) {
       ennemy->size,
       ennemy->size,
       1);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureID[8]);
+    // if(ennemy->ennemyType == ENNEMY_TYPE_BASIC){
+      
+    // }else if(ennemy->ennemyType == ENNEMY_TYPE_BOSS){
+    //   glBindTexture(GL_TEXTURE_2D, textureID[8]);
+    // } 
+    glBegin(GL_QUADS);
+      {
+        glColor3ub(255,255,255);
+        glScalef(0.5,0.5,1);
+        glTexCoord2f(0, 0);
+        glVertex2f(-0.5, +0.5);
+
+        glTexCoord2f(1, 0);
+        glVertex2f(+0.5, +0.5);
+
+        glTexCoord2f(1, 1);
+        glVertex2f(+0.5, -0.5);
+
+        glTexCoord2f(0, 1);
+        glVertex2f(-0.5, -0.5);
+      }
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
     drawCircle(full);
   }
   glPopMatrix();
