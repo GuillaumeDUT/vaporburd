@@ -18,6 +18,7 @@ enum type {
   BONUS_TYPE_MISSILE_UP
 };
 
+
 typedef struct Entity{
   int hp;
   int id;  

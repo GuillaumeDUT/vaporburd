@@ -62,7 +62,7 @@ void updateBonuses(Ship ship, BList *bonuses,GLuint textureID[]) {
     if ( collision(ship, bActuel) ) {
       drawShip(ship, 1);
       drawBonus(bActuel, 1, textureID);
-      printf("Bonus\n");
+      printf("Bonus taken\n");
       acquireBonus(ship, bActuel);
       supprimerList(bonuses, bActuel->id);
     }

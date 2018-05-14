@@ -37,7 +37,7 @@ Bullet createBullet(Entity entity, float size){
   Bullet bullet = (Bullet) createEntity(entity->pos[X], entity->pos[Y], 1, size, bulletID++ );
 
   if (entity->type == ENNEMY_BOSS) {
-    printf("Size:%f\n", bullet->size);
+//    printf("Size:%f\n", bullet->size);
   }
 
   bullet->damages = entity->damages;

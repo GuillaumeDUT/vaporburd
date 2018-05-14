@@ -5,6 +5,7 @@
 #include "ship.h"
 #include "shoot.h"
 #include "obstacle.h"
+#include <math.h>
 
 int collision(Entity e1, Entity e2);
 

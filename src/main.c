@@ -25,6 +25,19 @@ int LEVEL_STATE;
 /* DEBUG */
 static const int DEBUG = 0;
 
+/* DIFFICULTY */
+
+/* 
+Where difficulty is one of : 
+	EASY = "ryuu's Easy",
+	NORMAL = "Normal",
+	ADVANCED = "Advanced",
+	HARD = "Hard",
+	INSANE = "fufufu"
+*/
+		
+static const char diff[20] = "ryuu's Easy";
+
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
   glMatrixMode(GL_PROJECTION);
@@ -117,8 +130,6 @@ int main(int argc, char** argv) {
   setTexture("basic_ennemy",8,textureID);
 
 
-
-
   /* activation du canal Alpha */
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -129,6 +140,7 @@ int main(int argc, char** argv) {
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
 
+//	char osuFileName = "";
   OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [ryuu's Easy].osu");
   OSUNode currentOsuNode = osu.first;
 
@@ -161,7 +173,6 @@ int main(int argc, char** argv) {
     /* DEBUG DU BOSS */
     Bonus actuel = bonusesList.first;
     while ( actuel != NULL ) {
-      printf("%d->", actuel->id);
       acquireBonus(ship, actuel);
       supprimerList(&bonusesList, actuel->id);
       actuel = actuel->next;

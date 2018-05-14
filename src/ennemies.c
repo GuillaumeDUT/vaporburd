@@ -36,9 +36,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, int globalTransl
       if ( eActuel->hp / BOSS_HP >= 0.8 ) {
         /* PATTERN 1 */
         bossPattern1( eActuel, ship, bullets );
-        //        shootEnnemy( eActuel, bullets );     
       } else {
-        
         
         /* Deplacement */
         if ( eActuel->pos[Y] < ship->pos[Y] ) {
