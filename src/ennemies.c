@@ -147,7 +147,7 @@ void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_TEXTURE_2D);
-    drawCircle(full);
+    //drawCircle(full);
   }
   glPopMatrix();
 
