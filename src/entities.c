@@ -43,7 +43,7 @@ Bullet createBullet(Entity entity, float size){
   bullet->damages = entity->damages;
 
   if ( entity->type != SHIP ) {
-    bullet->speed[X] = BULLET_SPEED * 1;
+    bullet->speed[X] = BULLET_SPEED * 0.6;
     bullet->speed[X] = -(bullet->speed[X]);
     bullet->pos[X] -= entity->size;
     bullet->type = BULLET_ENNEMY;

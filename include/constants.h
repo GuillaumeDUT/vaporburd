@@ -7,7 +7,7 @@
 
 #define BULLET_SPEED 0.2
 #define BULLET_DAMAGES 10
-#define BULLET_SIZE 0.1
+#define BULLET_SIZE 0.15
 
 #define SHIP_DAMAGES 5
 #define SHIP_ATTACK_SPEED 1

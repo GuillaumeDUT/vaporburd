@@ -26,17 +26,11 @@ int LEVEL_STATE;
 static const int DEBUG = 0;
 
 /* DIFFICULTY */
-
-/* 
-Where difficulty is one of : 
-	EASY = "ryuu's Easy",
-	NORMAL = "Normal",
-	ADVANCED = "Advanced",
-	HARD = "Hard",
-	INSANE = "fufufu"
-*/
-		
-static const char diff[20] = "ryuu's Easy";
+//static const char diff[20] = "[ryuu's Easy]";
+//static const char diff[20] = "[Normal]";
+//static const char diff[20] = "[Advanced]";
+static const char diff[20] = "[Hard]";
+//static const char diff[20] = "[fufufu]";
 
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -140,11 +134,15 @@ int main(int argc, char** argv) {
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
 
-//	char osuFileName = "";
-  OSUList osu = readOsuFile("./assets/osu/Porter Robinson - Flicker (Cyllinus) [ryuu's Easy].osu");
+	
+	/* Ouverture de la map OSU de la bonne difficulté */
+	char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
+	strcat(osuFileName, diff);
+	strcat(osuFileName, ".osu");
+  OSUList osu = readOsuFile(osuFileName);
   OSUNode currentOsuNode = osu.first;
 
-  Ship ship = createShip(-4.0, 0.0, 20, 0.5);
+  Ship ship = createShip(-4.0, 0.0, 30, 0.5);
 
   OList obstaclesList;
   obstaclesList.taille = 0;
@@ -155,7 +153,14 @@ int main(int argc, char** argv) {
   BList bonusesList;
   bonusesList.taille = 0;
 
-  int mapLength = createFromPPM("./assets/map2.ppm", &obstaclesList, &bonusesList);
+	
+	/* Open PPM MAP */
+	char ppmFileName[100] = "./assets/map ";
+	strcat(ppmFileName, diff);
+	strcat(ppmFileName, ".ppm");
+	int mapLength = createFromPPM(ppmFileName, &obstaclesList, &bonusesList);
+	
+	
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
