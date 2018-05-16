@@ -21,6 +21,9 @@ float WINDOW_SCALE = 20.0;
 float globalTranslation;
 int LEVEL_STATE;
 
+static const int GAME_MODE_MENU = 1;
+static const int GAME_MODE_GAME = 2;
+static const int GAME_MODE_END_GAME = 3;
 
 /* DEBUG */
 static const int DEBUG = 0;
@@ -108,11 +111,11 @@ int main(int argc, char** argv) {
   /* Chargement et traitement de la texture */
 
 
-  GLuint textureID[10];
+  GLuint textureID[20];
 
 
 
-  glGenTextures(10, textureID);
+  glGenTextures(20, textureID);
   setTexture("ship", 0, textureID);
   setTexture("bullet", 1, textureID);
   setTexture("bg", 2, textureID);
@@ -122,6 +125,8 @@ int main(int argc, char** argv) {
   setTexture("bonus2",6,textureID);
   setTexture("bonus3",7,textureID);
   setTexture("basic_ennemy",8,textureID);
+
+  setTexture("background_menu",9,textureID);
 
 
   /* activation du canal Alpha */
@@ -134,7 +139,7 @@ int main(int argc, char** argv) {
   int musicStartTime = SDL_GetTicks() + CORRECTIF;
   printf("Music start at %d ticks\n", musicStartTime);
 
-	
+
 	/* Ouverture de la map OSU de la bonne difficulté */
 	char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
 	strcat(osuFileName, diff);
@@ -153,14 +158,14 @@ int main(int argc, char** argv) {
   BList bonusesList;
   bonusesList.taille = 0;
 
-	
+
 	/* Open PPM MAP */
 	char ppmFileName[100] = "./assets/map ";
 	strcat(ppmFileName, diff);
 	strcat(ppmFileName, ".ppm");
 	int mapLength = createFromPPM(ppmFileName, &obstaclesList, &bonusesList);
-	
-	
+
+
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
@@ -172,6 +177,10 @@ int main(int argc, char** argv) {
   float globalTranslationTotal = 0;
 
   int loop = 1;
+
+  // 1 = Menu  ### 2 = jeu  ### 3 = fin de jeu
+  int GAME_MODE = GAME_MODE_MENU;
+
   glClearColor(0.1, 0.1, 0.1 ,1.0);
 
   if ( DEBUG == 1 ) {
@@ -191,119 +200,146 @@ int main(int argc, char** argv) {
   while(loop) {
     Uint32 startTime = SDL_GetTicks();
     glClear(GL_COLOR_BUFFER_BIT);
-    glTranslatef(-globalTranslation, 0, 0);
 
-    /* Global counter */
-    globalTranslationTotal += globalTranslation;
+      if(GAME_MODE ==  GAME_MODE_MENU){
 
-    /* Texture */
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textureID[9]);
 
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+          glTexCoord2f(0, 0);
+          glVertex2f(-1.77 * 10, +1 *10);
 
-    /*affiche le bg */
+          glTexCoord2f(1, 0);
+          glVertex2f(+1.77 * 10, +1 *10);
 
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID[2]);
+          glTexCoord2f(1, 1);
+          glVertex2f(+1.77 * 10, -1 *10);
 
-    glBegin(GL_QUADS);
-    {
-      glColor3ub(255,255,255);
-      glTexCoord2f(0, 0);
-      glVertex2f(-1.77 *10+globalTranslationTotal, +1 *10);
+          glTexCoord2f(0, 1);
+          glVertex2f(-1.77 * 10, -1 *10);
+        }
+        glEnd();
+        /* Desactive l'image */
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
 
-      glTexCoord2f(1, 0);
-      glVertex2f(+1.77 *10+globalTranslationTotal, +1 *10);
-
-      glTexCoord2f(1, 1);
-      glVertex2f(+1.77 *10+globalTranslationTotal, -1 *10);
-
-      glTexCoord2f(0, 1);
-      glVertex2f(-1.77 *10+globalTranslationTotal, -1 *10);
-    }
-    glEnd();
-    /* Desactive l'image */
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
-
-    /* Active l'image */
-    /* dessine l'image du vaisseau en fonction de sa position */
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID[0]);
-
-    glBegin(GL_QUADS);
-    {
-      glColor3ub(255,255,255);
-      glTexCoord2f(0, 0);
-      glVertex2f(ship->pos[X]-1, ship->pos[Y]+1.76);
-
-      glTexCoord2f(1, 0);
-      glVertex2f(ship->pos[X]+1, ship->pos[Y]+1.76);
-
-      glTexCoord2f(1, 1);
-      glVertex2f(ship->pos[X]+1, ship->pos[Y]-1.76);
-
-      glTexCoord2f(0, 1);
-      glVertex2f(ship->pos[X]-1, ship->pos[Y]-1.76);
-    }
-    glEnd();
-    /* Desactive l'image */
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
+        drawCircle(1);
 
 
+      }else if(GAME_MODE == GAME_MODE_GAME){
+          glTranslatef(-globalTranslation, 0, 0);
+          /* Global counter */
+          globalTranslationTotal += globalTranslation;
+          /* textures bg */
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[2]);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-1.77 *10+globalTranslationTotal, +1 *10);
 
-    /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
-    if ( currentOsuNode != NULL &&
-        musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
-        LEVEL_STATE == LEVEL_STATE_RUNNING)
-    {
-      /*
-     createRandomEnnemy(&ennemiesList, globalTranslationTotal);
-      */
-      createOSUNodeEnnemy(
-        &ennemiesList,
-        currentOsuNode,
-        globalTranslationTotal);
-      currentOsuNode = currentOsuNode->next;
-    } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
-      createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
-      LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
-      printf("Boss spawned\n");
-    }
+            glTexCoord2f(1, 0);
+            glVertex2f(+1.77 *10+globalTranslationTotal, +1 *10);
 
-    /* Si on reste appuyé sur les flêches, on se déplace */
-    if(triggerKeyArrowUp) moveUp(ship);
-    if(triggerKeyArrowDown) moveDown(ship);
-    if(triggerKeyArrowLeft) moveLeft(ship);
-    if(triggerKeyArrowRight) moveRight(ship);
+            glTexCoord2f(1, 1);
+            glVertex2f(+1.77 *10+globalTranslationTotal, -1 *10);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-1.77 *10+globalTranslationTotal, -1 *10);
+          }
+          glEnd();
+          /* Desactive l'image */
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+
+          /* Active l'image */
+          /* dessine l'image du vaisseau en fonction de sa position */
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[0]);
+
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(ship->pos[X]-1, ship->pos[Y]+1.76);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(ship->pos[X]+1, ship->pos[Y]+1.76);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(ship->pos[X]+1, ship->pos[Y]-1.76);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(ship->pos[X]-1, ship->pos[Y]-1.76);
+          }
+          glEnd();
+          /* Desactive l'image */
+
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
 
 
-    /* Tir */
-    ship->cooldown = ship->cooldown > 0 ?
-      ship->cooldown-1
-      : 0;
-    if ( triggerKeySpace ) {
-      if ( ship->cooldown <= 0 ) {
-        ship->cooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackPerSecond);
-        shoot(ship, &bulletsList);
+
+          /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
+          if ( currentOsuNode != NULL &&
+              musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
+              LEVEL_STATE == LEVEL_STATE_RUNNING)
+          {
+            /*
+           createRandomEnnemy(&ennemiesList, globalTranslationTotal);
+            */
+            createOSUNodeEnnemy(
+              &ennemiesList,
+              currentOsuNode,
+              globalTranslationTotal);
+            currentOsuNode = currentOsuNode->next;
+          } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
+            createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
+            LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
+            printf("Boss spawned\n");
+          }
+
+          /* Si on reste appuyé sur les flêches, on se déplace */
+          if(triggerKeyArrowUp) moveUp(ship);
+          if(triggerKeyArrowDown) moveDown(ship);
+          if(triggerKeyArrowLeft) moveLeft(ship);
+          if(triggerKeyArrowRight) moveRight(ship);
+
+
+          /* Tir */
+          ship->cooldown = ship->cooldown > 0 ?
+            ship->cooldown-1
+            : 0;
+          if ( triggerKeySpace ) {
+            if ( ship->cooldown <= 0 ) {
+              ship->cooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackPerSecond);
+              shoot(ship, &bulletsList);
+            }
+          }
+
+
+
+          /* Boucle d'update et affichage des objets */
+          updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
+          updateObstacles(ship, &obstaclesList,textureID);
+          updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
+          updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal,textureID);
+          updateBonuses(ship, &bonusesList,textureID);
+
+
+          if ( ship->hp <= 0) {
+            printf("Fin de partie\n\n");
+            GAME_MODE= GAME_MODE_END_GAME;
+          }
+      }else if(GAME_MODE == GAME_MODE_END_GAME ){
+        drawSquare(1);
       }
-    }
 
 
-
-    /* Boucle d'update et affichage des objets */
-    updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
-    updateObstacles(ship, &obstaclesList,textureID);
-    updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
-    updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal,textureID);
-    updateBonuses(ship, &bonusesList,textureID);
-
-
-    if ( ship->hp <= 0) {
-      printf("Fin de partie\n\n");
-      loop = 0;
-    }
 
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
@@ -322,32 +358,45 @@ int main(int argc, char** argv) {
         case SDL_KEYDOWN:
           //printf("touche pressée (code = %d)\n", e.key.keysym.sym);
           // if spacebar
-          if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 1;
-          if(e.key.keysym.sym == SDLK_DOWN) triggerKeyArrowDown = 1;
-          if(e.key.keysym.sym == SDLK_RIGHT) triggerKeyArrowRight = 1;
-          if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 1;
-          if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 1;
-          if(e.key.keysym.sym == SDLK_LSHIFT
-             || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 1;
+          if(GAME_MODE == GAME_MODE_GAME){
+            if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 1;
+            if(e.key.keysym.sym == SDLK_DOWN) triggerKeyArrowDown = 1;
+            if(e.key.keysym.sym == SDLK_RIGHT) triggerKeyArrowRight = 1;
+            if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 1;
+            if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 1;
+            if(e.key.keysym.sym == SDLK_LSHIFT || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 1;
+          }
           break;
         case SDL_KEYUP:
-          if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 0;
-          if(e.key.keysym.sym == SDLK_DOWN) triggerKeyArrowDown = 0;
-          if(e.key.keysym.sym == SDLK_RIGHT) triggerKeyArrowRight = 0;
-          if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 0;
-          if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 0;
-          if(e.key.keysym.sym == SDLK_LSHIFT
-             || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 0;
-          if(e.key.keysym.sym == 'a' || e.key.keysym.sym == 'q') loop = 0;
-          if(e.key.keysym.sym == '1') {
-            ship->missileLevel++;
-            printf("[DEBUG] Missile level:%d\n", ship->missileLevel);
+          if(GAME_MODE == GAME_MODE_GAME){
+            if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 0;
+            if(e.key.keysym.sym == SDLK_DOWN) triggerKeyArrowDown = 0;
+            if(e.key.keysym.sym == SDLK_RIGHT) triggerKeyArrowRight = 0;
+            if(e.key.keysym.sym == SDLK_LEFT) triggerKeyArrowLeft = 0;
+            if(e.key.keysym.sym == SDLK_SPACE) triggerKeySpace = 0;
+            if(e.key.keysym.sym == SDLK_LSHIFT || e.key.keysym.sym == SDLK_RSHIFT) triggerKeyShift = 0;
+            if(e.key.keysym.sym == '1') {
+              ship->missileLevel++;
+              printf("[DEBUG] Missile level:%d\n", ship->missileLevel);
+            }
+            if(e.key.keysym.sym == '2') {
+              ship->missileLevel--;
+              printf("[DEBUG] Missile level:%d\n", ship->missileLevel);
+            }
           }
-          if(e.key.keysym.sym == '2') {
-            ship->missileLevel--;
-            printf("[DEBUG] Missile level:%d\n", ship->missileLevel);
+          if(e.key.keysym.sym == 'a' || e.key.keysym.sym == 'q') loop = 0;
+
+          break;
+
+        case SDL_MOUSEBUTTONDOWN:
+          if(GAME_MODE == GAME_MODE_MENU){
+
+            GAME_MODE = GAME_MODE_GAME;
           }
           break;
+        // case SDL_MOUSEMOTION:
+        //   printf("oos X : %f  ||  pos Y :  %f \n",e.motion.x,e.motion.y);
+        //   break;
 
         default:
           break;
