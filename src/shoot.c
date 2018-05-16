@@ -127,11 +127,11 @@ void moveBullet( Bullet bullet ) {
   bullet->pos[Y] += bullet->speed[Y];
 }
 
-void bossAttack1(Entity entity, Ship ship, BList *liste, int deltaTime) {
+void bossAttack1(Entity entity, Ship ship, BList *bList, int deltaTime) {
   float deltaX, deltaY;
 	
   Bullet bullet = createBullet(entity, 2);
-  ajouterFinList(liste, bullet);
+  ajouterFinList(bList, bullet);
 
   bullet->pos[Y] += (deltaTime-25) / 3;
 

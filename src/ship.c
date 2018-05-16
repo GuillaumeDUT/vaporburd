@@ -107,7 +107,7 @@ void drawShip(Ship ship, int full){
 
   /* Les HP */
   /* Affichage de la barre de vie */
-  float percent = (float)ship->hp/20; // 20 is the nmax HP
+  float percent = (float)ship->hp/30; // 30 is the nmax HP
   glPushMatrix(); 
   {
     glLoadIdentity();

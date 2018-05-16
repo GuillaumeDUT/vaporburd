@@ -23,7 +23,7 @@ int LEVEL_STATE;
 
 
 /* DEBUG */
-static const int DEBUG = 0;
+static const int DEBUG = 1;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";

@@ -9,13 +9,26 @@
 #include "ship.h"
 #include "collisions.h"
 
+/* Ennemy creation */
 void createRandomEnnemy(EList *ennemies, float globalTranslation);
 void createOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation);
-void updateEnnemies(Ship ship, BList *bullets, EList *liste, int globalTranslationTotal,GLuint textureID[]);
+void createHommingEnnemy(EList *ennemies, float y, Ennemy boss);
+void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal);
+
+
+
+/* Update Loop */
+void updateEnnemies(Ship ship, BList *bullets, EList *liste, float globalTranslationTotal, GLuint textureID[]);
 void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]);
 void moveEnnemy(Ennemy ennemy, int globalTranslationTotal);
-void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal);
 void shootEnnemy(Ennemy ennemy, BList *bullets);
-void bossPattern1(Ennemy e, Ship s, BList *bullets);
+
+
+/* Boss pattern */
+void bossPattern1(Ennemy boss, Ship s, BList *bullets);
+void bossPattern2(Ennemy boss, Ship s, BList *bullets, EList *ennemies);
+void bossPattern3(Ennemy boss, Ship s, BList *bullets);
+void bossPattern4(Ennemy boss, Ship s, BList *bullets);
+void bossPattern5(Ennemy boss, Ship s, BList *bullets);
 
 #endif
