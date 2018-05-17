@@ -23,13 +23,13 @@ int LEVEL_STATE;
 
 
 /* DEBUG */
-static const int DEBUG = 1;
+static const int DEBUG = 0;
 
 /* DIFFICULTY */
-//static const char diff[20] = "[ryuu's Easy]";
+static const char diff[20] = "[ryuu's Easy]";
 //static const char diff[20] = "[Normal]";
 //static const char diff[20] = "[Advanced]";
-static const char diff[20] = "[Hard]";
+//static const char diff[20] = "[Hard]";
 //static const char diff[20] = "[fufufu]";
 
 void resizeViewport() {
@@ -194,7 +194,9 @@ int main(int argc, char** argv) {
     glTranslatef(-globalTranslation, 0, 0);
 
     /* Global counter */
-    globalTranslationTotal += globalTranslation;
+		if ( LEVEL_STATE == LEVEL_STATE_RUNNING ) {
+			globalTranslationTotal += globalTranslation;
+		}
 
     /* Texture */
 
@@ -267,9 +269,23 @@ int main(int argc, char** argv) {
         globalTranslationTotal);
       currentOsuNode = currentOsuNode->next;
     } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
+			
+			/* Stop the scrolling */
+			globalTranslation = 0;
+			
+			/* Delete all obstacles and enemies */
+			while ( ennemiesList.taille != 0 ) {
+				supprimerDernierList(&ennemiesList);
+			}
+			while ( obstaclesList.taille != 0 ) {
+				supprimerDernierList(&obstaclesList);
+			}
+			
+			/* Spawn the boss */
       createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
       LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
       printf("Boss spawned\n");
+			
     }
 
     /* Si on reste appuyé sur les flêches, on se déplace */

@@ -67,9 +67,9 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 
 			/* Patterns du boss */
 			if ( eActuel->hp / BOSS_HP >= 0.8 ) {
-				bossPattern2( eActuel, ship, bullets, ennemies);
+				bossPattern3( eActuel, ship, bullets );
 			} else if ( eActuel->hp / BOSS_HP >= 0.6 ) {
-				bossPattern1( eActuel, ship, bullets );
+				bossPattern2( eActuel, ship, bullets, ennemies);
 			} else if ( eActuel->hp / BOSS_HP >= 0.4 ) {
 				bossPattern1( eActuel, ship, bullets );
 			} else if ( eActuel->hp / BOSS_HP >= 0.2 ) {
@@ -290,8 +290,18 @@ void bossPattern2(Ennemy boss, Ship ship, BList *bullets, EList *ennemies) {
 
 
 	if ( boss->cooldown <= 0 ) {
-		boss->cooldown = 100;
+		boss->cooldown = 160;
 
+	}
+
+}
+void bossPattern3(Ennemy boss, Ship ship, BList *bullets) {
+	boss->cooldown = boss->cooldown > 0 ? boss->cooldown-1 : 0;
+
+
+	if ( boss->cooldown <= 0 ) {
+		boss->cooldown = 10;
+		bossAttack3(boss, ship, bullets);
 	}
 
 }

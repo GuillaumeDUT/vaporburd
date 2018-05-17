@@ -127,10 +127,10 @@ void moveBullet( Bullet bullet ) {
   bullet->pos[Y] += bullet->speed[Y];
 }
 
-void bossAttack1(Entity entity, Ship ship, BList *bList, int deltaTime) {
+void bossAttack1(Entity boss, Ship ship, BList *bList, int deltaTime) {
   float deltaX, deltaY;
 	
-  Bullet bullet = createBullet(entity, 2);
+  Bullet bullet = createBullet(boss, 2);
   ajouterFinList(bList, bullet);
 
   bullet->pos[Y] += (deltaTime-25) / 3;
@@ -140,4 +140,25 @@ void bossAttack1(Entity entity, Ship ship, BList *bList, int deltaTime) {
 	
   bullet->speed[Y] = deltaY/300;
   bullet->speed[X] = deltaX/300;
+}
+
+void bossAttack3(Entity boss, Ship ship, BList *bList) {
+	int i,j;
+	float NB_BALLS = 20.0;
+	float increment = 0.0;
+	
+	/*
+	for ( i=0; i<NB_BALLS; i++) {
+		
+		
+		
+		
+		increment += 1/NB_BALLS;
+	}
+	
+	*/
+  Bullet bullet = createBullet(boss, BULLET_SIZE);
+  ajouterFinList(bList, bullet);
+	
+	printf("Attack 3\n");
 }
