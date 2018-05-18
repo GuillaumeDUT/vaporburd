@@ -108,13 +108,12 @@ int main(int argc, char** argv) {
   }
 
 
+  Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
+  int musicStartTime =0;
+
   /* Chargement et traitement de la texture */
 
-
   GLuint textureID[20];
-
-
-
   glGenTextures(20, textureID);
   setTexture("ship", 0, textureID);
   setTexture("bullet", 1, textureID);
@@ -128,16 +127,19 @@ int main(int argc, char** argv) {
 
   setTexture("background_menu",9,textureID);
 
+  setTexture("button_easy",10,textureID);
+  setTexture("button_normal",11,textureID);
+  setTexture("button_advanced",12,textureID);
+  setTexture("button_hard",13,textureID);
+  setTexture("button_fufufu",14,textureID);
+  setTexture("button_play",15,textureID);
+
 
   /* activation du canal Alpha */
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
-  Mix_PlayMusic(music, -1);
-  int CORRECTIF = 100;
-  int musicStartTime = SDL_GetTicks() + CORRECTIF;
-  printf("Music start at %d ticks\n", musicStartTime);
+
 
 
 	/* Ouverture de la map OSU de la bonne difficulté */
@@ -222,12 +224,171 @@ int main(int argc, char** argv) {
           glVertex2f(-1.77 * 10, -1 *10);
         }
         glEnd();
-        /* Desactive l'image */
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_TEXTURE_2D);
 
-        drawCircle(1);
+        //bouton easy
+        glPushMatrix();
+        {
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[10]);
+          glTranslatef(-6.5,-4,0);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
 
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+        }
+        glPopMatrix();
+        //bouton normal
+        glPushMatrix();
+        {
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[11]);
+          glTranslatef(0,-4,0);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+        }
+        glPopMatrix();
+        //bouton advanced
+        glPushMatrix();
+        {
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[12]);
+          glTranslatef(6.5,-4,0);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+        }
+        glPopMatrix();
+        //bouton hard
+        glPushMatrix();
+        {
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[13]);
+          glTranslatef(-3.5,-7,0);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+        }
+        glPopMatrix();
+        //bouton FUUUU
+        glPushMatrix();
+        {
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[14]);
+          glTranslatef(3.5,-7,0);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+        }
+        glPopMatrix();
+
+        //bouton FUUUU
+        glPushMatrix();
+        {
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[15]);
+          glTranslatef(0,0,0);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+        }
+        glPopMatrix();
+
+        glPushMatrix();
+          glTranslatef(0,-6,0);
+          drawCircle(1);
+        glPopMatrix();
 
       }else if(GAME_MODE == GAME_MODE_GAME){
           glTranslatef(-globalTranslation, 0, 0);
@@ -287,7 +448,8 @@ int main(int argc, char** argv) {
           /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
           if ( currentOsuNode != NULL &&
               musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
-              LEVEL_STATE == LEVEL_STATE_RUNNING)
+              LEVEL_STATE == LEVEL_STATE_RUNNING &&
+              GAME_MODE == GAME_MODE_GAME)
           {
             /*
            createRandomEnnemy(&ennemiesList, globalTranslationTotal);
@@ -334,9 +496,14 @@ int main(int argc, char** argv) {
           if ( ship->hp <= 0) {
             printf("Fin de partie\n\n");
             GAME_MODE= GAME_MODE_END_GAME;
+            resizeViewport();
           }
       }else if(GAME_MODE == GAME_MODE_END_GAME ){
+
+
+        glTranslatef(0, 0, 0);
         drawSquare(1);
+        drawCircle(1);
       }
 
 
@@ -392,6 +559,10 @@ int main(int argc, char** argv) {
           if(GAME_MODE == GAME_MODE_MENU){
 
             GAME_MODE = GAME_MODE_GAME;
+            Mix_PlayMusic(music, -1);
+            int CORRECTIF = 100;
+            musicStartTime = SDL_GetTicks() + CORRECTIF;
+            printf("Music start at %d ticks\n", musicStartTime);
           }
           break;
         // case SDL_MOUSEMOTION:
