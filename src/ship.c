@@ -61,48 +61,78 @@ void moveShip(Ship ship, float globalTranslation, float globalTranslationTotal, 
   }
 }
 
-void drawShip(Ship ship, int full){
+void drawShip(Ship ship, int full, GLuint textureID[]){
 
+  /* Affiche la texture */
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, textureID[0]);
+  glBegin(GL_QUADS);
+  {
+    glColor3ub(255,255,255);
+    glTexCoord2f(0, 0);
+    glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]+1 *0.4 );
+
+    glTexCoord2f(1, 0);
+    glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]+1 *0.4 );
+
+    glTexCoord2f(1, 1);
+    glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]-1 *0.4 );
+
+    glTexCoord2f(0, 1);
+    glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]-1 *0.4 );
+  }
+  glEnd();
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glDisable(GL_TEXTURE_2D);
+
+
+  /* Affiche la hitbox */
   glPushMatrix();
-  glColor3f(255, 255, 255);
-  glTranslatef(
-    ship->pos[X],
-    ship->pos[Y],
-    0);
-  glScalef(
-    ship->size,
-    ship->size,
-    1);
-  drawCircle(full);
+  {
+    glColor3f(255, 255, 255);
+    glTranslatef(
+      ship->pos[X],
+      ship->pos[Y],
+      0);
+    glScalef(
+      ship->size,
+      ship->size,
+      1);
+    drawCircle(full);
+  }
   glPopMatrix();
 
   /* Indicateurs de la bounding box */
   /* Min : vert */
   glPushMatrix();
-  glColor3f(0, 0, 255);
-  glTranslatef(
-    ship->pos[X] + ship->min[X],
-    ship->pos[Y] + ship->min[Y],
-    0);
-  glScalef(
-    ship->size / 10,
-    ship->size / 10,
-    1);
-  drawCircle(1);
+  {
+    glColor3f(0, 0, 255);
+    glTranslatef(
+      ship->pos[X] + ship->min[X],
+      ship->pos[Y] + ship->min[Y],
+      0);
+    glScalef(
+      ship->size / 10,
+      ship->size / 10,
+      1);
+    drawCircle(1);
+  }
   glPopMatrix();
 
   /* Max : rouge */
   glPushMatrix();
-  glColor3f(255, 0, 0);
-  glTranslatef(
-    ship->pos[X] + ship->max[X],
-    ship->pos[Y] + ship->max[Y],
-    0);
-  glScalef(
-    ship->size / 10,
-    ship->size / 10,
-    1);
-  drawCircle(1);
+  {
+    glColor3f(255, 0, 0);
+    glTranslatef(
+      ship->pos[X] + ship->max[X],
+      ship->pos[Y] + ship->max[Y],
+      0);
+    glScalef(
+      ship->size / 10,
+      ship->size / 10,
+      1);
+    drawCircle(1);
+  }
   glPopMatrix();
 
   /* Les HP */
@@ -132,11 +162,7 @@ void drawShip(Ship ship, int full){
 
 }
 
-void updateShip(Ship ship, BList *bullets, float globalTranslation, float globalTranslationTotal, int slow) {
-  moveShip(ship, globalTranslation, globalTranslationTotal, slow); 
-  drawShip(ship, 0);
-
-
+void updateShip(Ship ship, BList *bullets) {
   /* Collision avec les bullets de l'ennemy */
   if(bullets->taille != 0){
     Bullet bulletActuel = bullets->first;
@@ -144,7 +170,7 @@ void updateShip(Ship ship, BList *bullets, float globalTranslation, float global
     while ( bulletActuel != NULL ) {
       bulletNext = bulletActuel->next;
       if ( bulletActuel->type == BULLET_ENNEMY && collision(bulletActuel, ship) ) {
-        drawShip( ship, 1 );
+//        drawShip( ship, 1 );
         getDamage(bulletActuel, ship);
         supprimerList(bullets, bulletActuel->id);
       }

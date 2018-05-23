@@ -2,7 +2,7 @@
 
 #include "menu.h"
 
-void drawBackground(GLuint textureID[]) {
+void drawMenuBackground(GLuint textureID[]) {
 
   /* Image de fond */
   glEnable(GL_TEXTURE_2D);
@@ -25,7 +25,50 @@ void drawBackground(GLuint textureID[]) {
   glEnd();
   glBindTexture(GL_TEXTURE_2D, 0);
   glDisable(GL_TEXTURE_2D);
-  
+
+}
+void drawGameBackground(GLuint textureID[], int globalTranslationTotal) {
+  glBindTexture(GL_TEXTURE_2D, textureID[2]);
+  glTranslatef(42+globalTranslationTotal*0.58,0,0);
+  glBegin(GL_QUADS);
+  {
+    glColor3ub(255,255,255);
+    glTexCoord2f(0, 0);
+    glVertex2f(-5.33 *10, +1 *10);
+
+    glTexCoord2f(1, 0);
+    glVertex2f(+5.33 *10, +1 *10);
+
+    glTexCoord2f(1, 1);
+    glVertex2f(+5.33 *10, -1 *10);
+
+    glTexCoord2f(0, 1);
+    glVertex2f(-5.33 *10, -1 *10);
+  }
+  glEnd();
+  glBindTexture(GL_TEXTURE_2D, 0);
+}
+void drawBossBackground(GLuint textureID[], int globalTranslationTotal) {
+  glBindTexture(GL_TEXTURE_2D, textureID[16]);
+  glTranslatef(globalTranslationTotal,0,0);
+  glRotatef(20-(globalTranslationTotal*5),0,0,1);
+  glBegin(GL_QUADS);
+  {
+    glColor3ub(255,255,255);
+    glTexCoord2f(0, 0);
+    glVertex2f(-1 *14, +1 *14);
+
+    glTexCoord2f(1, 0);
+    glVertex2f(+1 *14, +1 *14);
+
+    glTexCoord2f(1, 1);
+    glVertex2f(+1 *14, -1 *14);
+
+    glTexCoord2f(0, 1);
+    glVertex2f(-1 *14, -1 *14);
+  }
+  glEnd();
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void drawSelectionBox(GLuint textureID[], float posButton[], int selectedDifficulty) {

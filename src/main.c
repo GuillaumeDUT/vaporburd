@@ -196,7 +196,7 @@ int main(int argc, char** argv) {
     if(GAME_MODE ==  GAME_MODE_MENU){   
 
       /* Affichage du background */
-      drawBackground(textureID);
+      drawMenuBackground(textureID);
 
       /* Affichage du cadre de selection */
       drawSelectionBox(textureID, posButton, selectedDifficulty);
@@ -209,22 +209,13 @@ int main(int argc, char** argv) {
         idTextureForLoop = idTextureForLoop +1;
       }
 
-      /* Cercle blanc de debug */
-      /*
-      glPushMatrix();
-      glTranslatef(0,-6,0);
-      drawCircle(1);
-      glPopMatrix();
-      */
-
     }else if(GAME_MODE == GAME_MODE_GAME){
-      glTranslatef(-globalTranslation, 0, 0);
       /* Global counter */
+      glTranslatef(-globalTranslation, 0, 0);
       globalTranslationTotal += globalTranslation;
 
-
+      /* DEBUG DU BOSS */
       if ( DEBUG == 1 ) {
-        /* DEBUG DU BOSS */
         Bonus actuel = bonusesList.first;
         while ( actuel != NULL ) {
           acquireBonus(ship, actuel);
@@ -233,98 +224,16 @@ int main(int argc, char** argv) {
         }
       }
 
-      /* textures bg */
+      /* Affichage des background */
       glEnable(GL_TEXTURE_2D);
       glPushMatrix();
       if(LEVEL_STATE == LEVEL_STATE_BOSS_SPAWNED){
-        glBindTexture(GL_TEXTURE_2D, textureID[16]);
-        glTranslatef(globalTranslationTotal,0,0);
-        glRotatef(20-(globalTranslationTotal*5),0,0,1);
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
-          glTexCoord2f(0, 0);
-          glVertex2f(-1 *14, +1 *14);
-
-          glTexCoord2f(1, 0);
-          glVertex2f(+1 *14, +1 *14);
-
-          glTexCoord2f(1, 1);
-          glVertex2f(+1 *14, -1 *14);
-
-          glTexCoord2f(0, 1);
-          glVertex2f(-1 *14, -1 *14);
-        }
-        glEnd();
-
+        drawBossBackground(textureID, globalTranslationTotal);
       }else{
-        glBindTexture(GL_TEXTURE_2D, textureID[2]);
-        glTranslatef(42+globalTranslationTotal*0.58,0,0);
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
-          glTexCoord2f(0, 0);
-          glVertex2f(-5.33 *10, +1 *10);
-
-          glTexCoord2f(1, 0);
-          glVertex2f(+5.33 *10, +1 *10);
-
-          glTexCoord2f(1, 1);
-          glVertex2f(+5.33 *10, -1 *10);
-
-          glTexCoord2f(0, 1);
-          glVertex2f(-5.33 *10, -1 *10);
-        }
-        glEnd();
+        drawGameBackground(textureID, globalTranslationTotal);
       }
       glPopMatrix();
-      /* Desactive l'image */
-      glBindTexture(GL_TEXTURE_2D, 0);
-      glDisable(GL_TEXTURE_2D);
 
-      // glPushMatrix();
-      //   glScalef(10,10,1);
-      //   //glRotatef(-20,0,0,-1);
-      //   glPushMatrix();
-      //     glTranslatef(0.1- globalTranslationTotal ,0,0);
-      //     for(int i=-20;i<20;i++){
-      //       glColor3f(1.0f,0.0f,1.0f);
-      //       glBegin(GL_LINES);
-      //         glVertex3f(-20,i*0.1,0);
-      //         glVertex3f(20,i*0.1,0);
-      //       glEnd();
-      //     }
-      //     for(int i=-20;i<20;i++){
-      //       glColor3f(1.0f,0.0f,1.0f);
-      //       glBegin(GL_LINES);
-      //         glVertex3f(i*0.1,-20,0);
-      //         glVertex3f(i*0.1,20,0);
-      //       glEnd();
-      //     }
-      //   glPopMatrix();
-      // glPopMatrix();
-
-      /* Active l'image */
-      /* dessine l'image du vaisseau en fonction de sa position */
-      glEnable(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, textureID[0]);
-
-      glBegin(GL_QUADS);
-      {
-        glColor3ub(255,255,255);
-        glTexCoord2f(0, 0);
-        glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]+1 *0.4 );
-
-        glTexCoord2f(1, 0);
-        glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]+1 *0.4 );
-
-        glTexCoord2f(1, 1);
-        glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]-1 *0.4 );
-
-        glTexCoord2f(0, 1);
-        glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]-1 *0.4 );
-      }
-      glEnd();
       /* Desactive l'image */
 
       glBindTexture(GL_TEXTURE_2D, 0);
@@ -361,12 +270,12 @@ int main(int argc, char** argv) {
       }
 
 
+      /* ========== UPDATE DU SHIP ============= */
       /* Si on reste appuyé sur les flêches, on se déplace */
       if(triggerKeyArrowUp) moveUp(ship);
       if(triggerKeyArrowDown) moveDown(ship);
       if(triggerKeyArrowLeft) moveLeft(ship);
       if(triggerKeyArrowRight) moveRight(ship);
-
 
       /* Tir */
       ship->cooldown = ship->cooldown > 0 ?
@@ -379,8 +288,13 @@ int main(int argc, char** argv) {
         }
       }
 
+      /* Deplacement et Affichage */
+      moveShip(ship, globalTranslation, globalTranslationTotal, triggerKeyShift); 
+      drawShip(ship, 0, textureID);
+
+
       /* Boucle d'update et affichage des objets */
-      updateShip(ship, &bulletsEnnemyList, globalTranslation, globalTranslationTotal, triggerKeyShift);
+      updateShip(ship, &bulletsEnnemyList);
 
       updateEnnemies(ship, &bulletsEnnemyList, &bulletsShipList, &ennemiesList, globalTranslationTotal, textureID);
 

@@ -15,6 +15,6 @@ void moveLeft(Ship ship);
 void moveRight(Ship ship);
 
 void moveShip(Ship ship, float globalTranslation, float globalTranslationTotal, int slow);
-void drawShip(Ship ship, int full);
-void updateShip(Ship ship, BList *bulletsEnnemy, float globalTranslation, float globalTranslationTotal, int slow);
+void drawShip(Ship ship, int full, GLuint textureID[]);
+void updateShip(Ship ship, BList *bulletsEnnemy);
 #endif
