@@ -621,6 +621,8 @@ int main(int argc, char** argv) {
               osu = readOsuFile(bufferOsuFileName);
               currentOsuNode = osu.first;
 
+              LEVEL_STATE = LEVEL_STATE_RUNNING;
+
               strcpy(bufferPpmFileName,ppmFileName);
               strcat(bufferPpmFileName, diff);
             	strcat(bufferPpmFileName, ".ppm");
