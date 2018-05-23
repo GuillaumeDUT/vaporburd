@@ -12,6 +12,9 @@ void shoot(Entity entity, BList *liste){
     ajouterFinList(liste, bullets[i]);
   }
 
+  /* 
+    Permet d'avoir un comportement different en fonction du nombre des balles a tirer
+  */
   switch (max) {
     case 2:
       bullets[0]->speed[Y] = -0.02;

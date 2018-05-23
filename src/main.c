@@ -11,6 +11,7 @@
 #include "osu_reader.h"
 #include "ppm_reader.h"
 #include "bonus.h"
+#include "menu.h"
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
@@ -67,6 +68,7 @@ void setTexture ( char *name, int textureID, GLuint *textures ) {
 
 int main(int argc, char** argv) {
   LEVEL_STATE = LEVEL_STATE_INIT;
+  GAME_MODE = GAME_MODE_MENU;
 
   if ( DEBUG == 1 ) {
     printf(" // // MODE DEBUG BOSS ON // // \n");
@@ -99,7 +101,7 @@ int main(int argc, char** argv) {
     printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
   }
 
-
+  /* Chargement des musiques */
   Mix_Music *musicGame = Mix_LoadMUS("./assets/flicker.mp3");
   Mix_Music *musicBoss = Mix_LoadMUS("./assets/boss.mp3");
   Mix_Music *musicMenu = Mix_LoadMUS("./assets/menu.mp3");
@@ -107,7 +109,6 @@ int main(int argc, char** argv) {
   int musicStartTime =0;
 
   /* Chargement et traitement de la texture */
-
   GLuint textureID[25];
   glGenTextures(25, textureID);
   setTexture("ship", 0, textureID);
@@ -140,9 +141,10 @@ int main(int argc, char** argv) {
   setTexture("bullet_ship",21,textureID);
   setTexture("bullet_boss",22,textureID);
 
-  /* activation du canal Alpha */
+  /* Activation du canal Alpha */
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glClearColor(0.1, 0.1, 0.1 ,1.0);
 
   /* Ouverture de la map OSU de la bonne difficulté */
   char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
@@ -150,24 +152,22 @@ int main(int argc, char** argv) {
   OSUList osu;
   OSUNode currentOsuNode = NULL;
 
+  /* Creation des entitees */
   Ship ship = createShip(-4.0, 0.0, 30, 0.5);
+  OList obstaclesList;     obstaclesList.taille = 0;
+  EList ennemiesList;    ennemiesList.taille = 0;
+  BList bulletsShipList;    bulletsShipList.taille = 0;
+  BList bulletsEnnemyList;    bulletsEnnemyList.taille = 0;
+  BList bonusesList;    bonusesList.taille = 0;
 
-  OList obstaclesList;
-  obstaclesList.taille = 0;
-  EList ennemiesList;
-  ennemiesList.taille = 0;
-  BList bulletsShipList;
-  bulletsShipList.taille = 0;
-  BList bulletsEnnemyList;
-  bulletsEnnemyList.taille = 0;
-  BList bonusesList;
-  bonusesList.taille = 0;
 
+  /* Création des variables */
   char diff[50] = "[Normal]";
   char ppmFileName[100] = "./assets/map ";
   char bufferPpmFileName[100];
   int mapLength;
 
+  /* Variables qui enregistrent si les touches sont appuyées ou non */
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
   int triggerKeyArrowLeft = 0;
@@ -175,19 +175,16 @@ int main(int argc, char** argv) {
   int triggerKeySpace = 0;
   int triggerKeyShift = 0;
 
+  /* Contient le décalage sur l'axe X de l'écran */
   float globalTranslationTotal = 0;
 
   int loop = 1;
 
-  // 1 = Menu  ### 2 = jeu  ### 3 = fin de jeu
-  GAME_MODE = GAME_MODE_MENU;
-
-  glClearColor(0.1, 0.1, 0.1 ,1.0);
-
-  float posButton[12] ={-6.5,-4,0,-4,6.5,-4,-3.5,-7,3.5,-7,0,0};
-  int idTextureForLoop =0;
-  //ordre : easy normal advanced hard fuuu Haut gauche, bas droite
-  int selectedButtonPos[20]= {20,520,260,600,280,520,520,600,540,520,780,600,140,640,380,720,420,640,660,720};
+  /* Variables des textures */
+  float posButton[12] = {-6.5, -4, 0, -4, 6.5, -4, -3.5, -7, 3.5, -7, 0, 0};
+  int idTextureForLoop = 0;
+  /* ordre : easy normal advanced hard fuuu Haut gauche, bas droite */
+  int selectedButtonPos[20]= {20, 520, 260, 600, 280, 520, 520, 600, 540, 520, 780, 600, 140, 640, 380, 720, 420, 640, 660, 720};
   int selectedDifficulty = 1;
 
   LEVEL_STATE = LEVEL_STATE_RUNNING;
@@ -198,55 +195,8 @@ int main(int argc, char** argv) {
     /* ========================== MENU ================================ */
     if(GAME_MODE ==  GAME_MODE_MENU){   
 
-      // background
-      glEnable(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, textureID[9]);
-      glBegin(GL_QUADS);
-      {
-        glColor3ub(255,255,255);
-        glTexCoord2f(0, 0);
-        glVertex2f(-1.77 * 10, +1 *10);
-
-        glTexCoord2f(1, 0);
-        glVertex2f(+1.77 * 10, +1 *10);
-
-        glTexCoord2f(1, 1);
-        glVertex2f(+1.77 * 10, -1 *10);
-
-        glTexCoord2f(0, 1);
-        glVertex2f(-1.77 * 10, -1 *10);
-      }
-      glEnd();
-      glBindTexture(GL_TEXTURE_2D, 0);
-      glDisable(GL_TEXTURE_2D);
-
-      glEnable(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, textureID[10]);
-      glPushMatrix();{
-        glTranslatef(posButton[selectedDifficulty*2],posButton[selectedDifficulty*2+1],0);
-        glRotated(180,0,1,0);
-        glScalef(1.04,1.1,0);
-        glBegin(GL_QUADS);
-        {
-          //glColor4f(0.4,0,0.74,0.8);
-          glColor3ub(255,255,255);
-          glTexCoord2f(0, 0);
-          glVertex2f(-3 , +1);
-
-          glTexCoord2f(1, 0);
-          glVertex2f(+3, +1);
-
-          glTexCoord2f(1, 1);
-          glVertex2f(+3 , -1);
-
-          glTexCoord2f(0, 1);
-          glVertex2f(-3 , -1);
-        }
-        glEnd();
-      }
-      glPopMatrix();
-      glBindTexture(GL_TEXTURE_2D, 0);
-      glDisable(GL_TEXTURE_2D);
+      /* Affichage du background */
+      drawBackground(textureID, posButton, selectedDifficulty);
 
       // for de rendu bouttons
       idTextureForLoop = 0;
@@ -421,7 +371,7 @@ int main(int argc, char** argv) {
         deleteList(&ennemiesList);
         deleteList(&bulletsShipList);
         deleteList(&bulletsEnnemyList);
-        
+
         /* On charge la musique */
         Mix_PlayMusic(musicBoss, -1);
 
@@ -727,7 +677,7 @@ int main(int argc, char** argv) {
   {
     /* Libération des données GPU */
     glDeleteTextures(11, textureID);
-    
+
     /* Liberation des ressources associées à la SDL */
     Mix_FreeMusic(musicGame);
     Mix_FreeMusic(musicBoss);
