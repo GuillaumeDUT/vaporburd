@@ -26,7 +26,7 @@ int GAME_MODE;
 
 
 /* DEBUG */
-static const int DEBUG = 1 ;
+static const int DEBUG = 0 ;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
@@ -145,21 +145,15 @@ int main(int argc, char** argv) {
   setTexture("bullet_ship",21,textureID);
   setTexture("bullet_boss",22,textureID);
 
-
-
   /* activation du canal Alpha */
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-
 
 	/* Ouverture de la map OSU de la bonne difficulté */
 	char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
   char bufferOsuFileName[100];
   OSUList osu;
   OSUNode currentOsuNode;
-
 
   Ship ship = createShip(-4.0, 0.0, 30, 0.5);
 
@@ -171,7 +165,6 @@ int main(int argc, char** argv) {
   bulletsList.taille = 0;
   BList bonusesList;
   bonusesList.taille = 0;
-
 
   char diff[50] = "[Normal]";
 	char ppmFileName[100] = "./assets/map ";
@@ -432,10 +425,10 @@ int main(int argc, char** argv) {
             deleteList(&obstaclesList);
             deleteList(&ennemiesList);
             deleteList(&bulletsList);
-            
+
             /* On fait apparaître un boss */
             createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
-            
+
             LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
             printf("Boss spawned\n");
           }
@@ -632,6 +625,11 @@ int main(int argc, char** argv) {
           if(GAME_MODE == GAME_MODE_MENU ){
             if(e.button.x >= 260 && e.button.x <= 530 && e.button.y <= 430 && e.button.y >= 350){
 
+              /* Suppression des ressources */
+             deleteList(&obstaclesList);
+             deleteList(&ennemiesList);
+             deleteList(&bulletsList);
+
               //TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
               strcpy(bufferOsuFileName,osuFileName);
               strcat(bufferOsuFileName, diff);
@@ -647,11 +645,7 @@ int main(int argc, char** argv) {
             	mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
 
-              /* Suppression des ressources */
-//
-//              deleteList(&obstaclesList);
-//              deleteList(&ennemiesList);
-//              deleteList(&bulletsList);
+
 
 
               globalTranslationTotal =0;

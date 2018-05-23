@@ -116,16 +116,16 @@ void drawBullet( Bullet bullet, GLuint textureID[]) {
           glColor3ub(255,255,255);
 
           glTexCoord2f(0, 0);
-          glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]+1 *0.5);
+          glVertex2f(bullet->pos[X]-1.93 *0.25, bullet->pos[Y]+1 *0.25);
 
           glTexCoord2f(1, 0);
-          glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]+1 *0.5);
+          glVertex2f(bullet->pos[X]+1.93 *0.25, bullet->pos[Y]+1 *0.25);
 
           glTexCoord2f(1, 1);
-          glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]-1 *0.5);
+          glVertex2f(bullet->pos[X]+1.93 *0.25, bullet->pos[Y]-1 *0.25);
 
           glTexCoord2f(0, 1);
-          glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]-1 *0.5);
+          glVertex2f(bullet->pos[X]-1.93 *0.25, bullet->pos[Y]-1 *0.25);
         }
         glEnd();
       }
