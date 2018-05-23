@@ -184,16 +184,16 @@ void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
 					glColor3ub(255,255,255);
 					glScalef(0.5,0.5,1);
 					glTexCoord2f(0, 0);
-					glVertex2f(-1 *0.5, +1.77 *0.5);
+					glVertex2f(ennemy->pos[X]-1 *0.5, ennemy->pos[Y]+1.77 *0.5);
 
 					glTexCoord2f(1, 0);
-					glVertex2f(+1 *0.5, +1.77 *0.5);
+					glVertex2f(ennemy->pos[X]+1 *0.5, ennemy->pos[Y]+1.77 *0.5);
 
 					glTexCoord2f(1, 1);
-					glVertex2f(+1 *0.5, -1.77 *0.5);
+					glVertex2f(ennemy->pos[X]+1 *0.5,ennemy->pos[Y] -1.77 *0.5);
 
 					glTexCoord2f(0, 1);
-					glVertex2f(-1 *0.5, -1.77 *0.5);
+					glVertex2f(ennemy->pos[X]-1 *0.5, ennemy->pos[Y]-1.77 *0.5);
 				}
 				glEnd();
 		}else{
@@ -203,16 +203,16 @@ void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
 					glColor3ub(255,255,255);
 					glScalef(0.5,0.5,1);
 					glTexCoord2f(0, 0);
-					glVertex2f(-0.5 *1.2, +0.5 *1.2);
+					glVertex2f(ennemy->pos[X] -0.5 *1.2,ennemy->pos[Y] +0.5 *1.2);
 
 					glTexCoord2f(1, 0);
-					glVertex2f(+0.5 *1.2, +0.5 *1.2);
+					glVertex2f(ennemy->pos[X]+0.5 *1.2,ennemy->pos[Y] +0.5 *1.2);
 
 					glTexCoord2f(1, 1);
-					glVertex2f(+0.5 *1.2, -0.5 *1.2);
+					glVertex2f(ennemy->pos[X]+0.5 *1.2,ennemy->pos[Y] -0.5 *1.2);
 
 					glTexCoord2f(0, 1);
-					glVertex2f(-0.5 *1.2, -0.5 *1.2);
+					glVertex2f(ennemy->pos[X]-0.5 *1.2,ennemy->pos[Y] -0.5 *1.2);
 				}
 				glEnd();
 		}
