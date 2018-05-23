@@ -69,7 +69,7 @@ void drawBullet( Bullet bullet, GLuint textureID[]) {
   //  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
 
   glPushMatrix();
-  glEnable( GL_TEXTURE_2D );
+  glEnable(GL_TEXTURE_2D);
   if(bullet->type == BULLET_ENNEMY){
     glBindTexture(GL_TEXTURE_2D, textureID[4]);
 
@@ -78,16 +78,16 @@ void drawBullet( Bullet bullet, GLuint textureID[]) {
       glColor3ub(255,255,255);
       glScalef(0.5,0.5,1);
       glTexCoord2f(0, 0);
-      glVertex3f(bullet->pos[X]-0.5, bullet->pos[Y]+0.5, 1);
+      glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]+0.5);
 
       glTexCoord2f(1, 0);
-      glVertex3f(bullet->pos[X]+0.5, bullet->pos[Y]+0.5, 1);
+      glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]+0.5);
 
       glTexCoord2f(1, 1);
-      glVertex3f(bullet->pos[X]+0.5, bullet->pos[Y]-0.5, 1);
+      glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]-0.5);
 
       glTexCoord2f(0, 1);
-      glVertex3f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5, 1);
+      glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5);
     }
     glEnd();
   }else if(bullet->type == BULLET_SHIP){
@@ -116,16 +116,16 @@ void drawBullet( Bullet bullet, GLuint textureID[]) {
       glColor3ub(255,255,255);
 
       glTexCoord2f(0, 0);
-      glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]+1 *0.5);
+      glVertex2f(bullet->pos[X]-1.93 *0.25, bullet->pos[Y]+1 *0.25);
 
       glTexCoord2f(1, 0);
-      glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]+1 *0.5);
+      glVertex2f(bullet->pos[X]+1.93 *0.25, bullet->pos[Y]+1 *0.25);
 
       glTexCoord2f(1, 1);
-      glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]-1 *0.5);
+      glVertex2f(bullet->pos[X]+1.93 *0.25, bullet->pos[Y]-1 *0.25);
 
       glTexCoord2f(0, 1);
-      glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]-1 *0.5);
+      glVertex2f(bullet->pos[X]-1.93 *0.25, bullet->pos[Y]-1 *0.25);
     }
     glEnd();
   }
@@ -139,7 +139,7 @@ void drawBullet( Bullet bullet, GLuint textureID[]) {
     bullet->size,
     1);
   glBindTexture(GL_TEXTURE_2D, 0);
-  glDisable( GL_TEXTURE_2D );
+  glDisable(GL_TEXTURE_2D);
 
   drawCircle(1);
   glPopMatrix();

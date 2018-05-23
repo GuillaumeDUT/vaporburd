@@ -165,17 +165,17 @@ void updateEnnemies(Ship ship, BList *bulletsEnnemy, BList *bulletsShip, EList *
 void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
 	glPushMatrix();
 	{
-		glColor3f(255, 0, 120);
-		glTranslatef(
-			ennemy->pos[X],
-			ennemy->pos[Y],
-			0);
-		glScalef(
-			ennemy->size,
-			ennemy->size,
-			1);
-
-		drawCircle(1);
+		// glColor3f(255, 0, 120);
+		// glTranslatef(
+		// 	ennemy->pos[X],
+		// 	ennemy->pos[Y],
+		// 	0);
+		// glScalef(
+		// 	ennemy->size,
+		// 	ennemy->size,
+		// 	1);
+		//
+		// drawCircle(1);
 		glEnable(GL_TEXTURE_2D);
 		if(ennemy->type == ENNEMY_BOSS){
 				glBindTexture(GL_TEXTURE_2D, textureID[20]);
@@ -203,16 +203,16 @@ void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
 					glColor3ub(255,255,255);
 					glScalef(0.5,0.5,1);
 					glTexCoord2f(0, 0);
-					glVertex2f(-0.5, +0.5);
+					glVertex2f(-0.5 *1.2, +0.5 *1.2);
 
 					glTexCoord2f(1, 0);
-					glVertex2f(+0.5, +0.5);
+					glVertex2f(+0.5 *1.2, +0.5 *1.2);
 
 					glTexCoord2f(1, 1);
-					glVertex2f(+0.5, -0.5);
+					glVertex2f(+0.5 *1.2, -0.5 *1.2);
 
 					glTexCoord2f(0, 1);
-					glVertex2f(-0.5, -0.5);
+					glVertex2f(-0.5 *1.2, -0.5 *1.2);
 				}
 				glEnd();
 		}

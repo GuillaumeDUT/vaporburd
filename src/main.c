@@ -147,21 +147,15 @@ int main(int argc, char** argv) {
   setTexture("bullet_ship",21,textureID);
   setTexture("bullet_boss",22,textureID);
 
-
-
   /* activation du canal Alpha */
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-
 
   /* Ouverture de la map OSU de la bonne difficulté */
   char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
   char bufferOsuFileName[100];
   OSUList osu;
   OSUNode currentOsuNode = NULL;
-
 
   Ship ship = createShip(-4.0, 0.0, 30, 0.5);
 
@@ -175,7 +169,6 @@ int main(int argc, char** argv) {
   bulletsEnnemyList.taille = 0;
   BList bonusesList;
   bonusesList.taille = 0;
-
 
   char diff[50] = "[Normal]";
   char ppmFileName[100] = "./assets/map ";
@@ -200,7 +193,7 @@ int main(int argc, char** argv) {
 
   float posButton[12] ={-6.5,-4,0,-4,6.5,-4,-3.5,-7,3.5,-7,0,0};
   int idTextureForLoop =0;
-  //ordre : easy normal advanced hard fuuu  Haut gauche, bas droite
+  //ordre : easy normal advanced hard fuuu Haut gauche, bas droite
   int selectedButtonPos[20]= {20,520,260,600,280,520,520,600,540,520,780,600,140,640,380,720,420,640,660,720};
   int selectedDifficulty = 1;
 
@@ -214,7 +207,7 @@ int main(int argc, char** argv) {
       // Musique
       Mix_RewindMusic();
       Mix_PlayMusic(musicMenu, -1);      
-      
+
       // background
       glEnable(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D, textureID[9]);
@@ -443,7 +436,7 @@ int main(int argc, char** argv) {
 
         /* On fait apparaître un boss */
         createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
-        
+
         /* On lance la musique du boss */
         Mix_RewindMusic();
         Mix_PlayMusic(musicBoss, -1);  
@@ -474,16 +467,43 @@ int main(int argc, char** argv) {
 
       /* Boucle d'update et affichage des objets */
       updateShip(ship, &bulletsEnnemyList, globalTranslation, globalTranslationTotal, triggerKeyShift);
-      
+
       updateEnnemies(ship, &bulletsEnnemyList, &bulletsShipList, &ennemiesList, globalTranslationTotal, textureID);
 
       updateBullets(ship, &bulletsShipList, globalTranslationTotal,textureID);
-      
+
       updateObstacles(ship, &obstaclesList,textureID);
-      
+
       updateBullets(ship, &bulletsEnnemyList, globalTranslationTotal,textureID);
 
       updateBonuses(ship, &bonusesList,textureID);
+      /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
+      if ( currentOsuNode != NULL &&
+          musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
+          LEVEL_STATE == LEVEL_STATE_RUNNING &&
+          GAME_MODE == GAME_MODE_GAME)
+      {
+        /*
+           createRandomEnnemy(&ennemiesList, globalTranslationTotal);
+            */
+        createOSUNodeEnnemy(
+          &ennemiesList,
+          currentOsuNode,
+          globalTranslationTotal);
+        currentOsuNode = currentOsuNode->next;
+      } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
+
+        /* On supprime tous les obstacles */
+        deleteList(&obstaclesList);
+        deleteList(&ennemiesList);
+        deleteList(&bulletsList);
+
+        /* On fait apparaître un boss */
+        createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
+
+        LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
+        printf("Boss spawned\n");
+      }
 
       updateObstacles(ship, &obstaclesList,textureID);
 
@@ -654,6 +674,11 @@ int main(int argc, char** argv) {
         case SDL_MOUSEBUTTONDOWN:
           if(GAME_MODE == GAME_MODE_MENU ){
             if(e.button.x >= 260 && e.button.x <= 530 && e.button.y <= 430 && e.button.y >= 350){
+
+              /* Suppression des ressources */
+              deleteList(&obstaclesList);
+              deleteList(&ennemiesList);
+              deleteList(&bulletsList);
 
               //TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
               strcpy(bufferOsuFileName,osuFileName);
