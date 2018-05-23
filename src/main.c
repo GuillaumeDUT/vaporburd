@@ -26,7 +26,7 @@ static const int GAME_MODE_GAME = 2;
 static const int GAME_MODE_END_GAME = 3;
 
 /* DEBUG */
-static const int DEBUG = 0;
+static const int DEBUG = 1 ;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
@@ -134,6 +134,12 @@ int main(int argc, char** argv) {
   setTexture("button_fufufu",14,textureID);
   setTexture("button_play",15,textureID);
 
+  setTexture("bossBg",16,textureID);
+
+  setTexture("button_menu",17,textureID);
+  setTexture("text_win",18,textureID);
+  setTexture("text_death",19,textureID);
+
 
   /* activation du canal Alpha */
   glEnable(GL_BLEND);
@@ -144,6 +150,7 @@ int main(int argc, char** argv) {
 
 	/* Ouverture de la map OSU de la bonne difficulté */
 	char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
+  char bufferOsuFileName[100];
   OSUList osu;
   OSUNode currentOsuNode;
 
@@ -162,6 +169,7 @@ int main(int argc, char** argv) {
 
 	/* Open PPM MAP */
 	char ppmFileName[100] = "./assets/map ";
+  char bufferPpmFileName[100];
   int mapLength;
 
 
@@ -180,17 +188,6 @@ int main(int argc, char** argv) {
   int GAME_MODE = GAME_MODE_MENU;
 
   glClearColor(0.1, 0.1, 0.1 ,1.0);
-
-  if ( DEBUG == 1 ) {
-    /* DEBUG DU BOSS */
-    Bonus actuel = bonusesList.first;
-    while ( actuel != NULL ) {
-      acquireBonus(ship, actuel);
-      supprimerList(&bonusesList, actuel->id);
-      actuel = actuel->next;
-    }
-
-  }
 
   float posButton[12] ={-6.5,-4,0,-4,6.5,-4,-3.5,-7,3.5,-7,0,0};
   int idTextureForLoop =0;
@@ -299,28 +296,88 @@ int main(int argc, char** argv) {
           glTranslatef(-globalTranslation, 0, 0);
           /* Global counter */
           globalTranslationTotal += globalTranslation;
+
+
+          if ( DEBUG == 1 ) {
+            /* DEBUG DU BOSS */
+            Bonus actuel = bonusesList.first;
+            while ( actuel != NULL ) {
+              acquireBonus(ship, actuel);
+              supprimerList(&bonusesList, actuel->id);
+              actuel = actuel->next;
+            }
+          }
+
           /* textures bg */
           glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[2]);
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-1.77 *10+globalTranslationTotal, +1 *10);
+          glPushMatrix();
+            if(LEVEL_STATE == LEVEL_STATE_BOSS_SPAWNED){
+              glBindTexture(GL_TEXTURE_2D, textureID[16]);
+              glTranslatef(globalTranslationTotal,0,0);
+              glRotatef(20-(globalTranslationTotal*5),0,0,1);
+              glBegin(GL_QUADS);
+              {
+                glColor3ub(255,255,255);
+                glTexCoord2f(0, 0);
+                glVertex2f(-1 *14, +1 *14);
 
-            glTexCoord2f(1, 0);
-            glVertex2f(+1.77 *10+globalTranslationTotal, +1 *10);
+                glTexCoord2f(1, 0);
+                glVertex2f(+1 *14, +1 *14);
 
-            glTexCoord2f(1, 1);
-            glVertex2f(+1.77 *10+globalTranslationTotal, -1 *10);
+                glTexCoord2f(1, 1);
+                glVertex2f(+1 *14, -1 *14);
 
-            glTexCoord2f(0, 1);
-            glVertex2f(-1.77 *10+globalTranslationTotal, -1 *10);
-          }
-          glEnd();
+                glTexCoord2f(0, 1);
+                glVertex2f(-1 *14, -1 *14);
+              }
+              glEnd();
+
+            }else{
+              glBindTexture(GL_TEXTURE_2D, textureID[2]);
+              glTranslatef(42+globalTranslationTotal*0.58,0,0);
+              glBegin(GL_QUADS);
+              {
+                glColor3ub(255,255,255);
+                glTexCoord2f(0, 0);
+                glVertex2f(-5.33 *10, +1 *10);
+
+                glTexCoord2f(1, 0);
+                glVertex2f(+5.33 *10, +1 *10);
+
+                glTexCoord2f(1, 1);
+                glVertex2f(+5.33 *10, -1 *10);
+
+                glTexCoord2f(0, 1);
+                glVertex2f(-5.33 *10, -1 *10);
+              }
+              glEnd();
+            }
+          glPopMatrix();
           /* Desactive l'image */
           glBindTexture(GL_TEXTURE_2D, 0);
           glDisable(GL_TEXTURE_2D);
+
+          // glPushMatrix();
+          //   glScalef(10,10,1);
+          //   //glRotatef(-20,0,0,-1);
+          //   glPushMatrix();
+          //     glTranslatef(0.1- globalTranslationTotal ,0,0);
+          //     for(int i=-20;i<20;i++){
+          //       glColor3f(1.0f,0.0f,1.0f);
+          //       glBegin(GL_LINES);
+          //         glVertex3f(-20,i*0.1,0);
+          //         glVertex3f(20,i*0.1,0);
+          //       glEnd();
+          //     }
+          //     for(int i=-20;i<20;i++){
+          //       glColor3f(1.0f,0.0f,1.0f);
+          //       glBegin(GL_LINES);
+          //         glVertex3f(i*0.1,-20,0);
+          //         glVertex3f(i*0.1,20,0);
+          //       glEnd();
+          //     }
+          //   glPopMatrix();
+          // glPopMatrix();
 
           /* Active l'image */
           /* dessine l'image du vaisseau en fonction de sa position */
@@ -405,10 +462,103 @@ int main(int argc, char** argv) {
           }
       }else if(GAME_MODE == GAME_MODE_END_GAME ){
 
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textureID[9]);
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+          glTexCoord2f(0, 0);
+          glVertex2f(-1.77 * 10, +1 *10);
 
-        glTranslatef(0, 0, 0);
-        drawSquare(1);
-        drawCircle(1);
+          glTexCoord2f(1, 0);
+          glVertex2f(+1.77 * 10, +1 *10);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(+1.77 * 10, -1 *10);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(-1.77 * 10, -1 *10);
+        }
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textureID[17]);
+        glPushMatrix();
+          glScalef(1.5,1.5,0);
+          glTranslatef(0,-4,0);
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+
+
+        glEnable(GL_TEXTURE_2D);
+        if(ship->hp <=0){
+          glBindTexture(GL_TEXTURE_2D, textureID[19]);
+          glPushMatrix();
+            glScalef(1.5,1.5,0);
+            glBegin(GL_QUADS);
+            {
+              glColor3ub(255,255,255);
+              glTexCoord2f(0, 0);
+              glVertex2f(-3.79 , +1);
+
+              glTexCoord2f(1, 0);
+              glVertex2f(+3.79, +1);
+
+              glTexCoord2f(1, 1);
+              glVertex2f(+3.79 , -1);
+
+              glTexCoord2f(0, 1);
+              glVertex2f(-3.79 , -1);
+            }
+            glEnd();
+          glPopMatrix();
+        }else{
+          glBindTexture(GL_TEXTURE_2D, textureID[18]);
+          glPushMatrix();
+            glScalef(4,4,0);
+            glBegin(GL_QUADS);
+            {
+              glColor3ub(255,255,255);
+              glTexCoord2f(0, 0);
+              glVertex2f(-1.89 , +1);
+
+              glTexCoord2f(1, 0);
+              glVertex2f(+1.89, +1);
+
+              glTexCoord2f(1, 1);
+              glVertex2f(+1.89 , -1);
+
+              glTexCoord2f(0, 1);
+              glVertex2f(-1.89 , -1);
+            }
+            glEnd();
+          glPopMatrix();
+        }
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+
+        //glTranslatef(0, 0, 0);
+        //drawSquare(1);
+        //drawCircle(1);
       }
 
 
@@ -464,21 +614,33 @@ int main(int argc, char** argv) {
           if(GAME_MODE == GAME_MODE_MENU ){
             if(e.button.x >= 260 && e.button.x <= 530 && e.button.y <= 430 && e.button.y >= 350){
 
-
-              strcat(osuFileName, diff);
-            	strcat(osuFileName, ".osu");
-              osu = readOsuFile(osuFileName);
+              //TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
+              strcpy(bufferOsuFileName,osuFileName);
+              strcat(bufferOsuFileName, diff);
+            	strcat(bufferOsuFileName, ".osu");
+              osu = readOsuFile(bufferOsuFileName);
               currentOsuNode = osu.first;
 
-              strcat(ppmFileName, diff);
-            	strcat(ppmFileName, ".ppm");
-            	mapLength = createFromPPM(ppmFileName, &obstaclesList, &bonusesList);
+              strcpy(bufferPpmFileName,ppmFileName);
+              strcat(bufferPpmFileName, diff);
+            	strcat(bufferPpmFileName, ".ppm");
+            	mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
+
+
+              globalTranslationTotal =0;
+              ship->hp = 30;
+              ship->pos[X] = -5;
+              ship->pos[Y] =0;
               GAME_MODE = GAME_MODE_GAME;
+
+              // Debug fin jeu
+              //GAME_MODE = GAME_MODE_END_GAME;
               Mix_PlayMusic(music, -1);
               int CORRECTIF = 100;
               musicStartTime = SDL_GetTicks() + CORRECTIF;
               printf("Music start at %d ticks\n", musicStartTime);
+
             }else if(e.button.x >= selectedButtonPos[0] && e.button.x <= selectedButtonPos[2] && e.button.y >= selectedButtonPos[1] && e.button.y <= selectedButtonPos[3]){
 
               selectedDifficulty = 0;
@@ -514,6 +676,12 @@ int main(int argc, char** argv) {
             //
             //   }
             // }
+          }
+
+          if(GAME_MODE == GAME_MODE_END_GAME){
+            if(e.button.x >= 290 && e.button.x <= 505 && e.button.y <= 660 && e.button.y >= 605){
+              GAME_MODE = GAME_MODE_MENU;
+            }
           }
           break;
         case SDL_MOUSEMOTION:
