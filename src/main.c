@@ -181,11 +181,11 @@ int main(int argc, char** argv) {
   int loop = 1;
 
   /* Variables des textures */
-  float posButton[12] = {-6.5, -4, 0, -4, 6.5, -4, -3.5, -7, 3.5, -7, 0, 0};
-  int idTextureForLoop = 0;
   /* ordre : easy normal advanced hard fuuu Haut gauche, bas droite */
   int selectedButtonPos[20]= {20, 520, 260, 600, 280, 520, 520, 600, 540, 520, 780, 600, 140, 640, 380, 720, 420, 640, 660, 720};
+  float posButton[12] = {-6.5, -4, 0, -4, 6.5, -4, -3.5, -7, 3.5, -7, 0, 0};
   int selectedDifficulty = 1;
+  int idTextureForLoop = 0;
 
   LEVEL_STATE = LEVEL_STATE_RUNNING;
   while(loop) {
@@ -196,48 +196,26 @@ int main(int argc, char** argv) {
     if(GAME_MODE ==  GAME_MODE_MENU){   
 
       /* Affichage du background */
-      drawBackground(textureID, posButton, selectedDifficulty);
+      drawBackground(textureID);
 
-      // for de rendu bouttons
+      /* Affichage du cadre de selection */
+      drawSelectionBox(textureID, posButton, selectedDifficulty);
+
+      /* Boucle de rendu des buttons */
       idTextureForLoop = 0;
       for(int i =0;i<12;i=i+2){
-
-        glPushMatrix();
-        {
-          //printf("button %d",i-1+10);
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[10+idTextureForLoop]);
-          glTranslatef(posButton[i],posButton[i+1],0);
-          if(i>=10){
-            glScalef(2,2,0);
-          }
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-        }
-        glPopMatrix();
+        /* Affichage d'un button */
+        drawButton(textureID, posButton, i, 10+idTextureForLoop);
         idTextureForLoop = idTextureForLoop +1;
       }
 
+      /* Cercle blanc de debug */
+      /*
       glPushMatrix();
       glTranslatef(0,-6,0);
       drawCircle(1);
       glPopMatrix();
+      */
 
     }else if(GAME_MODE == GAME_MODE_GAME){
       glTranslatef(-globalTranslation, 0, 0);

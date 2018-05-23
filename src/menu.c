@@ -2,7 +2,7 @@
 
 #include "menu.h"
 
-void drawBackground(GLuint textureID[], float posButton[], int selectedDifficulty) {
+void drawBackground(GLuint textureID[]) {
 
   /* Image de fond */
   glEnable(GL_TEXTURE_2D);
@@ -25,7 +25,11 @@ void drawBackground(GLuint textureID[], float posButton[], int selectedDifficult
   glEnd();
   glBindTexture(GL_TEXTURE_2D, 0);
   glDisable(GL_TEXTURE_2D);
+  
+}
 
+void drawSelectionBox(GLuint textureID[], float posButton[], int selectedDifficulty) {
+  /* Cadre de selection */
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, textureID[10]);
   glPushMatrix();{
@@ -34,7 +38,6 @@ void drawBackground(GLuint textureID[], float posButton[], int selectedDifficult
     glScalef(1.04,1.1,0);
     glBegin(GL_QUADS);
     {
-      //glColor4f(0.4,0,0.74,0.8);
       glColor3ub(255,255,255);
       glTexCoord2f(0, 0);
       glVertex2f(-3 , +1);
@@ -52,5 +55,37 @@ void drawBackground(GLuint textureID[], float posButton[], int selectedDifficult
   }
   glPopMatrix();
   glBindTexture(GL_TEXTURE_2D, 0);
-  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_TEXTURE_2D);  
+}
+
+void drawButton(GLuint textureID[], float posButton[], int i, int id) {
+  glPushMatrix();
+  {
+    //printf("button %d",i-1+10);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureID[id]);
+    glTranslatef(posButton[i],posButton[i+1],0);
+    if(i>=10){
+      glScalef(2,2,0);
+    }
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
+      glTexCoord2f(0, 0);
+      glVertex2f(-3 , +1);
+
+      glTexCoord2f(1, 0);
+      glVertex2f(+3, +1);
+
+      glTexCoord2f(1, 1);
+      glVertex2f(+3 , -1);
+
+      glTexCoord2f(0, 1);
+      glVertex2f(-3 , -1);
+    }
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
+  }
+  glPopMatrix();
 }
