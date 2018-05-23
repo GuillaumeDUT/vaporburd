@@ -11,6 +11,7 @@ enum type {
   OBSTACLE,
   BULLET_SHIP,
   BULLET_ENNEMY,
+  BULLET_BOSS,
   ENNEMY_SIMPLE,
 	ENNEMY_HOMMING,
   ENNEMY_BOSS,
@@ -22,7 +23,7 @@ enum type {
 
 typedef struct Entity{
   int hp;
-  int id;  
+  int id;
   float size;
 
   float pos[2];
@@ -58,7 +59,7 @@ Bullet createBullet(Entity entity, float size);
 Entity createEntity(float x, float y, int hp, float size, int id);
 
 void displayEntity(Entity e);
-/* 
+/*
   Return :
   0: Dead
   1: Alive

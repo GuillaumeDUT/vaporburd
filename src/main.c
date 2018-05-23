@@ -26,7 +26,7 @@ int GAME_MODE;
 
 
 /* DEBUG */
-static const int DEBUG = 1;
+static const int DEBUG = 1 ;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
@@ -141,6 +141,10 @@ int main(int argc, char** argv) {
   setTexture("text_death",19,textureID);
 
   setTexture("boss",20,textureID);
+
+  setTexture("bullet_ship",21,textureID);
+  setTexture("bullet_boss",22,textureID);
+
 
 
   /* activation du canal Alpha */
@@ -432,7 +436,6 @@ int main(int argc, char** argv) {
             /* On fait apparaître un boss */
             createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
             
-            
             LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
             printf("Boss spawned\n");
           }
@@ -463,7 +466,7 @@ int main(int argc, char** argv) {
           updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
           updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal,textureID);
           updateBonuses(ship, &bonusesList,textureID);
-        
+
         /* Debug */
         printf("Nb bullets : %d\n", bulletsList.taille);
         printf("Nb ennemies : %d\n", ennemiesList.taille);
@@ -643,9 +646,9 @@ int main(int argc, char** argv) {
             	strcat(bufferPpmFileName, ".ppm");
             	mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
-              
+
               /* Suppression des ressources */
-//              
+//
 //              deleteList(&obstaclesList);
 //              deleteList(&ennemiesList);
 //              deleteList(&bulletsList);
