@@ -167,8 +167,10 @@ int main(int argc, char** argv) {
   obstaclesList.taille = 0;
   EList ennemiesList;
   ennemiesList.taille = 0;
-  BList bulletsList;
-  bulletsList.taille = 0;
+  BList bulletsShipList;
+  bulletsShipList.taille = 0;
+  BList bulletsEnnemyList;
+  bulletsEnnemyList.taille = 0;
   BList bonusesList;
   bonusesList.taille = 0;
 
@@ -431,7 +433,8 @@ int main(int argc, char** argv) {
             /* On supprime tous les obstacles */
             deleteList(&obstaclesList);
             deleteList(&ennemiesList);
-            deleteList(&bulletsList);
+            deleteList(&bulletsShipList);
+            deleteList(&bulletsEnnemyList);
             
             /* On fait apparaître un boss */
             createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
@@ -454,21 +457,23 @@ int main(int argc, char** argv) {
           if ( triggerKeySpace ) {
             if ( ship->cooldown <= 0 ) {
               ship->cooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackPerSecond);
-              shoot(ship, &bulletsList);
+              shoot(ship, &bulletsShipList);
             }
           }
 
 
 
           /* Boucle d'update et affichage des objets */
-          updateShip(ship, &bulletsList, globalTranslation, globalTranslationTotal, triggerKeyShift);
+          updateShip(ship, &bulletsShipList, globalTranslation, globalTranslationTotal, triggerKeyShift);
           updateObstacles(ship, &obstaclesList,textureID);
-          updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
-          updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal,textureID);
+          updateBullets(ship, &bulletsShipList, globalTranslationTotal,textureID);
+          updateBullets(ship, &bulletsEnnemyList, globalTranslationTotal,textureID);
+          updateEnnemies(ship, &bulletsEnnemyList, &ennemiesList, globalTranslationTotal,textureID);
           updateBonuses(ship, &bonusesList,textureID);
 
         /* Debug */
-        printf("Nb bullets : %d\n", bulletsList.taille);
+        printf("Nb bullets ship : %d\n", bulletsShipList.taille);
+        printf("Nb bullets ennemy : %d\n", bulletsEnnemyList.taille);
         printf("Nb ennemies : %d\n", ennemiesList.taille);
         printf("Nb obstacles : %d\n", obstaclesList.taille);
 
@@ -647,13 +652,6 @@ int main(int argc, char** argv) {
             	mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
 
-              /* Suppression des ressources */
-//
-//              deleteList(&obstaclesList);
-//              deleteList(&ennemiesList);
-//              deleteList(&bulletsList);
-
-
               globalTranslationTotal =0;
               ship->hp = 30;
               ship->pos[X] = -5;
@@ -739,7 +737,8 @@ int main(int argc, char** argv) {
     /* Liberation des structures allouées */
     deleteList(&obstaclesList);
     deleteList(&ennemiesList);
-    deleteList(&bulletsList);
+    deleteList(&bulletsEnnemyList);
+    deleteList(&bulletsShipList);
   }
 
   SDL_Quit();

@@ -56,9 +56,9 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal,GLuint 
 
     /* Supprime quand on sort de l'ecran */
     if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ||
-         actuel->pos[X] <= -WINDOW_SCALE / 2 + globalTranslationTotal ||
-         actuel->pos[Y] >= WINDOW_SCALE / 2 ||
-         actuel->pos[Y] <= -WINDOW_SCALE / 2) {
+        actuel->pos[X] <= -WINDOW_SCALE / 2 + globalTranslationTotal ||
+        actuel->pos[Y] >= WINDOW_SCALE / 2 ||
+        actuel->pos[Y] <= -WINDOW_SCALE / 2) {
       supprimerList( liste, actuel->id );
     }
     /* Next */
@@ -69,79 +69,79 @@ void drawBullet( Bullet bullet, GLuint textureID[]) {
   //  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
 
   glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
-    if(bullet->type == BULLET_ENNEMY){
-        glBindTexture(GL_TEXTURE_2D, textureID[4]);
+  glEnable( GL_TEXTURE_2D );
+  if(bullet->type == BULLET_ENNEMY){
+    glBindTexture(GL_TEXTURE_2D, textureID[4]);
 
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
-          glScalef(0.5,0.5,1);
-          glTexCoord2f(0, 0);
-          glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]+0.5);
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
+      glScalef(0.5,0.5,1);
+      glTexCoord2f(0, 0);
+      glVertex3f(bullet->pos[X]-0.5, bullet->pos[Y]+0.5, 1);
 
-          glTexCoord2f(1, 0);
-          glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]+0.5);
+      glTexCoord2f(1, 0);
+      glVertex3f(bullet->pos[X]+0.5, bullet->pos[Y]+0.5, 1);
 
-          glTexCoord2f(1, 1);
-          glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]-0.5);
+      glTexCoord2f(1, 1);
+      glVertex3f(bullet->pos[X]+0.5, bullet->pos[Y]-0.5, 1);
 
-          glTexCoord2f(0, 1);
-          glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5);
-        }
-        glEnd();
-      }else if(bullet->type == BULLET_SHIP){
-      glBindTexture(GL_TEXTURE_2D, textureID[21]);
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
+      glTexCoord2f(0, 1);
+      glVertex3f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5, 1);
+    }
+    glEnd();
+  }else if(bullet->type == BULLET_SHIP){
+    glBindTexture(GL_TEXTURE_2D, textureID[21]);
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
 
-          glTexCoord2f(0, 0);
-          glVertex2f(bullet->pos[X]-1.45 *0.4, bullet->pos[Y]+0.5 *0.4);
+      glTexCoord2f(0, 0);
+      glVertex2f(bullet->pos[X]-1.45 *0.4, bullet->pos[Y]+0.5 *0.4);
 
-          glTexCoord2f(1, 0);
-          glVertex2f(bullet->pos[X]+1.45 *0.4, bullet->pos[Y]+0.5 *0.4);
+      glTexCoord2f(1, 0);
+      glVertex2f(bullet->pos[X]+1.45 *0.4, bullet->pos[Y]+0.5 *0.4);
 
-          glTexCoord2f(1, 1);
-          glVertex2f(bullet->pos[X]+1.45 *0.4, bullet->pos[Y]-0.5 *0.4);
+      glTexCoord2f(1, 1);
+      glVertex2f(bullet->pos[X]+1.45 *0.4, bullet->pos[Y]-0.5 *0.4);
 
-          glTexCoord2f(0, 1);
-          glVertex2f(bullet->pos[X]-1.45 *0.4, bullet->pos[Y]-0.5 *0.4);
-        }
-        glEnd();
-      }else if(bullet->type == BULLET_BOSS){
-      glBindTexture(GL_TEXTURE_2D, textureID[22]);
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
+      glTexCoord2f(0, 1);
+      glVertex2f(bullet->pos[X]-1.45 *0.4, bullet->pos[Y]-0.5 *0.4);
+    }
+    glEnd();
+  }else if(bullet->type == BULLET_BOSS){
+    glBindTexture(GL_TEXTURE_2D, textureID[22]);
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
 
-          glTexCoord2f(0, 0);
-          glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]+1 *0.5);
+      glTexCoord2f(0, 0);
+      glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]+1 *0.5);
 
-          glTexCoord2f(1, 0);
-          glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]+1 *0.5);
+      glTexCoord2f(1, 0);
+      glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]+1 *0.5);
 
-          glTexCoord2f(1, 1);
-          glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]-1 *0.5);
+      glTexCoord2f(1, 1);
+      glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]-1 *0.5);
 
-          glTexCoord2f(0, 1);
-          glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]-1 *0.5);
-        }
-        glEnd();
-      }
-        //glColor3f(0, 155, 155);
-    glTranslatef(
-      bullet->pos[X],
-      bullet->pos[Y],
-      0);
-    glScalef(
-      bullet->size,
-      bullet->size,
-      1);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
+      glTexCoord2f(0, 1);
+      glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]-1 *0.5);
+    }
+    glEnd();
+  }
+  //glColor3f(0, 155, 155);
+  glTranslatef(
+    bullet->pos[X],
+    bullet->pos[Y],
+    0);
+  glScalef(
+    bullet->size,
+    bullet->size,
+    1);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glDisable( GL_TEXTURE_2D );
 
-    drawCircle(1);
+  drawCircle(1);
   glPopMatrix();
 }
 void moveBullet( Bullet bullet ) {
