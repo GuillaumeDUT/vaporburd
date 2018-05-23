@@ -477,6 +477,7 @@ int main(int argc, char** argv) {
       updateBullets(ship, &bulletsEnnemyList, globalTranslationTotal,textureID);
 
       updateBonuses(ship, &bonusesList,textureID);
+      
       /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
       if ( currentOsuNode != NULL &&
           musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
@@ -496,7 +497,8 @@ int main(int argc, char** argv) {
         /* On supprime tous les obstacles */
         deleteList(&obstaclesList);
         deleteList(&ennemiesList);
-        deleteList(&bulletsList);
+        deleteList(&bulletsShipList);
+        deleteList(&bulletsEnnemyList);
 
         /* On fait apparaître un boss */
         createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
@@ -678,7 +680,8 @@ int main(int argc, char** argv) {
               /* Suppression des ressources */
               deleteList(&obstaclesList);
               deleteList(&ennemiesList);
-              deleteList(&bulletsList);
+              deleteList(&bulletsShipList);
+              deleteList(&bulletsEnnemyList);
 
               //TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
               strcpy(bufferOsuFileName,osuFileName);
