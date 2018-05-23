@@ -26,7 +26,7 @@ static const int GAME_MODE_GAME = 2;
 static const int GAME_MODE_END_GAME = 3;
 
 /* DEBUG */
-static const int DEBUG = 0 ;
+static const int DEBUG = 1 ;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
@@ -141,6 +141,10 @@ int main(int argc, char** argv) {
   setTexture("text_death",19,textureID);
 
   setTexture("boss",20,textureID);
+
+  setTexture("bullet_ship",21,textureID);
+  setTexture("bullet_boss",22,textureID);
+
 
 
   /* activation du canal Alpha */

@@ -69,7 +69,7 @@ void drawBullet( Bullet bullet,GLuint textureID[]) {
     glEnable(GL_TEXTURE_2D);
     if(bullet->type == BULLET_ENNEMY){
         glBindTexture(GL_TEXTURE_2D, textureID[4]);
-     
+
         glBegin(GL_QUADS);
         {
           glColor3ub(255,255,255);
@@ -88,25 +88,44 @@ void drawBullet( Bullet bullet,GLuint textureID[]) {
         }
         glEnd();
       }else if(bullet->type == BULLET_SHIP){
-      glBindTexture(GL_TEXTURE_2D, textureID[1]);
+      glBindTexture(GL_TEXTURE_2D, textureID[21]);
         glBegin(GL_QUADS);
         {
           glColor3ub(255,255,255);
 
           glTexCoord2f(0, 0);
-          glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]+0.5);
+          glVertex2f(bullet->pos[X]-1.45 *0.4, bullet->pos[Y]+0.5 *0.4);
 
           glTexCoord2f(1, 0);
-          glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]+0.5);
+          glVertex2f(bullet->pos[X]+1.45 *0.4, bullet->pos[Y]+0.5 *0.4);
 
           glTexCoord2f(1, 1);
-          glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]-0.5);
+          glVertex2f(bullet->pos[X]+1.45 *0.4, bullet->pos[Y]-0.5 *0.4);
 
           glTexCoord2f(0, 1);
-          glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]-0.5);
+          glVertex2f(bullet->pos[X]-1.45 *0.4, bullet->pos[Y]-0.5 *0.4);
         }
         glEnd();
-    }
+      }else if(bullet->type == BULLET_BOSS){
+      glBindTexture(GL_TEXTURE_2D, textureID[22]);
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+
+          glTexCoord2f(0, 0);
+          glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]+1 *0.5);
+
+          glTexCoord2f(1, 0);
+          glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]+1 *0.5);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(bullet->pos[X]+1.93 *0.5, bullet->pos[Y]-1 *0.5);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(bullet->pos[X]-1.93 *0.5, bullet->pos[Y]-1 *0.5);
+        }
+        glEnd();
+      }
         //glColor3f(0, 155, 155);
     glTranslatef(
       bullet->pos[X],
@@ -129,7 +148,7 @@ void moveBullet( Bullet bullet ) {
 
 void bossAttack1(Entity boss, Ship ship, BList *bList, int deltaTime) {
   float deltaX, deltaY;
-	
+
   Bullet bullet = createBullet(boss, 2);
   ajouterFinList(bList, bullet);
 
@@ -137,7 +156,7 @@ void bossAttack1(Entity boss, Ship ship, BList *bList, int deltaTime) {
 
   deltaX = ship->pos[X] - bullet->pos[X];
   deltaY = ship->pos[Y] - bullet->pos[Y];
-	
+
   bullet->speed[Y] = deltaY/300;
   bullet->speed[X] = deltaX/300;
 }
@@ -146,19 +165,20 @@ void bossAttack3(Entity boss, Ship ship, BList *bList) {
 	int i,j;
 	float NB_BALLS = 20.0;
 	float increment = 0.0;
-	
+
 	/*
 	for ( i=0; i<NB_BALLS; i++) {
-		
-		
-		
-		
+
+
+
+
 		increment += 1/NB_BALLS;
 	}
-	
+
 	*/
   Bullet bullet = createBullet(boss, BULLET_SIZE);
+  bullet->type = BULLET_BOSS;
   ajouterFinList(bList, bullet);
-	
+
 	printf("Attack 3\n");
 }
