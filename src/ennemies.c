@@ -56,7 +56,7 @@ void createBoss(EList *ennemies, float globalTranslation, float globalTranslatio
 
 	ajouterFinList(ennemies, boss);
 }
-void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTranslationTotal, GLuint textureID[]) {
+void updateEnnemies(Ship ship, BList *bulletsEnnemy, BList *bulletsShip, EList *ennemies, float globalTranslationTotal, GLuint textureID[]) {
 	if(ennemies->taille == 0){
 		return ;
 	}
@@ -68,13 +68,13 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 
 			/* Patterns du boss */
 			if ( eActuel->hp / BOSS_HP >= 0.8 ) {
-				bossPattern3( eActuel, ship, bullets );
+				bossPattern3( eActuel, ship, bulletsEnnemy );
 			} else if ( eActuel->hp / BOSS_HP >= 0.6 ) {
-				bossPattern2( eActuel, ship, bullets, ennemies);
+				bossPattern2( eActuel, ship, bulletsEnnemy, ennemies);
 			} else if ( eActuel->hp / BOSS_HP >= 0.4 ) {
-				bossPattern1( eActuel, ship, bullets );
+				bossPattern1( eActuel, ship, bulletsEnnemy );
 			} else if ( eActuel->hp / BOSS_HP >= 0.2 ) {
-				bossPattern1( eActuel, ship, bullets );
+				bossPattern1( eActuel, ship, bulletsEnnemy );
 			} else {
 
 				/* Deplacement */
@@ -86,7 +86,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 					eActuel->speed[Y] = 0;
 				}
 
-				shootEnnemy( eActuel, bullets );
+				shootEnnemy( eActuel, bulletsEnnemy );
 			}
 
 		}
@@ -121,15 +121,15 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 
 			eActuel->speed[X] = offX;
 			eActuel->speed[Y] = offY;
-			shootEnnemy( eActuel, bullets );
+			shootEnnemy( eActuel, bulletsEnnemy );
 
 		}
 		moveEnnemy( eActuel, globalTranslationTotal );
 		drawEnnemy( eActuel, 0 , textureID);
 
-		/* Collision avec les bullets */
-		if(bullets->taille != 0){
-			Bullet bulletActuel = bullets->first;
+		/* Collision avec les bullets du ship */
+		if(bulletsShip->taille != 0){
+			Bullet bulletActuel = bulletsShip->first;
 			Bullet bulletNext;
 			while ( bulletActuel != NULL ) {
 				bulletNext = bulletActuel->next;
@@ -137,7 +137,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 					/*displayEntity(eActuel);*/
 					drawEnnemy( eActuel, 1 ,textureID);
 					getDamage(bulletActuel, eActuel);
-					supprimerList(bullets, bulletActuel->id);
+					supprimerList(bulletsShip, bulletActuel->id);
 				}
 				bulletActuel = bulletNext;
 			}

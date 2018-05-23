@@ -26,7 +26,7 @@ int GAME_MODE;
 
 
 /* DEBUG */
-static const int DEBUG = 1 ;
+static const int DEBUG = 0;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
@@ -108,7 +108,9 @@ int main(int argc, char** argv) {
   }
 
 
-  Mix_Music *music = Mix_LoadMUS("./assets/flicker.mp3");
+  Mix_Music *musicGame = Mix_LoadMUS("./assets/flicker.mp3");
+  Mix_Music *musicBoss = Mix_LoadMUS("./assets/boss.mp3");
+  Mix_Music *musicMenu = Mix_LoadMUS("./assets/menu.mp3");
   int musicStartTime =0;
 
   /* Chargement et traitement de la texture */
@@ -154,11 +156,11 @@ int main(int argc, char** argv) {
 
 
 
-	/* Ouverture de la map OSU de la bonne difficulté */
-	char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
+  /* Ouverture de la map OSU de la bonne difficulté */
+  char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
   char bufferOsuFileName[100];
   OSUList osu;
-  OSUNode currentOsuNode;
+  OSUNode currentOsuNode = NULL;
 
 
   Ship ship = createShip(-4.0, 0.0, 30, 0.5);
@@ -176,7 +178,7 @@ int main(int argc, char** argv) {
 
 
   char diff[50] = "[Normal]";
-	char ppmFileName[100] = "./assets/map ";
+  char ppmFileName[100] = "./assets/map ";
   char bufferPpmFileName[100];
   int mapLength;
 
@@ -207,382 +209,398 @@ int main(int argc, char** argv) {
     Uint32 startTime = SDL_GetTicks();
     glClear(GL_COLOR_BUFFER_BIT);
 
-      if(GAME_MODE ==  GAME_MODE_MENU){
-        // background
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, textureID[9]);
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
-          glTexCoord2f(0, 0);
-          glVertex2f(-1.77 * 10, +1 *10);
+    /* ========================== MENU ================================ */
+    if(GAME_MODE ==  GAME_MODE_MENU){
+      // Musique
+      Mix_RewindMusic();
+      Mix_PlayMusic(musicMenu, -1);      
+      
+      // background
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, textureID[9]);
+      glBegin(GL_QUADS);
+      {
+        glColor3ub(255,255,255);
+        glTexCoord2f(0, 0);
+        glVertex2f(-1.77 * 10, +1 *10);
 
-          glTexCoord2f(1, 0);
-          glVertex2f(+1.77 * 10, +1 *10);
+        glTexCoord2f(1, 0);
+        glVertex2f(+1.77 * 10, +1 *10);
 
-          glTexCoord2f(1, 1);
-          glVertex2f(+1.77 * 10, -1 *10);
+        glTexCoord2f(1, 1);
+        glVertex2f(+1.77 * 10, -1 *10);
 
-          glTexCoord2f(0, 1);
-          glVertex2f(-1.77 * 10, -1 *10);
-        }
-        glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
-
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, textureID[10]);
-        glPushMatrix();{
-          glTranslatef(posButton[selectedDifficulty*2],posButton[selectedDifficulty*2+1],0);
-          glRotated(180,0,1,0);
-          glScalef(1.04,1.1,0);
-          glBegin(GL_QUADS);
-          {
-            //glColor4f(0.4,0,0.74,0.8);
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-        }
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
-
-        // for de rendu bouttons
-        idTextureForLoop = 0;
-        for(int i =0;i<12;i=i+2){
-
-          glPushMatrix();
-          {
-            //printf("button %d",i-1+10);
-            glEnable(GL_TEXTURE_2D);
-            glBindTexture(GL_TEXTURE_2D, textureID[10+idTextureForLoop]);
-            glTranslatef(posButton[i],posButton[i+1],0);
-            if(i>=10){
-              glScalef(2,2,0);
-            }
-            glBegin(GL_QUADS);
-            {
-              glColor3ub(255,255,255);
-              glTexCoord2f(0, 0);
-              glVertex2f(-3 , +1);
-
-              glTexCoord2f(1, 0);
-              glVertex2f(+3, +1);
-
-              glTexCoord2f(1, 1);
-              glVertex2f(+3 , -1);
-
-              glTexCoord2f(0, 1);
-              glVertex2f(-3 , -1);
-            }
-            glEnd();
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glDisable(GL_TEXTURE_2D);
-          }
-          glPopMatrix();
-          idTextureForLoop = idTextureForLoop +1;
-        }
-
-        glPushMatrix();
-          glTranslatef(0,-6,0);
-          drawCircle(1);
-        glPopMatrix();
-
-      }else if(GAME_MODE == GAME_MODE_GAME){
-          glTranslatef(-globalTranslation, 0, 0);
-          /* Global counter */
-          globalTranslationTotal += globalTranslation;
-
-
-          if ( DEBUG == 1 ) {
-            /* DEBUG DU BOSS */
-            Bonus actuel = bonusesList.first;
-            while ( actuel != NULL ) {
-              acquireBonus(ship, actuel);
-              supprimerList(&bonusesList, actuel->id);
-              actuel = actuel->next;
-            }
-          }
-
-          /* textures bg */
-          glEnable(GL_TEXTURE_2D);
-          glPushMatrix();
-            if(LEVEL_STATE == LEVEL_STATE_BOSS_SPAWNED){
-              glBindTexture(GL_TEXTURE_2D, textureID[16]);
-              glTranslatef(globalTranslationTotal,0,0);
-              glRotatef(20-(globalTranslationTotal*5),0,0,1);
-              glBegin(GL_QUADS);
-              {
-                glColor3ub(255,255,255);
-                glTexCoord2f(0, 0);
-                glVertex2f(-1 *14, +1 *14);
-
-                glTexCoord2f(1, 0);
-                glVertex2f(+1 *14, +1 *14);
-
-                glTexCoord2f(1, 1);
-                glVertex2f(+1 *14, -1 *14);
-
-                glTexCoord2f(0, 1);
-                glVertex2f(-1 *14, -1 *14);
-              }
-              glEnd();
-
-            }else{
-              glBindTexture(GL_TEXTURE_2D, textureID[2]);
-              glTranslatef(42+globalTranslationTotal*0.58,0,0);
-              glBegin(GL_QUADS);
-              {
-                glColor3ub(255,255,255);
-                glTexCoord2f(0, 0);
-                glVertex2f(-5.33 *10, +1 *10);
-
-                glTexCoord2f(1, 0);
-                glVertex2f(+5.33 *10, +1 *10);
-
-                glTexCoord2f(1, 1);
-                glVertex2f(+5.33 *10, -1 *10);
-
-                glTexCoord2f(0, 1);
-                glVertex2f(-5.33 *10, -1 *10);
-              }
-              glEnd();
-            }
-          glPopMatrix();
-          /* Desactive l'image */
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-
-          // glPushMatrix();
-          //   glScalef(10,10,1);
-          //   //glRotatef(-20,0,0,-1);
-          //   glPushMatrix();
-          //     glTranslatef(0.1- globalTranslationTotal ,0,0);
-          //     for(int i=-20;i<20;i++){
-          //       glColor3f(1.0f,0.0f,1.0f);
-          //       glBegin(GL_LINES);
-          //         glVertex3f(-20,i*0.1,0);
-          //         glVertex3f(20,i*0.1,0);
-          //       glEnd();
-          //     }
-          //     for(int i=-20;i<20;i++){
-          //       glColor3f(1.0f,0.0f,1.0f);
-          //       glBegin(GL_LINES);
-          //         glVertex3f(i*0.1,-20,0);
-          //         glVertex3f(i*0.1,20,0);
-          //       glEnd();
-          //     }
-          //   glPopMatrix();
-          // glPopMatrix();
-
-          /* Active l'image */
-          /* dessine l'image du vaisseau en fonction de sa position */
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[0]);
-
-            glBegin(GL_QUADS);
-            {
-              glColor3ub(255,255,255);
-              glTexCoord2f(0, 0);
-              glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]+1 *0.4 );
-
-              glTexCoord2f(1, 0);
-              glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]+1 *0.4 );
-
-              glTexCoord2f(1, 1);
-              glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]-1 *0.4 );
-
-              glTexCoord2f(0, 1);
-              glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]-1 *0.4 );
-            }
-            glEnd();
-          /* Desactive l'image */
-
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-
-
-
-          /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
-          if ( currentOsuNode != NULL &&
-              musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
-              LEVEL_STATE == LEVEL_STATE_RUNNING &&
-              GAME_MODE == GAME_MODE_GAME)
-          {
-            /*
-           createRandomEnnemy(&ennemiesList, globalTranslationTotal);
-            */
-            createOSUNodeEnnemy(
-              &ennemiesList,
-              currentOsuNode,
-              globalTranslationTotal);
-            currentOsuNode = currentOsuNode->next;
-          } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
-
-            /* On supprime tous les obstacles */
-            deleteList(&obstaclesList);
-            deleteList(&ennemiesList);
-            deleteList(&bulletsShipList);
-            deleteList(&bulletsEnnemyList);
-            
-            /* On fait apparaître un boss */
-            createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
-            
-            LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
-            printf("Boss spawned\n");
-          }
-
-          /* Si on reste appuyé sur les flêches, on se déplace */
-          if(triggerKeyArrowUp) moveUp(ship);
-          if(triggerKeyArrowDown) moveDown(ship);
-          if(triggerKeyArrowLeft) moveLeft(ship);
-          if(triggerKeyArrowRight) moveRight(ship);
-
-
-          /* Tir */
-          ship->cooldown = ship->cooldown > 0 ?
-            ship->cooldown-1
-            : 0;
-          if ( triggerKeySpace ) {
-            if ( ship->cooldown <= 0 ) {
-              ship->cooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackPerSecond);
-              shoot(ship, &bulletsShipList);
-            }
-          }
-
-
-
-          /* Boucle d'update et affichage des objets */
-          updateShip(ship, &bulletsShipList, globalTranslation, globalTranslationTotal, triggerKeyShift);
-          updateObstacles(ship, &obstaclesList,textureID);
-          updateBullets(ship, &bulletsShipList, globalTranslationTotal,textureID);
-          updateBullets(ship, &bulletsEnnemyList, globalTranslationTotal,textureID);
-          updateEnnemies(ship, &bulletsEnnemyList, &ennemiesList, globalTranslationTotal,textureID);
-          updateBonuses(ship, &bonusesList,textureID);
-
-        /* Debug */
-        printf("Nb bullets ship : %d\n", bulletsShipList.taille);
-        printf("Nb bullets ennemy : %d\n", bulletsEnnemyList.taille);
-        printf("Nb ennemies : %d\n", ennemiesList.taille);
-        printf("Nb obstacles : %d\n", obstaclesList.taille);
-
-
-          if ( ship->hp <= 0) {
-            printf("Fin de partie\n\n");
-            GAME_MODE= GAME_MODE_END_GAME;
-            resizeViewport();
-          }
-      }else if(GAME_MODE == GAME_MODE_END_GAME ){
-
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, textureID[9]);
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
-          glTexCoord2f(0, 0);
-          glVertex2f(-1.77 * 10, +1 *10);
-
-          glTexCoord2f(1, 0);
-          glVertex2f(+1.77 * 10, +1 *10);
-
-          glTexCoord2f(1, 1);
-          glVertex2f(+1.77 * 10, -1 *10);
-
-          glTexCoord2f(0, 1);
-          glVertex2f(-1.77 * 10, -1 *10);
-        }
-        glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
-
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, textureID[17]);
-        glPushMatrix();
-          glScalef(1.5,1.5,0);
-          glTranslatef(0,-4,0);
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
-
-
-        glEnable(GL_TEXTURE_2D);
-        if(ship->hp <=0){
-          glBindTexture(GL_TEXTURE_2D, textureID[19]);
-          glPushMatrix();
-            glScalef(1.5,1.5,0);
-            glBegin(GL_QUADS);
-            {
-              glColor3ub(255,255,255);
-              glTexCoord2f(0, 0);
-              glVertex2f(-3.79 , +1);
-
-              glTexCoord2f(1, 0);
-              glVertex2f(+3.79, +1);
-
-              glTexCoord2f(1, 1);
-              glVertex2f(+3.79 , -1);
-
-              glTexCoord2f(0, 1);
-              glVertex2f(-3.79 , -1);
-            }
-            glEnd();
-          glPopMatrix();
-        }else{
-          glBindTexture(GL_TEXTURE_2D, textureID[18]);
-          glPushMatrix();
-            glScalef(4,4,0);
-            glBegin(GL_QUADS);
-            {
-              glColor3ub(255,255,255);
-              glTexCoord2f(0, 0);
-              glVertex2f(-1.89 , +1);
-
-              glTexCoord2f(1, 0);
-              glVertex2f(+1.89, +1);
-
-              glTexCoord2f(1, 1);
-              glVertex2f(+1.89 , -1);
-
-              glTexCoord2f(0, 1);
-              glVertex2f(-1.89 , -1);
-            }
-            glEnd();
-          glPopMatrix();
-        }
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
-
-        //glTranslatef(0, 0, 0);
-        //drawSquare(1);
-        //drawCircle(1);
+        glTexCoord2f(0, 1);
+        glVertex2f(-1.77 * 10, -1 *10);
       }
+      glEnd();
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, textureID[10]);
+      glPushMatrix();{
+        glTranslatef(posButton[selectedDifficulty*2],posButton[selectedDifficulty*2+1],0);
+        glRotated(180,0,1,0);
+        glScalef(1.04,1.1,0);
+        glBegin(GL_QUADS);
+        {
+          //glColor4f(0.4,0,0.74,0.8);
+          glColor3ub(255,255,255);
+          glTexCoord2f(0, 0);
+          glVertex2f(-3 , +1);
+
+          glTexCoord2f(1, 0);
+          glVertex2f(+3, +1);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(+3 , -1);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(-3 , -1);
+        }
+        glEnd();
+      }
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+      // for de rendu bouttons
+      idTextureForLoop = 0;
+      for(int i =0;i<12;i=i+2){
+
+        glPushMatrix();
+        {
+          //printf("button %d",i-1+10);
+          glEnable(GL_TEXTURE_2D);
+          glBindTexture(GL_TEXTURE_2D, textureID[10+idTextureForLoop]);
+          glTranslatef(posButton[i],posButton[i+1],0);
+          if(i>=10){
+            glScalef(2,2,0);
+          }
+          glBegin(GL_QUADS);
+          {
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+          glBindTexture(GL_TEXTURE_2D, 0);
+          glDisable(GL_TEXTURE_2D);
+        }
+        glPopMatrix();
+        idTextureForLoop = idTextureForLoop +1;
+      }
+
+      glPushMatrix();
+      glTranslatef(0,-6,0);
+      drawCircle(1);
+      glPopMatrix();
+
+    }else if(GAME_MODE == GAME_MODE_GAME){
+      glTranslatef(-globalTranslation, 0, 0);
+      /* Global counter */
+      globalTranslationTotal += globalTranslation;
+
+
+      if ( DEBUG == 1 ) {
+        /* DEBUG DU BOSS */
+        Bonus actuel = bonusesList.first;
+        while ( actuel != NULL ) {
+          acquireBonus(ship, actuel);
+          supprimerList(&bonusesList, actuel->id);
+          actuel = actuel->next;
+        }
+      }
+
+      /* textures bg */
+      glEnable(GL_TEXTURE_2D);
+      glPushMatrix();
+      if(LEVEL_STATE == LEVEL_STATE_BOSS_SPAWNED){
+        glBindTexture(GL_TEXTURE_2D, textureID[16]);
+        glTranslatef(globalTranslationTotal,0,0);
+        glRotatef(20-(globalTranslationTotal*5),0,0,1);
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+          glTexCoord2f(0, 0);
+          glVertex2f(-1 *14, +1 *14);
+
+          glTexCoord2f(1, 0);
+          glVertex2f(+1 *14, +1 *14);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(+1 *14, -1 *14);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(-1 *14, -1 *14);
+        }
+        glEnd();
+
+      }else{
+        glBindTexture(GL_TEXTURE_2D, textureID[2]);
+        glTranslatef(42+globalTranslationTotal*0.58,0,0);
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+          glTexCoord2f(0, 0);
+          glVertex2f(-5.33 *10, +1 *10);
+
+          glTexCoord2f(1, 0);
+          glVertex2f(+5.33 *10, +1 *10);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(+5.33 *10, -1 *10);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(-5.33 *10, -1 *10);
+        }
+        glEnd();
+      }
+      glPopMatrix();
+      /* Desactive l'image */
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+      // glPushMatrix();
+      //   glScalef(10,10,1);
+      //   //glRotatef(-20,0,0,-1);
+      //   glPushMatrix();
+      //     glTranslatef(0.1- globalTranslationTotal ,0,0);
+      //     for(int i=-20;i<20;i++){
+      //       glColor3f(1.0f,0.0f,1.0f);
+      //       glBegin(GL_LINES);
+      //         glVertex3f(-20,i*0.1,0);
+      //         glVertex3f(20,i*0.1,0);
+      //       glEnd();
+      //     }
+      //     for(int i=-20;i<20;i++){
+      //       glColor3f(1.0f,0.0f,1.0f);
+      //       glBegin(GL_LINES);
+      //         glVertex3f(i*0.1,-20,0);
+      //         glVertex3f(i*0.1,20,0);
+      //       glEnd();
+      //     }
+      //   glPopMatrix();
+      // glPopMatrix();
+
+      /* Active l'image */
+      /* dessine l'image du vaisseau en fonction de sa position */
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, textureID[0]);
+
+      glBegin(GL_QUADS);
+      {
+        glColor3ub(255,255,255);
+        glTexCoord2f(0, 0);
+        glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]+1 *0.4 );
+
+        glTexCoord2f(1, 0);
+        glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]+1 *0.4 );
+
+        glTexCoord2f(1, 1);
+        glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]-1 *0.4 );
+
+        glTexCoord2f(0, 1);
+        glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]-1 *0.4 );
+      }
+      glEnd();
+      /* Desactive l'image */
+
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+
+
+      /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
+      if ( currentOsuNode != NULL &&
+          musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
+          LEVEL_STATE == LEVEL_STATE_RUNNING &&
+          GAME_MODE == GAME_MODE_GAME)
+      {
+        // createRandomEnnemy(&ennemiesList, globalTranslationTotal);
+        createOSUNodeEnnemy(
+          &ennemiesList,
+          currentOsuNode,
+          globalTranslationTotal);
+        currentOsuNode = currentOsuNode->next;
+      } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
+
+        /* On supprime tous les obstacles */
+        deleteList(&obstaclesList);
+        deleteList(&ennemiesList);
+        deleteList(&bulletsShipList);
+        deleteList(&bulletsEnnemyList);
+
+        /* On fait apparaître un boss */
+        createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
+        
+        /* On lance la musique du boss */
+        Mix_RewindMusic();
+        Mix_PlayMusic(musicBoss, -1);  
+
+        LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
+        printf("Boss spawned\n");
+      }
+
+      /* Si on reste appuyé sur les flêches, on se déplace */
+      if(triggerKeyArrowUp) moveUp(ship);
+      if(triggerKeyArrowDown) moveDown(ship);
+      if(triggerKeyArrowLeft) moveLeft(ship);
+      if(triggerKeyArrowRight) moveRight(ship);
+
+
+      /* Tir */
+      ship->cooldown = ship->cooldown > 0 ?
+        ship->cooldown-1
+        : 0;
+      if ( triggerKeySpace ) {
+        if ( ship->cooldown <= 0 ) {
+          ship->cooldown = 1 + FRAMERATE_MILLISECONDS/(ship->attackPerSecond);
+          shoot(ship, &bulletsShipList);
+        }
+      }
+
+
+
+      /* Boucle d'update et affichage des objets */
+      updateShip(ship, &bulletsEnnemyList, globalTranslation, globalTranslationTotal, triggerKeyShift);
+      
+      updateEnnemies(ship, &bulletsEnnemyList, &bulletsShipList, &ennemiesList, globalTranslationTotal, textureID);
+
+      updateBullets(ship, &bulletsShipList, globalTranslationTotal,textureID);
+      
+      updateObstacles(ship, &obstaclesList,textureID);
+      
+      updateBullets(ship, &bulletsEnnemyList, globalTranslationTotal,textureID);
+
+      updateBonuses(ship, &bonusesList,textureID);
+
+      updateObstacles(ship, &obstaclesList,textureID);
+
+      /* Debug */
+      /*
+      printf("Nb bullets ship : %d\n", bulletsShipList.taille);
+      printf("Nb bullets ennemy : %d\n", bulletsEnnemyList.taille);
+      printf("Nb ennemies : %d\n", ennemiesList.taille);
+      printf("Nb obstacles : %d\n", obstaclesList.taille);
+      */
+
+
+      if ( ship->hp <= 0) {
+        printf("Fin de partie\n\n");
+        GAME_MODE= GAME_MODE_END_GAME;
+        resizeViewport();
+      }
+    }else if(GAME_MODE == GAME_MODE_END_GAME ){
+
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, textureID[9]);
+      glBegin(GL_QUADS);
+      {
+        glColor3ub(255,255,255);
+        glTexCoord2f(0, 0);
+        glVertex2f(-1.77 * 10, +1 *10);
+
+        glTexCoord2f(1, 0);
+        glVertex2f(+1.77 * 10, +1 *10);
+
+        glTexCoord2f(1, 1);
+        glVertex2f(+1.77 * 10, -1 *10);
+
+        glTexCoord2f(0, 1);
+        glVertex2f(-1.77 * 10, -1 *10);
+      }
+      glEnd();
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, textureID[17]);
+      glPushMatrix();
+      glScalef(1.5,1.5,0);
+      glTranslatef(0,-4,0);
+      glBegin(GL_QUADS);
+      {
+        glColor3ub(255,255,255);
+        glTexCoord2f(0, 0);
+        glVertex2f(-3 , +1);
+
+        glTexCoord2f(1, 0);
+        glVertex2f(+3, +1);
+
+        glTexCoord2f(1, 1);
+        glVertex2f(+3 , -1);
+
+        glTexCoord2f(0, 1);
+        glVertex2f(-3 , -1);
+      }
+      glEnd();
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+
+      glEnable(GL_TEXTURE_2D);
+      if(ship->hp <=0){
+        glBindTexture(GL_TEXTURE_2D, textureID[19]);
+        glPushMatrix();
+        glScalef(1.5,1.5,0);
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+          glTexCoord2f(0, 0);
+          glVertex2f(-3.79 , +1);
+
+          glTexCoord2f(1, 0);
+          glVertex2f(+3.79, +1);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(+3.79 , -1);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(-3.79 , -1);
+        }
+        glEnd();
+        glPopMatrix();
+      }else{
+        glBindTexture(GL_TEXTURE_2D, textureID[18]);
+        glPushMatrix();
+        glScalef(4,4,0);
+        glBegin(GL_QUADS);
+        {
+          glColor3ub(255,255,255);
+          glTexCoord2f(0, 0);
+          glVertex2f(-1.89 , +1);
+
+          glTexCoord2f(1, 0);
+          glVertex2f(+1.89, +1);
+
+          glTexCoord2f(1, 1);
+          glVertex2f(+1.89 , -1);
+
+          glTexCoord2f(0, 1);
+          glVertex2f(-1.89 , -1);
+        }
+        glEnd();
+        glPopMatrix();
+      }
+      glBindTexture(GL_TEXTURE_2D, 0);
+      glDisable(GL_TEXTURE_2D);
+
+      //glTranslatef(0, 0, 0);
+      //drawSquare(1);
+      //drawCircle(1);
+    }
 
 
 
@@ -640,7 +658,7 @@ int main(int argc, char** argv) {
               //TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
               strcpy(bufferOsuFileName,osuFileName);
               strcat(bufferOsuFileName, diff);
-            	strcat(bufferOsuFileName, ".osu");
+              strcat(bufferOsuFileName, ".osu");
               osu = readOsuFile(bufferOsuFileName);
               currentOsuNode = osu.first;
 
@@ -648,8 +666,8 @@ int main(int argc, char** argv) {
 
               strcpy(bufferPpmFileName,ppmFileName);
               strcat(bufferPpmFileName, diff);
-            	strcat(bufferPpmFileName, ".ppm");
-            	mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
+              strcat(bufferPpmFileName, ".ppm");
+              mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
 
               globalTranslationTotal =0;
@@ -660,10 +678,11 @@ int main(int argc, char** argv) {
 
               // Debug fin jeu
               //GAME_MODE = GAME_MODE_END_GAME;
-              Mix_PlayMusic(music, -1);
+              Mix_RewindMusic();
+              Mix_PlayMusic(musicGame, -1);
               int CORRECTIF = 100;
               musicStartTime = SDL_GetTicks() + CORRECTIF;
-              printf("Music start at %d ticks\n", musicStartTime);
+              printf("MusicGame start at %d ticks\n", musicStartTime);
 
             }else if(e.button.x >= selectedButtonPos[0] && e.button.x <= selectedButtonPos[2] && e.button.y >= selectedButtonPos[1] && e.button.y <= selectedButtonPos[3]){
 
@@ -731,7 +750,9 @@ int main(int argc, char** argv) {
   glDeleteTextures(11, textureID);
 */
     /* Liberation des ressources associées à la SDL */
-    Mix_FreeMusic(music);
+    Mix_FreeMusic(musicGame);
+    Mix_FreeMusic(musicBoss);
+    Mix_FreeMusic(musicMenu);
     Mix_CloseAudio();
 
     /* Liberation des structures allouées */

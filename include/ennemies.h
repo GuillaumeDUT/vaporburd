@@ -18,7 +18,7 @@ void createBoss(EList *ennemies, float globalTranslation, float globalTranslatio
 
 
 /* Update Loop */
-void updateEnnemies(Ship ship, BList *bullets, EList *liste, float globalTranslationTotal, GLuint textureID[]);
+void updateEnnemies(Ship ship, BList *bulletsEnnemy, BList *bulletsShip, EList *liste, float globalTranslationTotal, GLuint textureID[]);
 void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]);
 void moveEnnemy(Ennemy ennemy, int globalTranslationTotal);
 void shootEnnemy(Ennemy ennemy, BList *bullets);

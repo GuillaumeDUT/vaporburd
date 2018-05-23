@@ -137,7 +137,7 @@ void updateShip(Ship ship, BList *bullets, float globalTranslation, float global
   drawShip(ship, 0);
 
 
-  /* Collision avec les bullets */
+  /* Collision avec les bullets de l'ennemy */
   if(bullets->taille != 0){
     Bullet bulletActuel = bullets->first;
     Bullet bulletNext;
@@ -145,6 +145,7 @@ void updateShip(Ship ship, BList *bullets, float globalTranslation, float global
       bulletNext = bulletActuel->next;
       if ( bulletActuel->type == BULLET_ENNEMY && collision(bulletActuel, ship) ) {
         drawShip( ship, 1 );
+        printf("Aie\n");
         getDamage(bulletActuel, ship);
         supprimerList(bullets, bulletActuel->id);
       }
