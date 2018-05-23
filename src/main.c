@@ -30,9 +30,9 @@ static const int DEBUG = 0;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
-//static const char diff[20] = "[Normal]";
+static const char diff[20] = "[Normal]";
 //static const char diff[20] = "[Advanced]";
-static const char diff[20] = "[Hard]";
+//static const char diff[20] = "[Hard]";
 //static const char diff[20] = "[fufufu]";
 
 void resizeViewport() {
@@ -196,7 +196,10 @@ int main(int argc, char** argv) {
 
   }
 
-
+  float posButton[12] ={-6.5,-4,0,-4,6.5,-4,-3.5,-7,3.5,-7,0,0};
+  int idTextureForLoop =0;
+  //ordre : easy normal advanced hard fuuu
+  int selectedButtonPos[10]= {};
 
   LEVEL_STATE = LEVEL_STATE_RUNNING;
   while(loop) {
@@ -204,10 +207,9 @@ int main(int argc, char** argv) {
     glClear(GL_COLOR_BUFFER_BIT);
 
       if(GAME_MODE ==  GAME_MODE_MENU){
-
+        // background
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, textureID[9]);
-
         glBegin(GL_QUADS);
         {
           glColor3ub(255,255,255);
@@ -227,163 +229,42 @@ int main(int argc, char** argv) {
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_TEXTURE_2D);
 
-        //bouton easy
-        glPushMatrix();
-        {
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[10]);
-          glTranslatef(-6.5,-4,0);
-          glBegin(GL_QUADS);
+
+        // for de rendu bouttons
+        idTextureForLoop = 0;
+        for(int i =0;i<12;i=i+2){
+
+          glPushMatrix();
           {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
+            //printf("button %d",i-1+10);
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, textureID[10+idTextureForLoop]);
+            glTranslatef(posButton[i],posButton[i+1],0);
+            if(i>=10){
+              glScalef(2,2,0);
+            }
+            glBegin(GL_QUADS);
+            {
+              glColor3ub(255,255,255);
+              glTexCoord2f(0, 0);
+              glVertex2f(-3 , +1);
 
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
+              glTexCoord2f(1, 0);
+              glVertex2f(+3, +1);
 
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
+              glTexCoord2f(1, 1);
+              glVertex2f(+3 , -1);
 
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
+              glTexCoord2f(0, 1);
+              glVertex2f(-3 , -1);
+            }
+            glEnd();
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_TEXTURE_2D);
           }
-          glEnd();
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
+          glPopMatrix();
+          idTextureForLoop = idTextureForLoop +1;
         }
-        glPopMatrix();
-        //bouton normal
-        glPushMatrix();
-        {
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[11]);
-          glTranslatef(0,-4,0);
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-        }
-        glPopMatrix();
-        //bouton advanced
-        glPushMatrix();
-        {
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[12]);
-          glTranslatef(6.5,-4,0);
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-        }
-        glPopMatrix();
-        //bouton hard
-        glPushMatrix();
-        {
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[13]);
-          glTranslatef(-3.5,-7,0);
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-        }
-        glPopMatrix();
-        //bouton FUUUU
-        glPushMatrix();
-        {
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[14]);
-          glTranslatef(3.5,-7,0);
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-        }
-        glPopMatrix();
-
-        //bouton FUUUU
-        glPushMatrix();
-        {
-          glEnable(GL_TEXTURE_2D);
-          glBindTexture(GL_TEXTURE_2D, textureID[15]);
-          glTranslatef(0,0,0);
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(-3 , +1);
-
-            glTexCoord2f(1, 0);
-            glVertex2f(+3, +1);
-
-            glTexCoord2f(1, 1);
-            glVertex2f(+3 , -1);
-
-            glTexCoord2f(0, 1);
-            glVertex2f(-3 , -1);
-          }
-          glEnd();
-          glBindTexture(GL_TEXTURE_2D, 0);
-          glDisable(GL_TEXTURE_2D);
-        }
-        glPopMatrix();
 
         glPushMatrix();
           glTranslatef(0,-6,0);
@@ -556,18 +437,23 @@ int main(int argc, char** argv) {
           break;
 
         case SDL_MOUSEBUTTONDOWN:
-          if(GAME_MODE == GAME_MODE_MENU){
-
-            GAME_MODE = GAME_MODE_GAME;
-            Mix_PlayMusic(music, -1);
-            int CORRECTIF = 100;
-            musicStartTime = SDL_GetTicks() + CORRECTIF;
-            printf("Music start at %d ticks\n", musicStartTime);
+          if(GAME_MODE == GAME_MODE_MENU ){
+            if(e.button.x >= 260 && e.button.x <= 530 && e.button.y <= 430 && e.button.y >= 350){
+              printf("bite\n");
+              // GAME_MODE = GAME_MODE_GAME;
+              // Mix_PlayMusic(music, -1);
+              // int CORRECTIF = 100;
+              // musicStartTime = SDL_GetTicks() + CORRECTIF;
+              // printf("Music start at %d ticks\n", musicStartTime);
+            }
           }
           break;
-        // case SDL_MOUSEMOTION:
-        //   printf("oos X : %f  ||  pos Y :  %f \n",e.motion.x,e.motion.y);
-        //   break;
+        case SDL_MOUSEMOTION:
+          if(e.motion.x >= 260 && e.motion.x <= 530 && e.motion.y >= 430 && e.motion.y <= 350){
+            printf("bite");
+          }
+          printf("oos X : %d  ||  pos Y :  %d \n",e.motion.x,e.motion.y);
+          break;
 
         default:
           break;
