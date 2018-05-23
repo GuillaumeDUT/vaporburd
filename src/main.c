@@ -30,7 +30,7 @@ static const int DEBUG = 0;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
-static const char diff[20] = "[Normal]";
+char diff[50] = "[Normal]";
 //static const char diff[20] = "[Advanced]";
 //static const char diff[20] = "[Hard]";
 //static const char diff[20] = "[fufufu]";
@@ -144,10 +144,9 @@ int main(int argc, char** argv) {
 
 	/* Ouverture de la map OSU de la bonne difficulté */
 	char osuFileName[100] = "./assets/osu/Porter Robinson - Flicker (Cyllinus) ";
-	strcat(osuFileName, diff);
-	strcat(osuFileName, ".osu");
-  OSUList osu = readOsuFile(osuFileName);
-  OSUNode currentOsuNode = osu.first;
+  OSUList osu;
+  OSUNode currentOsuNode;
+
 
   Ship ship = createShip(-4.0, 0.0, 30, 0.5);
 
@@ -163,9 +162,7 @@ int main(int argc, char** argv) {
 
 	/* Open PPM MAP */
 	char ppmFileName[100] = "./assets/map ";
-	strcat(ppmFileName, diff);
-	strcat(ppmFileName, ".ppm");
-	int mapLength = createFromPPM(ppmFileName, &obstaclesList, &bonusesList);
+  int mapLength;
 
 
   int triggerKeyArrowUp = 0;
@@ -175,7 +172,6 @@ int main(int argc, char** argv) {
   int triggerKeySpace = 0;
   int triggerKeyShift = 0;
 
-  globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
   float globalTranslationTotal = 0;
 
   int loop = 1;
@@ -198,8 +194,9 @@ int main(int argc, char** argv) {
 
   float posButton[12] ={-6.5,-4,0,-4,6.5,-4,-3.5,-7,3.5,-7,0,0};
   int idTextureForLoop =0;
-  //ordre : easy normal advanced hard fuuu
-  int selectedButtonPos[10]= {};
+  //ordre : easy normal advanced hard fuuu  Haut gauche, bas droite
+  int selectedButtonPos[20]= {20,520,260,600,280,520,520,600,540,520,780,600,140,640,380,720,420,640,660,720};
+  int selectedDifficulty = 1;
 
   LEVEL_STATE = LEVEL_STATE_RUNNING;
   while(loop) {
@@ -229,6 +226,33 @@ int main(int argc, char** argv) {
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_TEXTURE_2D);
 
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textureID[10]);
+        glPushMatrix();{
+          glTranslatef(posButton[selectedDifficulty*2],posButton[selectedDifficulty*2+1],0);
+          glRotated(180,0,1,0);
+          glScalef(1.04,1.1,0);
+          glBegin(GL_QUADS);
+          {
+            //glColor4f(0.4,0,0.74,0.8);
+            glColor3ub(255,255,255);
+            glTexCoord2f(0, 0);
+            glVertex2f(-3 , +1);
+
+            glTexCoord2f(1, 0);
+            glVertex2f(+3, +1);
+
+            glTexCoord2f(1, 1);
+            glVertex2f(+3 , -1);
+
+            glTexCoord2f(0, 1);
+            glVertex2f(-3 , -1);
+          }
+          glEnd();
+        }
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
 
         // for de rendu bouttons
         idTextureForLoop = 0;
@@ -439,20 +463,61 @@ int main(int argc, char** argv) {
         case SDL_MOUSEBUTTONDOWN:
           if(GAME_MODE == GAME_MODE_MENU ){
             if(e.button.x >= 260 && e.button.x <= 530 && e.button.y <= 430 && e.button.y >= 350){
-              printf("bite\n");
-              // GAME_MODE = GAME_MODE_GAME;
-              // Mix_PlayMusic(music, -1);
-              // int CORRECTIF = 100;
-              // musicStartTime = SDL_GetTicks() + CORRECTIF;
-              // printf("Music start at %d ticks\n", musicStartTime);
+
+
+              strcat(osuFileName, diff);
+            	strcat(osuFileName, ".osu");
+              osu = readOsuFile(osuFileName);
+              currentOsuNode = osu.first;
+
+              strcat(ppmFileName, diff);
+            	strcat(ppmFileName, ".ppm");
+            	mapLength = createFromPPM(ppmFileName, &obstaclesList, &bonusesList);
+              globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
+              GAME_MODE = GAME_MODE_GAME;
+              Mix_PlayMusic(music, -1);
+              int CORRECTIF = 100;
+              musicStartTime = SDL_GetTicks() + CORRECTIF;
+              printf("Music start at %d ticks\n", musicStartTime);
+            }else if(e.button.x >= selectedButtonPos[0] && e.button.x <= selectedButtonPos[2] && e.button.y >= selectedButtonPos[1] && e.button.y <= selectedButtonPos[3]){
+
+              selectedDifficulty = 0;
+              strcpy(diff,"[ryuu's Easy]");
+              printf("niveau 1 easy \n");
+
+            }else if(e.button.x >= selectedButtonPos[4] && e.button.x <= selectedButtonPos[6] && e.button.y >= selectedButtonPos[5] && e.button.y <= selectedButtonPos[7]){
+              selectedDifficulty = 1;
+              strcpy(diff,"[Normal]");
+              printf("niveau 2 normal\n");
+            }else if(e.button.x >= selectedButtonPos[8] && e.button.x <= selectedButtonPos[10] && e.button.y >= selectedButtonPos[9] && e.button.y <= selectedButtonPos[11]){
+              selectedDifficulty = 2;
+              strcpy(diff,"[Advanced]");
+              printf("niveau 3 advanced\n");
+
+            }else if(e.button.x >= selectedButtonPos[12] && e.button.x <= selectedButtonPos[14] && e.button.y >= selectedButtonPos[13] && e.button.y <= selectedButtonPos[15]){
+              selectedDifficulty = 3;
+              strcpy(diff,"[Hard]");
+              printf("niveau 4 hard \n");
+
+            }else if(e.button.x >= selectedButtonPos[16] && e.button.x <= selectedButtonPos[18] && e.button.y >= selectedButtonPos[17] && e.button.y <= selectedButtonPos[19]){
+              selectedDifficulty = 4;
+              strcpy(diff,"[fufufu]");
+              printf("niveau 5 fufufu\n");
+
             }
+            // for(int i =0;i<10;i+=4){
+            //   printf("bornes : %d %d %d %d ",selectedButtonPos[i],selectedButtonPos[i+1],
+            //   selectedButtonPos[i+2],selectedButtonPos[i+3]);
+            //   if(e.button.x >= selectedButtonPos[i] && e.button.x <= selectedButtonPos[i+2]
+            //     && e.button.y >= selectedButtonPos[i+1] && e.button.y <= selectedButtonPos[i+3]){
+            //     printf("niveau : %d\n",i/4);
+            //
+            //   }
+            // }
           }
           break;
         case SDL_MOUSEMOTION:
-          if(e.motion.x >= 260 && e.motion.x <= 530 && e.motion.y >= 430 && e.motion.y <= 350){
-            printf("bite");
-          }
-          printf("oos X : %d  ||  pos Y :  %d \n",e.motion.x,e.motion.y);
+          //printf("oos X : %d  ||  pos Y :  %d \n",e.motion.x,e.motion.y);
           break;
 
         default:
