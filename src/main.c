@@ -474,7 +474,7 @@ int main(int argc, char** argv) {
       printf("Nb obstacles : %d\n", obstaclesList.taille);
       */
 
-
+      /* Si l'on est a cours de points de vies, game over on affiche le menu de fin */
       if ( ship->hp <= 0) {
         printf("Fin de partie\n\n");
         Mix_PlayMusic(musicMenu, -1);   
@@ -576,17 +576,12 @@ int main(int argc, char** argv) {
       }
       glBindTexture(GL_TEXTURE_2D, 0);
       glDisable(GL_TEXTURE_2D);
-
-      //glTranslatef(0, 0, 0);
-      //drawSquare(1);
-      //drawCircle(1);
     }
 
 
 
     SDL_Event e;
     while(SDL_PollEvent(&e)) {
-
       switch(e.type) {
 
         case SDL_QUIT:
@@ -730,10 +725,9 @@ int main(int argc, char** argv) {
 
   /* SUPPRESSION DES RESSOURCES */
   {
-    /* TODO: Libération des données GPU */
-    /*
-  glDeleteTextures(11, textureID);
-*/
+    /* Libération des données GPU */
+    glDeleteTextures(11, textureID);
+    
     /* Liberation des ressources associées à la SDL */
     Mix_FreeMusic(musicGame);
     Mix_FreeMusic(musicBoss);
