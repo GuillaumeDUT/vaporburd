@@ -55,14 +55,17 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal,GLuint 
     drawBullet( actuel, textureID);
 
     /* Supprime quand on sort de l'ecran */
-    if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ) {
+    if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ||
+         actuel->pos[X] <= -WINDOW_SCALE / 2 + globalTranslationTotal ||
+         actuel->pos[Y] >= WINDOW_SCALE / 2 ||
+         actuel->pos[Y] <= -WINDOW_SCALE / 2) {
       supprimerList( liste, actuel->id );
     }
     /* Next */
     actuel = next;
   }
 }
-void drawBullet( Bullet bullet,GLuint textureID[]) {
+void drawBullet( Bullet bullet, GLuint textureID[]) {
   //  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
 
   glPushMatrix();
@@ -162,23 +165,35 @@ void bossAttack1(Entity boss, Ship ship, BList *bList, int deltaTime) {
 }
 
 void bossAttack3(Entity boss, Ship ship, BList *bList) {
-	int i,j;
-	float NB_BALLS = 20.0;
-	float increment = 0.0;
-
-	/*
-	for ( i=0; i<NB_BALLS; i++) {
+  int i,j;
+  float NB_BALLS = 40.0;
+  float angle = 0.0 + (SDL_GetTicks() % 360);
+  float normX, normY;
 
 
+  for ( i=0; i<NB_BALLS; i++) {
 
+    Bullet bullet = createBullet(boss, BULLET_SIZE);
+    bullet->type = BULLET_BOSS;
+    // Reset bullet pos
+    bullet->pos[X] = boss->pos[X];
+    bullet->pos[Y] = boss->pos[Y];
+    bullet->speed[X] = 0;
+    bullet->speed[Y] = 0;
 
-		increment += 1/NB_BALLS;
-	}
+    // Calcul de l'angle
+    normX = cos(angle);
+    normY = sin(angle);
 
-	*/
-  Bullet bullet = createBullet(boss, BULLET_SIZE);
-  bullet->type = BULLET_BOSS;
-  ajouterFinList(bList, bullet);
+    bullet->pos[X] += normX;
+    bullet->pos[Y] += normY;
 
-	printf("Attack 3\n");
+    bullet->speed[X] += normX / 10;
+    bullet->speed[Y] += normY / 10;
+
+    ajouterFinList(bList, bullet);
+    angle += 360/NB_BALLS;
+    angle = angle > 360 ? angle-360 : angle;
+  }
+
 }
