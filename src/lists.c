@@ -54,6 +54,7 @@ int supprimerList(List *liste, int id){
         tmp->next->before = tmp->before;
         tmp->before->next = tmp->next;
       }
+      free(tmp);
       found = 1;
       liste->taille--;
     } else {

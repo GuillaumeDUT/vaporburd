@@ -55,71 +55,74 @@ void updateBullets(Ship ship, BList *liste, float globalTranslationTotal,GLuint 
     drawBullet( actuel, textureID);
 
     /* Supprime quand on sort de l'ecran */
-    if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ) {
+    if ( actuel->pos[X] >= WINDOW_SCALE / 2 + globalTranslationTotal ||
+         actuel->pos[X] <= -WINDOW_SCALE / 2 + globalTranslationTotal ||
+         actuel->pos[Y] >= WINDOW_SCALE / 2 ||
+         actuel->pos[Y] <= -WINDOW_SCALE / 2) {
       supprimerList( liste, actuel->id );
     }
     /* Next */
     actuel = next;
   }
 }
-void drawBullet( Bullet bullet,GLuint textureID[]) {
+void drawBullet( Bullet bullet, GLuint textureID[]) {
   //  printf("(%d) posX:%f posY:%f\n", bullet->id, bullet->pos[X], bullet->pos[Y]);
 
   glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
-    if(bullet->type == BULLET_ENNEMY){
-        glBindTexture(GL_TEXTURE_2D, textureID[4]);
-     
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
-          glScalef(0.5,0.5,1);
-          glTexCoord2f(0, 0);
-          glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]+0.5);
+  glEnable(GL_TEXTURE_2D);
+  if(bullet->type == BULLET_ENNEMY){
+    glBindTexture(GL_TEXTURE_2D, textureID[4]);
 
-          glTexCoord2f(1, 0);
-          glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]+0.5);
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
+      glScalef(0.5,0.5,1);
+      glTexCoord2f(0, 0);
+      glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]+0.5);
 
-          glTexCoord2f(1, 1);
-          glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]-0.5);
+      glTexCoord2f(1, 0);
+      glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]+0.5);
 
-          glTexCoord2f(0, 1);
-          glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5);
-        }
-        glEnd();
-      }else if(bullet->type == BULLET_SHIP){
-      glBindTexture(GL_TEXTURE_2D, textureID[1]);
-        glBegin(GL_QUADS);
-        {
-          glColor3ub(255,255,255);
+      glTexCoord2f(1, 1);
+      glVertex2f(bullet->pos[X]+0.5, bullet->pos[Y]-0.5);
 
-          glTexCoord2f(0, 0);
-          glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]+0.5);
-
-          glTexCoord2f(1, 0);
-          glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]+0.5);
-
-          glTexCoord2f(1, 1);
-          glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]-0.5);
-
-          glTexCoord2f(0, 1);
-          glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]-0.5);
-        }
-        glEnd();
+      glTexCoord2f(0, 1);
+      glVertex2f(bullet->pos[X]-0.5, bullet->pos[Y]-0.5);
     }
-        //glColor3f(0, 155, 155);
-    glTranslatef(
-      bullet->pos[X],
-      bullet->pos[Y],
-      0);
-    glScalef(
-      bullet->size,
-      bullet->size,
-      1);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
+    glEnd();
+  }else if(bullet->type == BULLET_SHIP){
+    glBindTexture(GL_TEXTURE_2D, textureID[1]);
+    glBegin(GL_QUADS);
+    {
+      glColor3ub(255,255,255);
 
-    drawCircle(1);
+      glTexCoord2f(0, 0);
+      glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]+0.5);
+
+      glTexCoord2f(1, 0);
+      glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]+0.5);
+
+      glTexCoord2f(1, 1);
+      glVertex2f(bullet->pos[X]+1.45, bullet->pos[Y]-0.5);
+
+      glTexCoord2f(0, 1);
+      glVertex2f(bullet->pos[X]-1.45, bullet->pos[Y]-0.5);
+    }
+    glEnd();
+  }
+  //glColor3f(0, 155, 155);
+  glTranslatef(
+    bullet->pos[X],
+    bullet->pos[Y],
+    0);
+  glScalef(
+    bullet->size,
+    bullet->size,
+    1);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glDisable(GL_TEXTURE_2D);
+
+  drawCircle(1);
   glPopMatrix();
 }
 void moveBullet( Bullet bullet ) {
@@ -129,7 +132,7 @@ void moveBullet( Bullet bullet ) {
 
 void bossAttack1(Entity boss, Ship ship, BList *bList, int deltaTime) {
   float deltaX, deltaY;
-	
+
   Bullet bullet = createBullet(boss, 2);
   ajouterFinList(bList, bullet);
 
@@ -137,28 +140,41 @@ void bossAttack1(Entity boss, Ship ship, BList *bList, int deltaTime) {
 
   deltaX = ship->pos[X] - bullet->pos[X];
   deltaY = ship->pos[Y] - bullet->pos[Y];
-	
+
   bullet->speed[Y] = deltaY/300;
   bullet->speed[X] = deltaX/300;
 }
 
 void bossAttack3(Entity boss, Ship ship, BList *bList) {
-	int i,j;
-	float NB_BALLS = 20.0;
-	float increment = 0.0;
-	
-	/*
-	for ( i=0; i<NB_BALLS; i++) {
-		
-		
-		
-		
-		increment += 1/NB_BALLS;
-	}
-	
-	*/
-  Bullet bullet = createBullet(boss, BULLET_SIZE);
-  ajouterFinList(bList, bullet);
-	
-	printf("Attack 3\n");
+  int i,j;
+  float NB_BALLS = 40.0;
+  float angle = 0.0 + (SDL_GetTicks() % 360);
+  float normX, normY;
+  
+
+  for ( i=0; i<NB_BALLS; i++) {
+
+    Bullet bullet = createBullet(boss, BULLET_SIZE);
+    
+    // Reset bullet pos
+    bullet->pos[X] = boss->pos[X];
+    bullet->pos[Y] = boss->pos[Y];
+    bullet->speed[X] = 0;
+    bullet->speed[Y] = 0;
+    
+    // Calcul de l'angle
+    normX = cos(angle);
+    normY = sin(angle);
+    
+    bullet->pos[X] += normX;
+    bullet->pos[Y] += normY;
+    
+    bullet->speed[X] += normX / 10;
+    bullet->speed[Y] += normY / 10;
+    
+    ajouterFinList(bList, bullet);
+    angle += 360/NB_BALLS;
+    angle = angle > 360 ? angle-360 : angle;
+  }
+
 }

@@ -266,8 +266,7 @@ void moveEnnemy(Ennemy ennemy, int globalTranslationTotal) {
 		ennemy->speed[X] = 0;
 	}
 
-	/* Deplacement du bas en h*(deltaTime-25);
-  bullet->size = 2.5; aut */
+	/* Deplacement du bas en haut */
 	if ( ennemy->pos[Y] > LIMIT ) ennemy->hp = 0;
 	if ( ennemy->pos[Y] < -LIMIT ) ennemy->hp = 0;
 }
@@ -308,7 +307,6 @@ void bossPattern2(Ennemy boss, Ship ship, BList *bullets, EList *ennemies) {
 		case 80:
 			createHommingEnnemy(ennemies, -4.0, boss);
 			break;
-
 	}
 
 
@@ -321,9 +319,8 @@ void bossPattern2(Ennemy boss, Ship ship, BList *bullets, EList *ennemies) {
 void bossPattern3(Ennemy boss, Ship ship, BList *bullets) {
 	boss->cooldown = boss->cooldown > 0 ? boss->cooldown-1 : 0;
 
-
 	if ( boss->cooldown <= 0 ) {
-		boss->cooldown = 10;
+		boss->cooldown = 30;
 		bossAttack3(boss, ship, bullets);
 	}
 

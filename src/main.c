@@ -26,7 +26,7 @@ static const int GAME_MODE_GAME = 2;
 static const int GAME_MODE_END_GAME = 3;
 
 /* DEBUG */
-static const int DEBUG = 0 ;
+static const int DEBUG = 1;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
@@ -425,6 +425,11 @@ int main(int argc, char** argv) {
             currentOsuNode = currentOsuNode->next;
           } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
             createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
+
+            /* On supprime tous les obstacles */
+            deleteList(&obstaclesList);
+            
+            
             LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
             printf("Boss spawned\n");
           }
@@ -455,6 +460,11 @@ int main(int argc, char** argv) {
           updateBullets(ship, &bulletsList, globalTranslationTotal,textureID);
           updateEnnemies(ship, &bulletsList, &ennemiesList, globalTranslationTotal,textureID);
           updateBonuses(ship, &bonusesList,textureID);
+        
+        /* Debug */
+        printf("Nb bullets : %d\n", bulletsList.taille);
+        printf("Nb ennemies : %d\n", ennemiesList.taille);
+        printf("Nb obstacles : %d\n", obstaclesList.taille);
 
 
           if ( ship->hp <= 0) {
@@ -630,6 +640,12 @@ int main(int argc, char** argv) {
             	strcat(bufferPpmFileName, ".ppm");
             	mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
+              
+              /* Suppression des ressources */
+//              
+//              deleteList(&obstaclesList);
+//              deleteList(&ennemiesList);
+//              deleteList(&bulletsList);
 
 
               globalTranslationTotal =0;
