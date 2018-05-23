@@ -80,12 +80,12 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 				if ( eActuel->pos[Y] < ship->pos[Y] ) {
 					eActuel->speed[Y] += ACC/5;
 				} else if ( eActuel->pos[Y] > ship->pos[Y] ) {
-					eActuel->speed[Y] -= ACC/5;        
+					eActuel->speed[Y] -= ACC/5;
 				} else {
 					eActuel->speed[Y] = 0;
 				}
 
-				shootEnnemy( eActuel, bullets );        
+				shootEnnemy( eActuel, bullets );
 			}
 
 		}
@@ -122,7 +122,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 			eActuel->speed[Y] = offY;
 			shootEnnemy( eActuel, bullets );
 
-		}    
+		}
 		moveEnnemy( eActuel, globalTranslationTotal );
 		drawEnnemy( eActuel, 0 , textureID);
 
@@ -160,7 +160,7 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 }
 void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
 	glPushMatrix();
-	{    
+	{
 		glColor3f(255, 0, 120);
 		glTranslatef(
 			ennemy->pos[X],
@@ -173,29 +173,52 @@ void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
 
 		drawCircle(1);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, textureID[8]);
+		if(ennemy->type == ENNEMY_BOSS){
+				glBindTexture(GL_TEXTURE_2D, textureID[20]);
+				glBegin(GL_QUADS);
+				{
+					glColor3ub(255,255,255);
+					glScalef(0.5,0.5,1);
+					glTexCoord2f(0, 0);
+					glVertex2f(-1 *0.5, +1.77 *0.5);
+
+					glTexCoord2f(1, 0);
+					glVertex2f(+1 *0.5, +1.77 *0.5);
+
+					glTexCoord2f(1, 1);
+					glVertex2f(+1 *0.5, -1.77 *0.5);
+
+					glTexCoord2f(0, 1);
+					glVertex2f(-1 *0.5, -1.77 *0.5);
+				}
+				glEnd();
+		}else{
+				glBindTexture(GL_TEXTURE_2D, textureID[8]);
+				glBegin(GL_QUADS);
+				{
+					glColor3ub(255,255,255);
+					glScalef(0.5,0.5,1);
+					glTexCoord2f(0, 0);
+					glVertex2f(-0.5, +0.5);
+
+					glTexCoord2f(1, 0);
+					glVertex2f(+0.5, +0.5);
+
+					glTexCoord2f(1, 1);
+					glVertex2f(+0.5, -0.5);
+
+					glTexCoord2f(0, 1);
+					glVertex2f(-0.5, -0.5);
+				}
+				glEnd();
+		}
+
 		// if(ennemy->ennemyType == ENNEMY_TYPE_BASIC){
 
 		// }else if(ennemy->ennemyType == ENNEMY_TYPE_BOSS){
 		//   glBindTexture(GL_TEXTURE_2D, textureID[8]);
-		// } 
-		glBegin(GL_QUADS);
-		{
-			glColor3ub(255,255,255);
-			glScalef(0.5,0.5,1);
-			glTexCoord2f(0, 0);
-			glVertex2f(-0.5, +0.5);
+		// }
 
-			glTexCoord2f(1, 0);
-			glVertex2f(+0.5, +0.5);
-
-			glTexCoord2f(1, 1);
-			glVertex2f(+0.5, -0.5);
-
-			glTexCoord2f(0, 1);
-			glVertex2f(-0.5, -0.5);
-		}
-		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -204,7 +227,7 @@ void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]) {
 	if ( ennemy->type == ENNEMY_BOSS ) {
 		/* Affichage de la barre de vie */
 		float percent = (float)ennemy->hp/BOSS_HP;
-		glPushMatrix(); 
+		glPushMatrix();
 		{
 			glLoadIdentity();
 			glColor3ub(112, 208, 69);
@@ -262,7 +285,7 @@ void bossPattern1(Ennemy boss, Ship ship, BList *bullets) {
 
 	/* Tir par raffale de 5 coups */
 	if ( boss->cooldown < 50 && boss->cooldown % 10 == 0 ) {
-		bossAttack1(boss, ship, bullets, boss->cooldown);    
+		bossAttack1(boss, ship, bullets, boss->cooldown);
 	}
 
 	/* Modifie le cooldown */
@@ -277,13 +300,13 @@ void bossPattern2(Ennemy boss, Ship ship, BList *bullets, EList *ennemies) {
 
 	switch (boss->cooldown) {
 		case 20:
-			createHommingEnnemy(ennemies, 4.0, boss);		
+			createHommingEnnemy(ennemies, 4.0, boss);
 			break;
 		case 40:
-			createHommingEnnemy(ennemies, 0.0, boss);		
+			createHommingEnnemy(ennemies, 0.0, boss);
 			break;
 		case 80:
-			createHommingEnnemy(ennemies, -4.0, boss);		
+			createHommingEnnemy(ennemies, -4.0, boss);
 			break;
 
 	}

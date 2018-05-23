@@ -26,7 +26,7 @@ static const int GAME_MODE_GAME = 2;
 static const int GAME_MODE_END_GAME = 3;
 
 /* DEBUG */
-static const int DEBUG = 1 ;
+static const int DEBUG = 0 ;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
@@ -113,8 +113,8 @@ int main(int argc, char** argv) {
 
   /* Chargement et traitement de la texture */
 
-  GLuint textureID[20];
-  glGenTextures(20, textureID);
+  GLuint textureID[25];
+  glGenTextures(25, textureID);
   setTexture("ship", 0, textureID);
   setTexture("bullet", 1, textureID);
   setTexture("bg", 2, textureID);
@@ -139,6 +139,8 @@ int main(int argc, char** argv) {
   setTexture("button_menu",17,textureID);
   setTexture("text_win",18,textureID);
   setTexture("text_death",19,textureID);
+
+  setTexture("boss",20,textureID);
 
 
   /* activation du canal Alpha */
@@ -383,7 +385,6 @@ int main(int argc, char** argv) {
           /* dessine l'image du vaisseau en fonction de sa position */
           glEnable(GL_TEXTURE_2D);
           glBindTexture(GL_TEXTURE_2D, textureID[0]);
-
 
             glBegin(GL_QUADS);
             {
