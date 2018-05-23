@@ -645,9 +645,6 @@ int main(int argc, char** argv) {
             	mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
 
-
-
-
               globalTranslationTotal =0;
               ship->hp = 30;
               ship->pos[X] = -5;
