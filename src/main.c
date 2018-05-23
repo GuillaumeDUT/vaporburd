@@ -384,22 +384,23 @@ int main(int argc, char** argv) {
           glEnable(GL_TEXTURE_2D);
           glBindTexture(GL_TEXTURE_2D, textureID[0]);
 
-          glBegin(GL_QUADS);
-          {
-            glColor3ub(255,255,255);
-            glTexCoord2f(0, 0);
-            glVertex2f(ship->pos[X]-1, ship->pos[Y]+1.76);
 
-            glTexCoord2f(1, 0);
-            glVertex2f(ship->pos[X]+1, ship->pos[Y]+1.76);
+            glBegin(GL_QUADS);
+            {
+              glColor3ub(255,255,255);
+              glTexCoord2f(0, 0);
+              glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]+1 *0.4 );
 
-            glTexCoord2f(1, 1);
-            glVertex2f(ship->pos[X]+1, ship->pos[Y]-1.76);
+              glTexCoord2f(1, 0);
+              glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]+1 *0.4 );
 
-            glTexCoord2f(0, 1);
-            glVertex2f(ship->pos[X]-1, ship->pos[Y]-1.76);
-          }
-          glEnd();
+              glTexCoord2f(1, 1);
+              glVertex2f(ship->pos[X]+1.10 *0.4 , ship->pos[Y]-1 *0.4 );
+
+              glTexCoord2f(0, 1);
+              glVertex2f(ship->pos[X]-1.10 *0.4 , ship->pos[Y]-1 *0.4 );
+            }
+            glEnd();
           /* Desactive l'image */
 
           glBindTexture(GL_TEXTURE_2D, 0);
