@@ -4,6 +4,7 @@
 
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 float WINDOW_SCALE;
+int GAME_MODE;
 
 void createRandomEnnemy(EList *ennemies, float globalTranslation) {
 	int limit = WINDOW_SCALE/2 - 1;
@@ -153,6 +154,9 @@ void updateEnnemies(Ship ship, BList *bullets, EList *ennemies, float globalTran
 
 		/* Verification de la mort */
 		if ( eActuel->hp <= 0 )  {
+      if ( eActuel->type == ENNEMY_BOSS ) {
+        GAME_MODE = GAME_MODE_END_GAME;
+      }
 			supprimerList(ennemies, eActuel->id);
 		}
 		eActuel = eNext;
@@ -312,7 +316,6 @@ void bossPattern2(Ennemy boss, Ship ship, BList *bullets, EList *ennemies) {
 
 	if ( boss->cooldown <= 0 ) {
 		boss->cooldown = 160;
-
 	}
 
 }

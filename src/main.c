@@ -17,20 +17,20 @@ static unsigned int WINDOW_HEIGHT = 800;
 static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 static int MUSIC_DURATION = 279000;
-float WINDOW_SCALE = 20.0;
-float globalTranslation;
-int LEVEL_STATE;
 
-static const int GAME_MODE_MENU = 1;
-static const int GAME_MODE_GAME = 2;
-static const int GAME_MODE_END_GAME = 3;
+/* Variables super globales */
+float globalTranslation;
+float WINDOW_SCALE = 20.0;
+int LEVEL_STATE;
+int GAME_MODE;
+
 
 /* DEBUG */
 static const int DEBUG = 1;
 
 /* DIFFICULTY */
 //static const char diff[20] = "[ryuu's Easy]";
-char diff[50] = "[Normal]";
+
 //static const char diff[20] = "[Advanced]";
 //static const char diff[20] = "[Hard]";
 //static const char diff[20] = "[fufufu]";
@@ -169,11 +169,10 @@ int main(int argc, char** argv) {
   bonusesList.taille = 0;
 
 
-	/* Open PPM MAP */
+  char diff[50] = "[Normal]";
 	char ppmFileName[100] = "./assets/map ";
   char bufferPpmFileName[100];
   int mapLength;
-
 
   int triggerKeyArrowUp = 0;
   int triggerKeyArrowDown = 0;
@@ -187,7 +186,7 @@ int main(int argc, char** argv) {
   int loop = 1;
 
   // 1 = Menu  ### 2 = jeu  ### 3 = fin de jeu
-  int GAME_MODE = GAME_MODE_MENU;
+  GAME_MODE = GAME_MODE_MENU;
 
   glClearColor(0.1, 0.1, 0.1 ,1.0);
 
@@ -424,10 +423,14 @@ int main(int argc, char** argv) {
               globalTranslationTotal);
             currentOsuNode = currentOsuNode->next;
           } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
-            createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
 
             /* On supprime tous les obstacles */
             deleteList(&obstaclesList);
+            deleteList(&ennemiesList);
+            deleteList(&bulletsList);
+            
+            /* On fait apparaître un boss */
+            createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
             
             
             LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;

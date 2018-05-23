@@ -25,8 +25,13 @@
 #define LEVEL_STATE_BOSS_SPAWNED 4  
 #define LEVEL_STATE_ENDED 5
 
+#define GAME_MODE_MENU 1
+#define GAME_MODE_GAME 2
+#define GAME_MODE_END_GAME 3
+
 extern float globalTranslation; /* DEBUG PURPOSE */
 extern int LEVEL_STATE;
+extern int GAME_MODE;
 extern float WINDOW_SCALE;
 
 #endif
