@@ -26,14 +26,7 @@ int GAME_MODE;
 
 
 /* DEBUG */
-static const int DEBUG = 0;
-
-/* DIFFICULTY */
-//static const char diff[20] = "[ryuu's Easy]";
-
-//static const char diff[20] = "[Advanced]";
-//static const char diff[20] = "[Hard]";
-//static const char diff[20] = "[fufufu]";
+static const int DEBUG = 1;
 
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -42,7 +35,6 @@ void resizeViewport() {
   gluOrtho2D(-WINDOW_SCALE/2.0, WINDOW_SCALE/2., -WINDOW_SCALE/2., WINDOW_SCALE/2.);
   SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
 }
-
 
 void setTexture ( char *name, int textureID, GLuint *textures ) {
 
@@ -111,6 +103,7 @@ int main(int argc, char** argv) {
   Mix_Music *musicGame = Mix_LoadMUS("./assets/flicker.mp3");
   Mix_Music *musicBoss = Mix_LoadMUS("./assets/boss.mp3");
   Mix_Music *musicMenu = Mix_LoadMUS("./assets/menu.mp3");
+  Mix_PlayMusic(musicMenu, -1);   
   int musicStartTime =0;
 
   /* Chargement et traitement de la texture */
@@ -203,10 +196,7 @@ int main(int argc, char** argv) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     /* ========================== MENU ================================ */
-    if(GAME_MODE ==  GAME_MODE_MENU){
-      // Musique
-      Mix_RewindMusic();
-      Mix_PlayMusic(musicMenu, -1);      
+    if(GAME_MODE ==  GAME_MODE_MENU){   
 
       // background
       glEnable(GL_TEXTURE_2D);
@@ -412,8 +402,6 @@ int main(int argc, char** argv) {
       glBindTexture(GL_TEXTURE_2D, 0);
       glDisable(GL_TEXTURE_2D);
 
-
-
       /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
       if ( currentOsuNode != NULL &&
           musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
@@ -433,17 +421,17 @@ int main(int argc, char** argv) {
         deleteList(&ennemiesList);
         deleteList(&bulletsShipList);
         deleteList(&bulletsEnnemyList);
+        
+        /* On charge la musique */
+        Mix_PlayMusic(musicBoss, -1);
 
         /* On fait apparaître un boss */
         createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
 
-        /* On lance la musique du boss */
-        Mix_RewindMusic();
-        Mix_PlayMusic(musicBoss, -1);  
-
         LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
         printf("Boss spawned\n");
       }
+
 
       /* Si on reste appuyé sur les flêches, on se déplace */
       if(triggerKeyArrowUp) moveUp(ship);
@@ -463,8 +451,6 @@ int main(int argc, char** argv) {
         }
       }
 
-
-
       /* Boucle d'update et affichage des objets */
       updateShip(ship, &bulletsEnnemyList, globalTranslation, globalTranslationTotal, triggerKeyShift);
 
@@ -477,35 +463,6 @@ int main(int argc, char** argv) {
       updateBullets(ship, &bulletsEnnemyList, globalTranslationTotal,textureID);
 
       updateBonuses(ship, &bonusesList,textureID);
-      
-      /* Spawn ennemy si la prochaine node OSU a un temps supérieur au temps passé, on invoque un ennemi */
-      if ( currentOsuNode != NULL &&
-          musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
-          LEVEL_STATE == LEVEL_STATE_RUNNING &&
-          GAME_MODE == GAME_MODE_GAME)
-      {
-        /*
-           createRandomEnnemy(&ennemiesList, globalTranslationTotal);
-            */
-        createOSUNodeEnnemy(
-          &ennemiesList,
-          currentOsuNode,
-          globalTranslationTotal);
-        currentOsuNode = currentOsuNode->next;
-      } else if ( LEVEL_STATE == LEVEL_STATE_BOSS_INIT ) {
-
-        /* On supprime tous les obstacles */
-        deleteList(&obstaclesList);
-        deleteList(&ennemiesList);
-        deleteList(&bulletsShipList);
-        deleteList(&bulletsEnnemyList);
-
-        /* On fait apparaître un boss */
-        createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
-
-        LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
-        printf("Boss spawned\n");
-      }
 
       updateObstacles(ship, &obstaclesList,textureID);
 
@@ -520,6 +477,7 @@ int main(int argc, char** argv) {
 
       if ( ship->hp <= 0) {
         printf("Fin de partie\n\n");
+        Mix_PlayMusic(musicMenu, -1);   
         GAME_MODE= GAME_MODE_END_GAME;
         resizeViewport();
       }
@@ -706,7 +664,6 @@ int main(int argc, char** argv) {
 
               // Debug fin jeu
               //GAME_MODE = GAME_MODE_END_GAME;
-              Mix_RewindMusic();
               Mix_PlayMusic(musicGame, -1);
               int CORRECTIF = 100;
               musicStartTime = SDL_GetTicks() + CORRECTIF;
