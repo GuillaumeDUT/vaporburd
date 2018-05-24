@@ -145,7 +145,6 @@ void updateEnnemies(Ship ship, BList *bulletsEnnemy, BList *bulletsShip, EList *
 
 		/* Collision avec le ship */
 		if ( collision(ship, eActuel) ) {
-			drawShip(ship, 1);
 			drawEnnemy(eActuel, 1,textureID);
 			getDamage(eActuel, ship);
 			eActuel->hp = 0;

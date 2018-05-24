@@ -28,6 +28,8 @@
 #define GAME_MODE_GAME 2
 #define GAME_MODE_END_GAME 3
 
+#define TEXTURE_NUMBER 25
+
 extern float globalTranslation; /* DEBUG PURPOSE */
 extern int LEVEL_STATE;
 extern int GAME_MODE;

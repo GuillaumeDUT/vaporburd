@@ -24,11 +24,9 @@ void updateObstacles(Ship ship, OList *obstacles, GLuint textureID[]) {
     if ( collision(ship, oActuel) ) {
       if ( oActuel->endOfLevel == 0 ) {
         /* Normal obstacle */
-        drawShip(ship, 1);
         drawObstacle(oActuel, 1, textureID);
         getDamage(ship, oActuel);
-//        getDamage(oActuel, ship);
-//        displayEntity(ship);
+        getDamage(oActuel, ship);
       } else if ( oActuel->endOfLevel == 1 && LEVEL_STATE == LEVEL_STATE_RUNNING ) {
         /* End of the level */
         globalTranslation = 100.0 / MUSIC_DURATION * FRAMERATE_MILLISECONDS;

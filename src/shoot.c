@@ -168,7 +168,7 @@ void bossAttack1(Entity boss, Ship ship, BList *bList, int deltaTime) {
 }
 
 void bossAttack3(Entity boss, Ship ship, BList *bList) {
-  int i,j;
+  int i;
   float NB_BALLS = 40.0;
   float angle = 0.0 + (SDL_GetTicks() % 360);
   float normX, normY;
