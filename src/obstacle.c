@@ -7,6 +7,7 @@ static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 static int MUSIC_DURATION = 279000;
 float globalTranslation;
 int LEVEL_STATE;
+int DEBUG;
 
 
 /* Affiche et detecte les collisions */
@@ -26,7 +27,8 @@ void updateObstacles(Ship ship, OList *obstacles, GLuint textureID[]) {
         /* Normal obstacle */
         drawObstacle(oActuel, 1, textureID);
         getDamage(ship, oActuel);
-        getDamage(oActuel, ship);
+				if ( !DEBUG )
+        	getDamage(oActuel, ship);
       } else if ( oActuel->endOfLevel == 1 && LEVEL_STATE == LEVEL_STATE_RUNNING ) {
         /* End of the level */
         globalTranslation = 100.0 / MUSIC_DURATION * FRAMERATE_MILLISECONDS;

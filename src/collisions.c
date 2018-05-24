@@ -5,7 +5,10 @@
 
 int collision(Entity e1, Entity e2) {
 	// SPHERIC COLLISION
-	if ( e1->type == BULLET_ENNEMY || e2->type == BULLET_ENNEMY ) {
+	if ( e1->type == BULLET_ENNEMY ||
+			 e2->type == BULLET_ENNEMY ||
+			 e1->type == BULLET_BOSS ||
+		 	 e2->type == BULLET_BOSS ) {
 		// FIX D'UN BUG APPARENT DE COLLISION POUR LES BULLETS DU BOSS
 		float deltaX = e1->pos[X] - e2->pos[X];
 		float deltaY = e1->pos[Y] - e2->pos[Y];

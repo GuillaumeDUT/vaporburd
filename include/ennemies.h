@@ -13,13 +13,13 @@
 void createRandomEnnemy(EList *ennemies, float globalTranslation);
 void createOSUNodeEnnemy(EList *ennemies, OSUNode oNode, float globalTranslation);
 void createHommingEnnemy(EList *ennemies, float y, Ennemy boss);
-void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal);
+void createBoss(EList *ennemies, float globalTranslation, float globalTranslationTotal, int diff);
 
 
 
 /* Update Loop */
-void updateEnnemies(Ship ship, BList *bulletsEnnemy, BList *bulletsShip, EList *liste, float globalTranslationTotal, GLuint textureID[]);
-void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[]);
+void updateEnnemies(Ship ship, BList *bulletsEnnemy, BList *bulletsShip, EList *liste, float globalTranslationTotal, GLuint textureID[], int diff);
+void drawEnnemy(Ennemy ennemy, int full,GLuint textureID[], int diff);
 void moveEnnemy(Ennemy ennemy, int globalTranslationTotal);
 void shootEnnemy(Ennemy ennemy, BList *bullets);
 

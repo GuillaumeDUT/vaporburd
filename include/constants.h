@@ -10,7 +10,7 @@
 
 #define SHIP_DAMAGES 5
 #define SHIP_ATTACK_SPEED 1
-#define BOSS_HP 20000.0
+#define BOSS_HP 5000.0
 
 #define X 0
 #define Y 1
@@ -46,5 +46,6 @@ extern float globalTranslation; /* DEBUG PURPOSE */
 extern int LEVEL_STATE;
 extern int GAME_MODE;
 extern float WINDOW_SCALE;
+extern int DEBUG;
 
 #endif
