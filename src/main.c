@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
 	Mix_Music *musicBoss = Mix_LoadMUS("./assets/boss.mp3");
 	Mix_Music *musicMenu = Mix_LoadMUS("./assets/menu.mp3");
 	Mix_PlayMusic(musicMenu, -1);   
-	int musicStartTime =0;
+	int musicStartTime = 0;
 
 	/* Chargement et traitement de la texture */
 	GLuint textureID[TEXTURE_NUMBER];
@@ -253,7 +253,7 @@ int main(int argc, char** argv) {
 
 				/* On charge la musique */
 				Mix_PlayMusic(musicBoss, -1);
-				
+
 				/* On déplace le vaisseau pour eviter les problèmes */
 				ship->pos[Y] = 0;
 				ship->pos[X] = globalTranslationTotal - WINDOW_SCALE / 4;
@@ -265,7 +265,7 @@ int main(int argc, char** argv) {
 			} else if ( LEVEL_STATE == LEVEL_STATE_ENDED ) {
 				printf(CYAN "Fin de partie\n\n" RESET);
 				Mix_PlayMusic(musicMenu, -1);   
-				GAME_MODE= GAME_MODE_END_GAME;
+				GAME_MODE = GAME_MODE_END_GAME;
 				resizeViewport();				
 			}
 
@@ -404,6 +404,26 @@ int main(int argc, char** argv) {
 							deleteList(&bulletsShipList);
 							deleteList(&bulletsEnnemyList);
 
+							/* Creation des entitees */
+							obstaclesList.taille = 0;
+							ennemiesList.taille = 0;
+							bulletsShipList.taille = 0;
+							bulletsEnnemyList.taille = 0;
+							bonusesList.taille = 0;
+
+
+							/* Variables qui enregistrent si les touches sont appuyées ou non */
+							triggerKeyArrowUp = 0;
+							triggerKeyArrowDown = 0;
+							triggerKeyArrowLeft = 0;
+							triggerKeyArrowRight = 0;
+							triggerKeySpace = 0;
+							triggerKeyShift = 0;
+							triggerKeyB = 0;
+
+
+
+
 							//TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
 
 							/* Chargement des ennemies */
@@ -425,11 +445,11 @@ int main(int argc, char** argv) {
 							globalTranslationTotal = 0;
 
 							/* Creation du vaisseau */
+							ship = NULL;
 							ship = createShip(-4.0, 0.0, 30, 0.5);
 							ship->hp = 30;
 							ship->pos[X] = -5;
 							ship->pos[Y] = 0;
-							GAME_MODE = GAME_MODE_GAME;
 
 							// Debug fin jeu
 							// GAME_MODE = GAME_MODE_END_GAME;
@@ -440,7 +460,9 @@ int main(int argc, char** argv) {
 							musicStartTime = SDL_GetTicks() + CORRECTIF;
 
 							/* Changement d'état */
+							GAME_MODE = GAME_MODE_GAME;
 							LEVEL_STATE = LEVEL_STATE_RUNNING;
+							resizeViewport();
 
 						} else if (e.button.x >= selectedButtonPos[0] &&
 											 e.button.x <= selectedButtonPos[2] &&
