@@ -174,7 +174,7 @@ int main(int argc, char** argv) {
 	float globalTranslationTotal = 0;
 
 	int loop = 1;
-
+  int i;
 	/* Variables des textures */
 	/* ordre : easy normal advanced hard fuuu Haut gauche, bas droite */
 	int selectedButtonPos[20] = {20, 520, 260, 600, 280, 520, 520, 600, 540, 520, 780, 600, 140, 640, 380, 720, 420, 640, 660, 720};
@@ -197,7 +197,7 @@ int main(int argc, char** argv) {
 			drawSelectionBox(textureID, posButton, selectedDifficulty);
 			/* Boucle de rendu des buttons */
 			idTextureForLoop = 0;
-			for(int i =0;i<12;i=i+2){
+			for(i =0;i<12;i=i+2){
 				/* Affichage d'un button */
 				drawButton(textureID, posButton, i, 10+idTextureForLoop);
 				idTextureForLoop = idTextureForLoop +1;
@@ -532,7 +532,6 @@ int main(int argc, char** argv) {
 
 	/* SUPPRESSION DES RESSOURCES */
 	/* Libération des données GPU */
-	int i;
 	for ( i=0; i<TEXTURE_NUMBER; i++) {
 		glDeleteTextures(i, textureID);    
 	}
