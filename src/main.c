@@ -345,8 +345,6 @@ int main(int argc, char** argv) {
 					resizeViewport();
 
 				case SDL_KEYDOWN:
-					// printf("touche pressée (code = %d)\n", e.key.keysym.sym);
-					// if spacebar
 					if(GAME_MODE == GAME_MODE_GAME){
 						if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 1;
 						if(e.key.keysym.sym == SDLK_DOWN) triggerKeyArrowDown = 1;
@@ -422,10 +420,6 @@ int main(int argc, char** argv) {
 							triggerKeyB = 0;
 
 
-
-
-							//TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
-
 							/* Chargement des ennemies */
 							strcpy(bufferOsuFileName,osuFileName);
 							strcat(bufferOsuFileName, diff);
@@ -439,35 +433,32 @@ int main(int argc, char** argv) {
 							strcat(bufferPpmFileName, diff);
 							strcat(bufferPpmFileName, ".ppm");
 							mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
+							
 
 							/* Modification de la vitesse de deplacement de la map */
 							globalTranslation = (float) mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
 							globalTranslationTotal = 0;
 							
-							printf("globalTranslation : %f\n", globalTranslation);
-							printf("mapLength : %d\n", mapLength);
-							printf("MUSIC_DURATION : %d\n", MUSIC_DURATION);
-							printf("FRAMERATE_MILLISECONDS : %d\n", FRAMERATE_MILLISECONDS);
-
+							
 							/* Creation du vaisseau */
 							ship = NULL;
 							ship = createShip(-4.0, 0.0, 30, 0.5);
 							ship->hp = 30;
 							ship->pos[X] = -5;
 							ship->pos[Y] = 0;
-
-							// Debug fin jeu
-							// GAME_MODE = GAME_MODE_END_GAME;
+							
 
 							/* Lancement de la musique */
 							Mix_PlayMusic(musicGame, -1);
 							int CORRECTIF = 100;
 							musicStartTime = SDL_GetTicks() + CORRECTIF;
+							
 
 							/* Changement d'état */
 							GAME_MODE = GAME_MODE_GAME;
 							LEVEL_STATE = LEVEL_STATE_RUNNING;
 							resizeViewport();
+							
 
 						} else if (e.button.x >= selectedButtonPos[0] &&
 											 e.button.x <= selectedButtonPos[2] &&
