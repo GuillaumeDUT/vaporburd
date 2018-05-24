@@ -309,7 +309,7 @@ int main(int argc, char** argv) {
       printf("Nb obstacles : %d\n", obstaclesList.taille);
       */
 
-			/* Si l'on est a cours de points de vies, game over on affiche le menu de fin */
+			/* Si l'on est a court de points de vies, game over on affiche le menu de fin */
 			if ( ship->hp <= 0) LEVEL_STATE = LEVEL_STATE_ENDED;
 		}
 		/* ========================== END ========================== */

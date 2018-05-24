@@ -1,6 +1,9 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "helpers.h"
+#include "constants.h"
+
 void drawMenuBackground(GLuint textureID[]);
 void drawGameBackground(GLuint textureID[], float globalTranslationTotal);
 void drawBossBackground(GLuint textureID[], float globalTranslationTotal);

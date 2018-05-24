@@ -2,6 +2,8 @@
 
 #include "menu.h"
 
+
+
 void drawMenuBackground(GLuint textureID[]) {
 
   /* Image de fond */
@@ -74,12 +76,16 @@ void drawBossBackground(GLuint textureID[], float globalTranslationTotal) {
 
 void drawSelectionBox(GLuint textureID[], float posButton[], int selectedDifficulty) {
   /* Cadre de selection */
+  float val = PI / 180.0;
+  float offset = (SDL_GetTicks() / 5) % 360;
+  float cosOffset = fmap(cos(offset * val), -1.0, 1.0, 1.02, 1.05);
+
   glBindTexture(GL_TEXTURE_2D, textureID[10]);
   glPushMatrix();
   {    
     glTranslatef(posButton[selectedDifficulty*2], posButton[selectedDifficulty*2+1], 0);
     glRotated(180,0,1,0);
-    glScalef(1.04,1.1,0);
+    glScalef(1.02 * cosOffset, 1.1 * cosOffset,0);
     glBegin(GL_QUADS);
     {
       glColor3ub(255,255,255);
@@ -102,6 +108,7 @@ void drawSelectionBox(GLuint textureID[], float posButton[], int selectedDifficu
 }
 
 void drawButton(GLuint textureID[], float posButton[], int i, int id) {
+  //Dessine tous les boutons du menu 
   glBindTexture(GL_TEXTURE_2D, textureID[id]);
   glPushMatrix();
   {
