@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
   OSUNode currentOsuNode = NULL;
 
   /* Creation des entitees */
-  Ship ship = createShip(-4.0, 0.0, 30, 0.5);
+  Ship ship;
   OList obstaclesList;     obstaclesList.taille = 0;
   EList ennemiesList;    ennemiesList.taille = 0;
   BList bulletsShipList;    bulletsShipList.taille = 0;
@@ -380,72 +380,98 @@ int main(int argc, char** argv) {
 
         case SDL_MOUSEBUTTONDOWN:
           if( GAME_MODE == GAME_MODE_MENU ){
-            if(e.button.x >= 260 && e.button.x <= 530 && e.button.y <= 430 && e.button.y >= 350){
-              /* >>> RESET COMPLET <<< */
+            if(e.button.x >= 260 &&
+               e.button.x <= 530 &&
+               e.button.y <= 430 &&
+               e.button.y >= 350){
+              /* >>> BUTTON PLAY <<< */
               /* Suppression des ressources */
               deleteList(&obstaclesList);
               deleteList(&ennemiesList);
               deleteList(&bulletsShipList);
               deleteList(&bulletsEnnemyList);
+              if ( ship ) free(ship);
 
               //TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
+              
+              /* Chargement des ennemies */
               strcpy(bufferOsuFileName,osuFileName);
               strcat(bufferOsuFileName, diff);
               strcat(bufferOsuFileName, ".osu");
               osu = readOsuFile(bufferOsuFileName);
               currentOsuNode = osu.first;
 
-              LEVEL_STATE = LEVEL_STATE_RUNNING;
 
+              /* Chargement des obstacles / bonus */
               strcpy(bufferPpmFileName,ppmFileName);
               strcat(bufferPpmFileName, diff);
               strcat(bufferPpmFileName, ".ppm");
               mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
+              
+              /* Modification de la vitesse de deplacement de la map */
               globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
-
-              globalTranslationTotal =0;
+              globalTranslationTotal = 0;
+              
+              /* Creation du vaisseau */
+              ship = createShip(-4.0, 0.0, 30, 0.5);
               ship->hp = 30;
               ship->pos[X] = -5;
               ship->pos[Y] =0;
               GAME_MODE = GAME_MODE_GAME;
 
               // Debug fin jeu
-              //GAME_MODE = GAME_MODE_END_GAME;
+              // GAME_MODE = GAME_MODE_END_GAME;
+              
+              /* Lancement de la musique */
               Mix_PlayMusic(musicGame, -1);
               int CORRECTIF = 100;
               musicStartTime = SDL_GetTicks() + CORRECTIF;
-              printf("MusicGame start at %d ticks\n", musicStartTime);
+              printf("MusicGame starts at %d ticks\n", musicStartTime);
+              
+              /* Changement d'état */
+              LEVEL_STATE = LEVEL_STATE_RUNNING;
 
-            }else if(e.button.x >= selectedButtonPos[0] && e.button.x <= selectedButtonPos[2] && e.button.y >= selectedButtonPos[1] && e.button.y <= selectedButtonPos[3]){
-
+            } else if (e.button.x >= selectedButtonPos[0] &&
+                       e.button.x <= selectedButtonPos[2] &&
+                       e.button.y >= selectedButtonPos[1] &&
+                       e.button.y <= selectedButtonPos[3]) {
               selectedDifficulty = 0;
               strcpy(diff,"[ryuu's Easy]");
               printf("niveau 1 easy \n");
-
-            }else if(e.button.x >= selectedButtonPos[4] && e.button.x <= selectedButtonPos[6] && e.button.y >= selectedButtonPos[5] && e.button.y <= selectedButtonPos[7]){
+            } else if (e.button.x >= selectedButtonPos[4] &&
+                       e.button.x <= selectedButtonPos[6] &&
+                       e.button.y >= selectedButtonPos[5] &&
+                       e.button.y <= selectedButtonPos[7]) {
               selectedDifficulty = 1;
               strcpy(diff,"[Normal]");
               printf("niveau 2 normal\n");
-            }else if(e.button.x >= selectedButtonPos[8] && e.button.x <= selectedButtonPos[10] && e.button.y >= selectedButtonPos[9] && e.button.y <= selectedButtonPos[11]){
+            } else if (e.button.x >= selectedButtonPos[8] &&
+                       e.button.x <= selectedButtonPos[10] &&
+                       e.button.y >= selectedButtonPos[9] &&
+                       e.button.y <= selectedButtonPos[11]) {
               selectedDifficulty = 2;
               strcpy(diff,"[Advanced]");
               printf("niveau 3 advanced\n");
-
-            }else if(e.button.x >= selectedButtonPos[12] && e.button.x <= selectedButtonPos[14] && e.button.y >= selectedButtonPos[13] && e.button.y <= selectedButtonPos[15]){
+            } else if (e.button.x >= selectedButtonPos[12] &&
+                       e.button.x <= selectedButtonPos[14] &&
+                       e.button.y >= selectedButtonPos[13] &&
+                       e.button.y <= selectedButtonPos[15]) {
               selectedDifficulty = 3;
               strcpy(diff,"[Hard]");
               printf("niveau 4 hard \n");
-
-            }else if(e.button.x >= selectedButtonPos[16] && e.button.x <= selectedButtonPos[18] && e.button.y >= selectedButtonPos[17] && e.button.y <= selectedButtonPos[19]){
+            } else if (e.button.x >= selectedButtonPos[16] &&
+                       e.button.x <= selectedButtonPos[18] &&
+                       e.button.y >= selectedButtonPos[17] &&
+                       e.button.y <= selectedButtonPos[19]) {
               selectedDifficulty = 4;
               strcpy(diff,"[fufufu]");
               printf("niveau 5 fufufu\n");
-
             }
           }
 
           if(GAME_MODE == GAME_MODE_END_GAME){
             if(e.button.x >= 290 && e.button.x <= 505 && e.button.y <= 660 && e.button.y >= 605){
+              /* >>> BUTTON RESET <<< */
               GAME_MODE = GAME_MODE_MENU;
             }
           }
@@ -477,6 +503,7 @@ int main(int argc, char** argv) {
   Mix_CloseAudio();
 
   /* Liberation des structures allouées */
+  if ( ship ) free(ship);
   deleteList(&obstaclesList);
   deleteList(&ennemiesList);
   deleteList(&bulletsEnnemyList);
