@@ -3,7 +3,6 @@
 #include "osu_reader.h"
 
 OSUList readOsuFile(char *filename) {
-  printf("OSU File : %s\n", filename);
   FILE *osuFile;
   osuFile = fopen(filename, "r");
   char line[256];

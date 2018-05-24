@@ -3,8 +3,7 @@
 #include "ppm_reader.h"
 
 /* Return the width of the map */
-int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {  
-  printf("PPM File : %s\n", filename);
+int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {
   FILE *ppmFile;
   char line[64];
   int w, h, i, j, r, g, b, max;
@@ -78,15 +77,15 @@ int createFromPPM( char *filename, OList *obstacles, BList *bonuses ) {
         }
         /* Blue */
         if ( r==0 && g==0 && b==max ) {
-          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_DAMAGE));
+          ajouterFinList(bonuses, createBonus( x, y, 1, 1, BONUS_TYPE_DAMAGE));
         }
         /* Green */
         if ( r==0 && g==max && b==0 ) {
-          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_ATTACK_SPEED));
+          ajouterFinList(bonuses, createBonus( x, y, 1, 1, BONUS_TYPE_ATTACK_SPEED));
         }
         /* Cyan */
         if ( r==0 && g==max && b==max ) {
-          ajouterFinList(bonuses, createBonus( x, y, 1, 0.5, BONUS_TYPE_MISSILE_UP));
+          ajouterFinList(bonuses, createBonus( x, y, 1, 1, BONUS_TYPE_MISSILE_UP));
         }
         /* Magenta */
         if ( r==max && g==0 && b==max ) {

@@ -29,6 +29,18 @@
 #define GAME_MODE_END_GAME 3
 
 #define TEXTURE_NUMBER 25
+#define PI 3.14159265
+
+/* Couleurs */
+#define RED   "\x1B[31m"
+#define GREEN   "\x1B[32m"
+#define YELLOW   "\x1B[33m"
+#define BLUE   "\x1B[34m"
+#define MAGENTA   "\x1B[35m"
+#define CYAN   "\x1B[36m"
+#define WHITE   "\x1B[37m"
+#define RESET "\x1B[0m"
+
 
 extern float globalTranslation; /* DEBUG PURPOSE */
 extern int LEVEL_STATE;

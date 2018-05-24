@@ -55,7 +55,6 @@ Bullet createBullet(Entity entity, float size){
 
   return bullet;
 }
-
 Entity createEntity(float x, float y, int hp, float size, int id) {
   Entity temp = (Entity) malloc( sizeof( struct Entity ) );
   if( !temp){
@@ -97,7 +96,6 @@ Entity createEntity(float x, float y, int hp, float size, int id) {
 void displayEntity(Entity e) {
   printf("(id:%d) x:%f y:%f | speed: x:%f y:%f | hp:%d | dmg:%d | size:%f\n", e->id, e->pos[X], e->pos[Y], e->speed[X], e->speed[Y], e->hp, e->damages, e->size);
 }
-
 /* 
   Return :
   0: Dead

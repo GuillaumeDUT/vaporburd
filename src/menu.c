@@ -26,7 +26,7 @@ void drawMenuBackground(GLuint textureID[]) {
   glPopMatrix();
   glBindTexture(GL_TEXTURE_2D, 0);
 }
-void drawGameBackground(GLuint textureID[], int globalTranslationTotal) {
+void drawGameBackground(GLuint textureID[], float globalTranslationTotal) {
   glBindTexture(GL_TEXTURE_2D, textureID[2]);
   glPushMatrix();
   glTranslatef(42+globalTranslationTotal*0.58,0,0);
@@ -49,7 +49,7 @@ void drawGameBackground(GLuint textureID[], int globalTranslationTotal) {
   glPopMatrix();
   glBindTexture(GL_TEXTURE_2D, 0);
 }
-void drawBossBackground(GLuint textureID[], int globalTranslationTotal) {
+void drawBossBackground(GLuint textureID[], float globalTranslationTotal) {
   glBindTexture(GL_TEXTURE_2D, textureID[16]);
   glTranslatef(globalTranslationTotal,0,0);
   glRotatef(20-(globalTranslationTotal*5),0,0,1);

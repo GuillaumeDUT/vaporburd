@@ -27,7 +27,7 @@ int GAME_MODE;
 
 
 /* DEBUG */
-static const int DEBUG = 1;
+static const int DEBUG = 0;
 
 void resizeViewport() {
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -66,13 +66,17 @@ void setTexture ( char *name, int textureID, GLuint *textures ) {
   }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) {  
+  
   LEVEL_STATE = LEVEL_STATE_INIT;
   GAME_MODE = GAME_MODE_MENU;
 
   if ( DEBUG == 1 ) {
-    printf(" // // MODE DEBUG BOSS ON // // \n");
-    /* DEBUG DU BOSS */
+    printf(CYAN);
+    printf("========================================\n");
+    printf(">>>>>>>>>> MODE DEBUG BOSS ON <<<<<<<<<<\n");
+    printf("========================================\n");
+    printf(RESET);
     MUSIC_DURATION = MUSIC_DURATION / 100;
   }
 
@@ -97,9 +101,10 @@ int main(int argc, char** argv) {
   if((Mix_Init(MIX_INIT_MP3)&MIX_INIT_MP3)!=MIX_INIT_MP3) {
     printf("Mix_Init error: %s",Mix_GetError());
   }
-  if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
+  if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096) == -1) {
     printf("Opening MIX_AUDIO: %s\n", Mix_GetError());
   }
+  Mix_VolumeMusic(MIX_MAX_VOLUME/2);
 
   /* Chargement des musiques */
   Mix_Music *musicGame = Mix_LoadMUS("./assets/flicker.mp3");
@@ -153,7 +158,7 @@ int main(int argc, char** argv) {
   OSUNode currentOsuNode = NULL;
 
   /* Creation des entitees */
-  Ship ship;
+  Ship ship = NULL;
   OList obstaclesList;     obstaclesList.taille = 0;
   EList ennemiesList;    ennemiesList.taille = 0;
   BList bulletsShipList;    bulletsShipList.taille = 0;
@@ -182,7 +187,7 @@ int main(int argc, char** argv) {
 
   /* Variables des textures */
   /* ordre : easy normal advanced hard fuuu Haut gauche, bas droite */
-  int selectedButtonPos[20]= {20, 520, 260, 600, 280, 520, 520, 600, 540, 520, 780, 600, 140, 640, 380, 720, 420, 640, 660, 720};
+  int selectedButtonPos[20] = {20, 520, 260, 600, 280, 520, 520, 600, 540, 520, 780, 600, 140, 640, 380, 720, 420, 640, 660, 720};
   float posButton[12] = {-6.5, -4, 0, -4, 6.5, -4, -3.5, -7, 3.5, -7, 0, 0};
   int selectedDifficulty = 1;
   int idTextureForLoop = 0;
@@ -193,7 +198,7 @@ int main(int argc, char** argv) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     /* ========================== MENU ========================== */
-    if(GAME_MODE ==  GAME_MODE_MENU){   
+    if(GAME_MODE == GAME_MODE_MENU){   
 
       glEnable(GL_TEXTURE_2D);      
       /* Affichage du background */
@@ -241,7 +246,6 @@ int main(int argc, char** argv) {
           musicStartTime + currentOsuNode->time <= SDL_GetTicks() &&
           LEVEL_STATE == LEVEL_STATE_RUNNING &&
           GAME_MODE == GAME_MODE_GAME) {
-        // createRandomEnnemy(&ennemiesList, globalTranslationTotal);
         createOSUNodeEnnemy(
           &ennemiesList,
           currentOsuNode,
@@ -262,7 +266,6 @@ int main(int argc, char** argv) {
         createBoss(&ennemiesList, globalTranslation, globalTranslationTotal);
 
         LEVEL_STATE = LEVEL_STATE_BOSS_SPAWNED;
-        printf("Boss spawned\n");
       }
 
 
@@ -307,7 +310,7 @@ int main(int argc, char** argv) {
 
       /* Si l'on est a cours de points de vies, game over on affiche le menu de fin */
       if ( ship->hp <= 0) {
-        printf("Fin de partie\n\n");
+        printf(CYAN "Fin de partie\n\n" RESET);
         Mix_PlayMusic(musicMenu, -1);   
         GAME_MODE= GAME_MODE_END_GAME;
         resizeViewport();
@@ -346,7 +349,7 @@ int main(int argc, char** argv) {
           resizeViewport();
 
         case SDL_KEYDOWN:
-          //printf("touche pressée (code = %d)\n", e.key.keysym.sym);
+          // printf("touche pressée (code = %d)\n", e.key.keysym.sym);
           // if spacebar
           if(GAME_MODE == GAME_MODE_GAME){
             if(e.key.keysym.sym == SDLK_UP) triggerKeyArrowUp = 1;
@@ -390,7 +393,6 @@ int main(int argc, char** argv) {
               deleteList(&ennemiesList);
               deleteList(&bulletsShipList);
               deleteList(&bulletsEnnemyList);
-              if ( ship ) free(ship);
 
               //TO DO une fonction init game ? vu que ça pourrait reservir pour un bouton rejouer sur l'écran de fin
               
@@ -409,14 +411,14 @@ int main(int argc, char** argv) {
               mapLength = createFromPPM(bufferPpmFileName, &obstaclesList, &bonusesList);
               
               /* Modification de la vitesse de deplacement de la map */
-              globalTranslation = (float)mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
+              globalTranslation = (float) mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
               globalTranslationTotal = 0;
               
               /* Creation du vaisseau */
               ship = createShip(-4.0, 0.0, 30, 0.5);
               ship->hp = 30;
               ship->pos[X] = -5;
-              ship->pos[Y] =0;
+              ship->pos[Y] = 0;
               GAME_MODE = GAME_MODE_GAME;
 
               // Debug fin jeu
@@ -426,7 +428,6 @@ int main(int argc, char** argv) {
               Mix_PlayMusic(musicGame, -1);
               int CORRECTIF = 100;
               musicStartTime = SDL_GetTicks() + CORRECTIF;
-              printf("MusicGame starts at %d ticks\n", musicStartTime);
               
               /* Changement d'état */
               LEVEL_STATE = LEVEL_STATE_RUNNING;
@@ -437,40 +438,43 @@ int main(int argc, char** argv) {
                        e.button.y <= selectedButtonPos[3]) {
               selectedDifficulty = 0;
               strcpy(diff,"[ryuu's Easy]");
-              printf("niveau 1 easy \n");
+              printf(YELLOW "Niveau 1 : 'easy'  \n" RESET);
             } else if (e.button.x >= selectedButtonPos[4] &&
                        e.button.x <= selectedButtonPos[6] &&
                        e.button.y >= selectedButtonPos[5] &&
                        e.button.y <= selectedButtonPos[7]) {
               selectedDifficulty = 1;
               strcpy(diff,"[Normal]");
-              printf("niveau 2 normal\n");
+              printf(YELLOW "Niveau 2 : 'normal' \n" RESET);
             } else if (e.button.x >= selectedButtonPos[8] &&
                        e.button.x <= selectedButtonPos[10] &&
                        e.button.y >= selectedButtonPos[9] &&
                        e.button.y <= selectedButtonPos[11]) {
               selectedDifficulty = 2;
               strcpy(diff,"[Advanced]");
-              printf("niveau 3 advanced\n");
+              printf(YELLOW "Niveau 3 : 'advanced' \n" RESET);
             } else if (e.button.x >= selectedButtonPos[12] &&
                        e.button.x <= selectedButtonPos[14] &&
                        e.button.y >= selectedButtonPos[13] &&
                        e.button.y <= selectedButtonPos[15]) {
               selectedDifficulty = 3;
               strcpy(diff,"[Hard]");
-              printf("niveau 4 hard \n");
+              printf(YELLOW "Niveau 4 : 'hard'  \n" RESET);
             } else if (e.button.x >= selectedButtonPos[16] &&
                        e.button.x <= selectedButtonPos[18] &&
                        e.button.y >= selectedButtonPos[17] &&
                        e.button.y <= selectedButtonPos[19]) {
               selectedDifficulty = 4;
               strcpy(diff,"[fufufu]");
-              printf("niveau 5 fufufu\n");
+              printf(YELLOW "Niveau 5 : 'fufufu' \n" RESET);
             }
           }
 
           if(GAME_MODE == GAME_MODE_END_GAME){
-            if(e.button.x >= 290 && e.button.x <= 505 && e.button.y <= 660 && e.button.y >= 605){
+            if(e.button.x >= 290 &&
+               e.button.x <= 505 &&
+               e.button.y <= 660 &&
+               e.button.y >= 605){
               /* >>> BUTTON RESET <<< */
               GAME_MODE = GAME_MODE_MENU;
             }
