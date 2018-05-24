@@ -394,7 +394,7 @@ int main(int argc, char** argv) {
 								printf(">>>>>>>>>> MODE DEBUG BOSS ON <<<<<<<<<<\n");
 								printf("========================================\n");
 								printf(RESET);
-								MUSIC_DURATION = MUSIC_DURATION / 100;
+								MUSIC_DURATION = 279000 / 100;
 							}
 
 							/* >>> BUTTON PLAY <<< */
@@ -443,6 +443,11 @@ int main(int argc, char** argv) {
 							/* Modification de la vitesse de deplacement de la map */
 							globalTranslation = (float) mapLength / MUSIC_DURATION * FRAMERATE_MILLISECONDS;
 							globalTranslationTotal = 0;
+							
+							printf("globalTranslation : %f\n", globalTranslation);
+							printf("mapLength : %d\n", mapLength);
+							printf("MUSIC_DURATION : %d\n", MUSIC_DURATION);
+							printf("FRAMERATE_MILLISECONDS : %d\n", FRAMERATE_MILLISECONDS);
 
 							/* Creation du vaisseau */
 							ship = NULL;

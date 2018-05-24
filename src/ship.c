@@ -62,7 +62,7 @@ void moveShip(Ship ship, float globalTranslation, float globalTranslationTotal, 
 }
 
 void drawShip(Ship ship, int full, GLuint textureID[]){
-
+	
 	/* Affiche la texture */
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, textureID[0]);
